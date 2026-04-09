@@ -1,1 +1,8 @@
-1
+다형성을 활용하여, 부모의 sequence를 만든 후 총 3개의 sequence를 받아서 다른 시나리오 3개를 지정함.
+Makefile에서 +UVM_TESTNAME을 활용하여 원하는 sequence를 사용 가능.
+1. ram_random_sequence
+  input을 전체 다 랜덤화
+2. ram_write_read_sequence
+  input 중에 write, read는 때에 따라 고정시키며, addr와 wdata값은 랜덤화하지만, 값은 유지되도록 지정
+3. ram_full_sweep_sequence
+  총 8비트의 addr의 주소 전체를 다 확인하는 시나리오로, 총 8비트의 write와 8비트의 read를 진행함.
