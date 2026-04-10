@@ -9,7 +9,7 @@ class ram_random_sequence extends uvm_sequence #(ram_seq_item);
     `uvm_object_utils(ram_random_sequence)
     int num_transaction = 0;
 
-    function new(string name = "ram_sequence");
+    function new(string name = "ram_random_sequence");
         super.new(name);
     endfunction
 
@@ -29,7 +29,7 @@ class ram_write_read_sequence extends uvm_sequence #(ram_seq_item);
     `uvm_object_utils(ram_write_read_sequence)
     int num_transaction = 0;
 
-    function new(string name = "ram_sequence");
+    function new(string name = "ram_write_read_sequence");
         super.new(name);
     endfunction
 
@@ -54,7 +54,7 @@ endclass
 class ram_full_sweep_sequence extends uvm_sequence #(ram_seq_item);
     `uvm_object_utils(ram_full_sweep_sequence)
 
-    function new(string name = "ram_sequence");
+    function new(string name = "ram_full_sweep_sequence");
         super.new(name);
     endfunction
 
