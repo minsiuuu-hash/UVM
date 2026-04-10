@@ -7,6 +7,6 @@ Makefile에서 +UVM_TESTNAME을 활용하여 원하는 sequence를 사용 가능
 3. ram_full_sweep_sequence
   총 8비트의 addr의 주소 전체를 다 확인하는 시나리오로, 총 8비트의 write와 8비트의 read를 진행함.
 
-RAM에서 결과값을 순차로직을 통해 나옴.
+RAM에서 결과값이 순차로직을 통해 나옴.
 WRITE의 경우 1clk 후의 값에서 검증을 진행
 READ의 경우 1clk 후, 그리고 또 1clk 후에 검증을 진행
