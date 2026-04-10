@@ -9,12 +9,14 @@ clocking block
   race condition 방지용
   입력은 안정된 후 샘플링
   출력은 DUT와 충돌하지 않게 늦게 구동
-  EX) input #1 → clock edge 이후 1 time unit 뒤에 샘플링
-      output #1 → clock edge 이후 1 time unit 뒤에 drive
-      input #1step  → clock edge 직전의 안정된 값을 샘플링
-      output #1step → clock edge 직후 (아주 미세하게 이후)에 drive
+  EX) input/output #1 : clock edge 기준 1 time unit 뒤에 샘플링/구동
+      input/output #1step : 매우 작은 simulation step 기준으로 샘플링/구동
 
 driver class 
-  run_phase에서는 dut에서 값들이 실제로 구동하니까 <=를 사용해서 넣어주고
+  run_phase에서는 dut에서 값들이 실제로 구동하니까 보통 <=를 사용해서 넣어주고
 monitor class
   run_phase에서는 구동 된 값을 복사하기만 하는것, 즉 읽기만 하니까 보통 =를 사용해서 복사함.
+
+monport
+  interface에 다양한 신호들이 있는데, 아무 제한없이 모두 접근하게되면, 헷갈릴 수 있음.
+  따라서 어떤 class에서는 몇몇의 신호들만 사용하게 임의로 정해줄수있음.(역할 고정)
