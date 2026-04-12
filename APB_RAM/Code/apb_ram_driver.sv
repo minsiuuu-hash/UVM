@@ -16,7 +16,7 @@ class apb_driver extends uvm_driver #(apb_seq_item);
 	virtual function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
 		if (!uvm_config_db#(virtual apb_if)::get(this,"","vif",vif)) begin
-			`uvm_fatal(get_type_name, "can't find vif");
+			`uvm_fatal(get_type_name, "can't find vif")
 		end
 	endfunction
 
@@ -65,7 +65,7 @@ class apb_driver extends uvm_driver #(apb_seq_item);
 		vif.drv_cb.penable <= 0;
 
 		`uvm_info(get_type_name(), $sformatf("complete drv apb: %s",
-						 tx.convert2string()),UVM_MEDIUM);
+						 tx.convert2string()),UVM_MEDIUM)
 	endtask
 endclass
 
