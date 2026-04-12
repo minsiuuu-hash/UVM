@@ -19,7 +19,7 @@ class ram_random_sequence extends uvm_sequence #(ram_seq_item);
 
             start_item(item);
             if (!item.randomize())
-                `uvm_fatal(get_type_name(), "Randomization Fail!");
+                `uvm_fatal(get_type_name(), "Randomization Fail!")
             finish_item(item);
         end
     endtask
@@ -40,7 +40,7 @@ class ram_write_read_sequence extends uvm_sequence #(ram_seq_item);
             start_item(item);
             begin
                 if (!item.randomize() with {wr == 1;})
-                    `uvm_fatal(get_type_name(), "Randomization Fail!");
+                    `uvm_fatal(get_type_name(), "Randomization Fail!")
             end
             finish_item(item);
 
@@ -69,7 +69,7 @@ class ram_full_sweep_sequence extends uvm_sequence #(ram_seq_item);
                     wr == 1;
                     addr == i;
                 })
-                `uvm_fatal(get_type_name(), "Randomization Fail!");
+                `uvm_fatal(get_type_name(), "Randomization Fail!")
             finish_item(item);
         end
 
@@ -82,7 +82,7 @@ class ram_full_sweep_sequence extends uvm_sequence #(ram_seq_item);
                     wr == 0;
                     addr == i;
                 })
-                `uvm_fatal(get_type_name(), "Randomization Fail!");
+                `uvm_fatal(get_type_name(), "Randomization Fail!")
             finish_item(item);
         end
     endtask
