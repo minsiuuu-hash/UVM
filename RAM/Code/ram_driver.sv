@@ -17,7 +17,7 @@ class ram_driver extends uvm_driver #(ram_seq_item);
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         if (!uvm_config_db#(virtual ram_if)::get(this, "", "r_if", r_if))
-            `uvm_fatal(get_type_name(), "can't find ram interface");
+            `uvm_fatal(get_type_name(), "can't find ram interface")
     endfunction
 
     virtual task run_phase(uvm_phase phase);
