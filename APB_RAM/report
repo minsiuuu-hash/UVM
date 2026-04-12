@@ -1,1 +1,210 @@
-haha
+APB RAM UVM 검증
+
+APB 프로토콜을 사용하는 RAM을 UVM 기반으로 검증함.
+기존 RAM 검증처럼 sequence를 여러 개로 나누어 다양한 시나리오를 확인하되,
+단순 RAM과 다르게 APB 프로토콜 특성상 driver가 bus 동작을 직접 만들어주는 구조로 진행함.
+
+기본 구조 = test → env → agent → driver / monitor / sequencer → scoreboard / coverage
+
+
+다형성을 활용하여, 부모 sequence를 만든 후 여러 개의 sequence를 상속받아 서로 다른 검증 시나리오를 구성함.
+Makefile에서 +UVM_TESTNAME을 사용하여 원하는 test를 선택하고, 각 test 내부에서 원하는 sequence를 실행하는 방식으로 검증을 진행함.
+
+구성한 APB RAM sequence 시나리오
+
+  1. apb_write_read_sequence
+    가장 기본적인 검증 시나리오.
+    특정 주소에 write를 수행한 뒤, 같은 주소를 다시 read하여 값이 정상적으로 나오는지 확인함.
+    주소는 4-byte align을 만족하도록 지정하고, 데이터는 랜덤값을 사용함.
+    APB RAM의 기본 동작인 write 후 read-back 검증을 위한 sequence임.
+
+  2. apb_random_sequence
+    transaction 전체를 랜덤화하여 다양한 APB 동작을 확인하는 시나리오.
+    pwrite, paddr, pwdata 등을 랜덤하게 발생시켜 write/read가 골고루 수행되도록 함.
+    단, address는 word 접근을 위해 align 조건을 만족하도록 제한함.
+    다양한 조합을 빠르게 확인하기 위한 random 검증용 sequence임.
+    주소 sweep 계열 시나리오
+    RAM 전체 주소 공간을 순차적으로 접근하는 방식으로 검증 가능.
+    예를 들어 APB RAM 주소가 8bit이고 word align으로 접근한다면
+    0x00 ~ 0xFC 범위를 순서대로 write / read 하며 전체 주소 영역을 확인할 수 있음.
+    특정 구간만 집중적으로 확인하는 random test와 다르게,
+    실제 주소 공간 전체가 빠짐없이 동작하는지를 확인하기 위한 시나리오임.
+  
+APB RAM driver
+
+    driver는 APB master 역할을 하는 컴포넌트로,
+    sequence에서 생성한 transaction을 실제 DUT 인터페이스 신호로 변환하여 인가함.
+
+    RAM 검증에서의 driver가 단순히 write/read 입력을 넣어주는 역할이었다면,
+    APB RAM에서는 driver가 APB 프로토콜 순서를 직접 만들어줘야 함.
+
+    즉 driver에서 다음 순서로 transaction을 수행함.
+
+    SETUP phase
+      psel = 1, penable = 0 상태에서
+      paddr, pwrite, pwdata를 DUT에 인가함.
+      이 단계는 “어떤 주소에 어떤 동작을 할 것인지”를 준비하는 단계임.
+    ACCESS phase
+      다음 clock에서 penable = 1로 올려 실제 APB access를 수행함.
+      DUT가 pready = 1이면 transfer 완료로 판단함.
+      현재 RTL에서 pready를 항상 1로 고정했다면 wait state는 없으므로
+      access 진입 후 바로 완료되는 구조로 볼 수 있음.
+    IDLE 복귀
+      transaction 완료 후 psel = 0, penable = 0으로 내려
+      bus를 idle 상태로 되돌림.
+
+    즉 APB RAM driver는 단순 값 전달이 아니라
+    APB 프로토콜의 setup / access / idle 흐름을 직접 생성하는 것이 핵심임.
+
+    driver에서 DUT output을 받는 부분
+
+      driver 코드에서 pready, prdata를 읽는 부분이 있을 수 있음.
+      하지만 현재 구조에서는 monitor가 실제 transaction을 다시 관찰하고,
+      scoreboard가 monitor 기준으로 expected / actual 비교를 수행하므로
+      tx.prdata, tx.pready를 driver에서 item에 저장하는 것은 필수는 아님.
+
+    정리하면
+
+    while (!pready)
+      일반적인 APB slave가 wait state를 가질 수 있으므로 넣는 범용 코드
+      tx.prdata = ..., tx.pready = ...
+      로그 확인, 응답 보관, sequence 확장성을 위한 보조 정보
+
+      현재 DUT처럼 pready=1 고정이고 monitor + scoreboard 중심 검증 구조라면
+      driver에서 output 값을 item에 굳이 저장하지 않아도 검증은 가능함.
+
+      즉 driver가 output을 읽는 이유는
+      검증 기준을 만들기 위해서가 아니라,
+      프로토콜 완료 확인이나 로그/디버깅 편의를 위한 경우가 많음.
+
+APB RAM monitor
+
+    monitor는 APB bus를 수동으로 관찰하는 역할을 함.
+    driver처럼 DUT에 신호를 넣지 않고,
+    실제 DUT 인터페이스에서 완료된 transaction만 읽어서 transaction 객체로 재구성함.
+
+    보통 psel = 1, penable = 1, pready = 1 인 시점을 valid transfer 완료 조건으로 보고,
+    그 순간의 paddr, pwrite, pwdata, prdata를 읽어서
+    새로운 transaction으로 만들어 scoreboard와 coverage에 전달함.
+
+    즉 monitor는 “driver가 이렇게 넣으려고 했다”가 아니라
+    “실제 DUT 인터페이스에서 이렇게 동작했다”를 기준으로 기록하는 컴포넌트임.
+
+    검증의 신뢰성을 높이기 위해 scoreboard와 coverage는 보통 monitor의 데이터를 기준으로 사용함.
+
+APB RAM scoreboard
+
+    scoreboard는 DUT의 read 결과가 맞는지 확인하는 비교기 역할을 함.
+    내부에 reference memory를 하나 두고,
+    monitor로부터 받은 transaction을 기준으로 expected 값을 관리함.
+
+    동작 방식은 다음과 같음.
+
+    write transaction인 경우
+      paddr에 해당하는 reference memory 위치에 pwdata를 저장함.
+      즉 DUT RAM에 write가 일어난 것과 동일하게 scoreboard 내부 모델도 갱신함.
+    read transaction인 경우
+      같은 주소의 reference memory 값을 expected로 꺼낸 뒤,
+      monitor가 관찰한 DUT의 prdata와 비교함.
+      값이 다르면 error로 판단함.
+
+    즉 APB RAM scoreboard의 핵심은 “실제 DUT 내부 RAM을 직접 보는 것이 아니라,
+    scoreboard 내부 reference memory를 이용해 같은 동작을 모델링하고 비교하는 것”임.
+
+    주소 처리 방식
+      APB에서는 paddr가 byte address로 들어오지만,
+      RAM은 보통 word 단위 배열로 관리하므로
+      scoreboard에서는 paddr >> 2 형태로 index를 계산하여 reference memory에 접근함.
+
+    예를 들어
+      0x00 → index 0
+      0x04 → index 1
+      0x08 → index 2
+    이런 식으로 변환됨.
+
+    즉 APB RAM 검증에서 중요한 포인트 중 하나는
+    byte address와 word index의 차이를 이해하는 것임.
+
+APB RAM coverage
+
+    coverage는 pass/fail을 판단하는 용도가 아니라,
+    검증이 얼마나 다양한 경우를 포함했는지 확인하기 위한 용도임.
+
+    보통 다음 항목들을 coverpoint로 설정할 수 있음.
+
+    address coverage
+      low / mid / high 영역 등 주소 구간이 골고루 접근되었는지 확인
+    read/write coverage
+      read와 write가 모두 수행되었는지 확인
+    write data coverage
+      0x00000000, 0xFFFFFFFF, 0xAAAAAAAA, 0x55555555 같은 대표 패턴이 사용되었는지 확인
+    read data coverage
+      실제 read 결과 데이터가 어떤 패턴으로 나왔는지 확인
+    cross coverage
+      주소 구간과 read/write 동작의 조합을 함께 측정하여
+      특정 구간에서 read만 하고 write는 안 했는지 같은 빈 영역을 찾기 위함
+
+    coverage는 monitor가 보낸 transaction을 받아서 sample() 하며,
+    실제 bus에서 수행된 transaction 기준으로 coverage를 누적함.
+
+    sample()의 의미 
+      covergroup은 어떤 항목을 측정할지 정의만 해둔 상태이고,
+      실제로 coverage를 누적하려면 sample()을 호출해야 함.
+      즉 coverage class에서 monitor로부터 transaction을 받음
+      현재 transaction 값을 내부 변수에 저장함
+      covergroup.sample() 호출
+      이 순서로 동작하여
+      해당 transaction이 coverage 결과에 반영됨.
+
+    즉 sample()은
+      “현재 transaction을 coverage 통계에 기록하는 동작”임.
+
+agent의 역할
+
+    agent는 APB 인터페이스를 담당하는 컴포넌트들을 하나로 묶은 구조임.
+
+    구성 요소:sequencer, driver, monitor
+
+    즉 APB bus 하나를 검증하기 위한 묶음이라고 보면 됨.
+    driver는 transaction을 DUT에 넣고,
+    monitor는 DUT 인터페이스를 관찰하며,
+    sequencer는 sequence에서 만든 item을 driver로 전달함.
+
+env의 역할
+
+    env는 verification environment 전체를 연결하는 최상위 UVM 구조임.
+
+    보통 env 안에는agent, scoreboard, coverage가 들어감.
+
+    그리고 connect_phase에서
+    monitor의 analysis port를 scoreboard에 연결
+    monitor의 analysis port를 coverage에 연결하여 
+    실제 bus transaction이 scoreboard와 coverage 양쪽으로 동시에 전달되도록 구성함.
+
+test의 역할
+
+    test는 어떤 sequence를 사용할 것인지 결정하는 역할을 함.
+
+    예를 들어 write_read test, random test, full sweep test등을 
+    각각 별도 test 클래스로 만들고, 각 test에서 원하는 sequence를 생성하여 start() 시킴.
+
+    즉 sequence는 “시나리오 생성”,
+    test는 “이번에 어떤 시나리오를 실행할지 선택”하는 역할이라고 볼 수 있음.
+
+APB RAM 검증의 핵심 차이점
+
+기존 RAM 검증에서는
+단순히 write, read 입력을 넣고
+1clk 뒤, 또는 2clk 뒤 결과를 확인하는 식으로 접근할 수 있었음.
+
+하지만 APB RAM 검증에서는
+RAM 기능 자체만이 아니라 APB bus protocol도 함께 고려해야 하므로
+driver가 다음을 직접 만들어줘야 함.
+
+setup phase
+access phase
+idle 복귀
+
+즉 APB RAM에서는
+“데이터가 맞는지” 뿐만 아니라
+“APB 방식으로 올바르게 접근했는지”까지 함께 검증하는 구조가 됨.
