@@ -19,7 +19,7 @@ class apb_base_test extends uvm_test;
 
     virtual function void end_of_elaboration_phase(uvm_phase phase);
         `uvm_info(get_type_name(), "===== UVM hierarchical structure =====",
-                  UVM_MEDIUM);
+                  UVM_MEDIUM)
         uvm_top.print_topology();
     endfunction
 
