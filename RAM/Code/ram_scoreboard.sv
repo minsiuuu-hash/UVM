@@ -30,7 +30,7 @@ class ram_scoreboard extends uvm_scoreboard;
             `uvm_info(
                 get_type_name(), $sformatf(
                 "write record : addr=0x%02h,data=0x%04h", item.addr, item.wdata),
-                UVM_MEDIUM);
+                UVM_MEDIUM)
         end else begin
             expected = ref_mem[item.addr];
             if (item.rdata === expected) begin
@@ -40,7 +40,7 @@ class ram_scoreboard extends uvm_scoreboard;
                           item.addr,
                           expected,
                           item.rdata
-                          ), UVM_MEDIUM);
+                          ), UVM_MEDIUM)
             end else begin
                 fail_cnt++;
                 `uvm_error(get_type_name(), $sformatf(
@@ -48,7 +48,7 @@ class ram_scoreboard extends uvm_scoreboard;
                            item.addr,
                            expected,
                            item.rdata
-                           ));
+                           ))
             end
         end
     endfunction
