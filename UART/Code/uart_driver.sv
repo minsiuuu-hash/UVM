@@ -28,7 +28,7 @@ class uart_driver extends uvm_driver #(uart_seq_item);
         uart_init();
         wait (u_if.rst == 0);
         `uvm_info(get_type_name(), "check reset off, wait for transaction..",
-                  UVM_MEDIUM)
+                  UVM_MEDIUM);
 
         forever begin
             uart_seq_item tx;
