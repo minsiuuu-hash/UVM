@@ -27,14 +27,14 @@ class uart_monitor extends uvm_monitor;
     endfunction
 
     virtual task run_phase(uvm_phase phase);
-        `uvm_info(get_type_name(), "start UART Monitor ..", UVM_MEDIUM)
+        `uvm_info(get_type_name(), "start UART Monitor ..", UVM_MEDIUM);
 
         forever begin
             uart_seq_item rx;
             rx = uart_seq_item::type_id::create("rx");
             receiver_rx(rx);
             ap.write(rx);
-            `uvm_info(get_type_name(), rx.convert2string(), UVM_MEDIUM)
+            `uvm_info(get_type_name(), rx.convert2string(), UVM_MEDIUM);
         end
     endtask
 
@@ -44,7 +44,7 @@ class uart_monitor extends uvm_monitor;
         repeat (BIT_PERIOD / 2) @(u_if.mon_cb);
 
         if (u_if.mon_cb.uart_tx != 1'b0) begin
-            `uvm_error(get_type_name(), "Invalid start bit")
+            `uvm_error(get_type_name(), "Invalid start bit");
             return;
         end
 
@@ -56,7 +56,7 @@ class uart_monitor extends uvm_monitor;
         end
 
         if (u_if.mon_cb.uart_tx != 1'b1)
-            `uvm_error(get_type_name(), "Invalid stop bit")
+            `uvm_error(get_type_name(), "Invalid stop bit");
     endtask
 
 endclass
