@@ -39,14 +39,14 @@ class apb_scoreboard extends uvm_scoreboard;
                            tx.paddr,
                            expected,
                            tx.prdata
-                           ))
+                ));
             end else begin
                 `uvm_info(get_type_name(), $sformatf(
                           "PASS! paddr = 0x%02h, expected = 0x%08h, prdata = 0x%08h",
                           tx.paddr,
                           expected,
                           tx.prdata
-                          ), UVM_MEDIUM)
+                ), UVM_MEDIUM);
             end
         end
     endfunction
@@ -54,18 +54,18 @@ class apb_scoreboard extends uvm_scoreboard;
     virtual function void report_phase(uvm_phase phase);
         string result = (num_errors == 0) ? "** PASS **" : "** FAIL **";
         `uvm_info(get_type_name(), "******** Report Summary ********",
-                  UVM_MEDIUM)
+                  UVM_MEDIUM);
         `uvm_info(get_type_name(), $sformatf(" Result : %s", result),
-                  UVM_MEDIUM)
+                  UVM_MEDIUM);
         `uvm_info(get_type_name(), $sformatf(
-                  " Overall : %0d", num_writes + num_reads), UVM_MEDIUM)
+            " Overall : %0d", num_writes + num_reads), UVM_MEDIUM);
         `uvm_info(get_type_name(), $sformatf(" Write num : %0d", num_writes),
-                  UVM_MEDIUM)
+                  UVM_MEDIUM);
         `uvm_info(get_type_name(), $sformatf(" Read num : %0d", num_reads),
-                  UVM_MEDIUM)
+                  UVM_MEDIUM);
         `uvm_info(get_type_name(), $sformatf(" Error num : %0d", num_errors),
-                  UVM_MEDIUM)
-        `uvm_info(get_type_name(), "***************************", UVM_MEDIUM)
+                  UVM_MEDIUM);
+        `uvm_info(get_type_name(), "***************************", UVM_MEDIUM);
     endfunction
 
 endclass
