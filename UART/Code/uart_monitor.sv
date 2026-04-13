@@ -22,7 +22,7 @@ class uart_monitor extends uvm_monitor;
         ap = new("ap", this);
 
         if (!uvm_config_db#(virtual uart_if)::get(this, "", "u_if", u_if)) begin
-            `uvm_fatal(get_type_name(), "can't find u_if")
+            `uvm_fatal(get_type_name(), "can't find u_if");
         end
     endfunction
 
