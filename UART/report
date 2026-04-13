@@ -1,1 +1,115 @@
-1
+# UART Loopback UVM 핵심 정리
+
+## 전체 구조
+- Sequence에서 랜덤 `tx_data` 생성
+- Driver가 `tx_data`를 UART 직렬 프레임으로 변환해서 DUT `uart_rx`에 입력
+- DUT가 받은 데이터를 다시 `uart_tx`로 송신
+- Monitor가 `uart_tx`를 다시 byte로 복원
+- Scoreboard가 입력값과 출력값 비교
+- Coverage가 검증된 값들 수집
+
+---
+
+## Driver 핵심
+- 역할: **transaction -> 실제 UART 파형**
+- `tx_data`를
+  - start bit
+  - 8bit data (LSB first)
+  - stop bit
+  순서로 `uart_rx`에 넣음
+- `BIT_PERIOD = 10416` 기준으로 각 bit를 유지
+- DUT에 넣은 값을 `analysis_port`로도 보내서 expected 데이터로 사용
+
+### 중요 포인트
+- Driver는 단순히 값 넣는 클래스가 아니라
+  **UART 프로토콜 타이밍에 맞게 직렬화하는 클래스**
+- `ap.write(tx_cp)`로 scoreboard/coverage에 expected 값 전달
+
+---
+
+## Monitor 핵심
+- 역할: **실제 UART 파형 -> transaction**
+- `uart_tx`의 negedge를 start bit 시작으로 감지
+- bit 중앙 타이밍에서 값 샘플링
+- 8비트를 모아서 `rx_data` 복원
+- 복원한 값을 `analysis_port`로 보내 actual 데이터로 사용
+
+### 중요 포인트
+- Monitor는 DUT를 제어하지 않고 **관찰만 함**
+- start bit를 바로 읽지 않고 **중간 시점에서 다시 확인**하는 게 중요
+- 각 data bit도 bit 타이밍에 맞춰 샘플링해야 함
+
+---
+
+## Driver / Monitor 타이밍 핵심
+- UART는 비동기 통신이라 **타이밍이 제일 중요**
+- 한 비트를 아무 때나 읽으면 안 되고 **bit 중앙 근처**에서 읽어야 안정적
+- Driver는 각 bit를 `BIT_PERIOD` 동안 유지
+- Monitor는 start 검출 후 반 비트/한 비트 단위로 이동하면서 샘플링
+
+### 한 줄 요약
+- Driver는 **정해진 bit 시간만큼 정확히 출력**
+- Monitor는 **정해진 bit 중앙에서 정확히 샘플링**
+
+---
+
+## FIFO 사용 이유
+- Driver의 expected 데이터와
+- Monitor의 actual 데이터는
+  **같은 시점에 안 들어옴**
+
+이유:
+- Driver는 DUT에 넣자마자 expected를 보냄
+- Monitor는 DUT가 loopback을 끝낸 뒤 actual을 보냄
+
+그래서 scoreboard/coverage는
+- `exp_fifo`
+- `act_fifo`
+두 개를 써서 각각 저장해두고,
+순서대로 꺼내 비교함
+
+### 핵심
+- FIFO는 **시간차 보정용**
+- expected/actual를 순서 맞춰 비교하려고 사용
+
+---
+
+## Scoreboard 핵심
+- 비교 기준:
+  - Driver가 보낸 `tx_data`
+  - Monitor가 복원한 `rx_data`
+- 둘이 같으면 PASS
+- 다르면 FAIL
+
+### 핵심 의미
+- DUT 내부 신호를 보는 게 아니라
+  **입력값과 출력값만 비교하는 블랙박스 검증**
+
+---
+
+## Coverage 핵심
+- 어떤 `tx_data`가 들어왔는지
+- 어떤 `rx_data`가 나왔는지
+- pass/fail이 어땠는지 수집
+
+### 중요 포인트
+- Scoreboard는 맞고 틀림 확인
+- Coverage는 **검증이 충분히 다양했는지 확인**
+
+---
+
+## 이 코드에서 진짜 중요한 포인트
+1. Driver는 UART 프로토콜 타이밍대로 직렬 데이터를 만들어야 함
+2. Monitor는 UART bit 중앙에서 정확히 샘플링해야 함
+3. expected / actual는 시간차가 있으므로 FIFO가 필요함
+4. Scoreboard는 입력값과 출력값을 비교함
+5. 이 검증의 본질은 **넣은 데이터가 그대로 다시 나오는지 확인하는 것**
+
+---
+
+## 제일 짧은 요약
+- Driver: byte를 UART 파형으로 만들어 DUT에 넣음
+- Monitor: DUT 출력 UART 파형을 다시 byte로 복원
+- FIFO: expected / actual 시간차 때문에 사용
+- Scoreboard: 입력값과 출력값 비교
+- 핵심: **loopback 데이터 일치 검증**
