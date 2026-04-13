@@ -52,7 +52,7 @@ class uart_monitor extends uvm_monitor;
 
         for (int i = 0; i < 8; i++) begin
             rx.rx_data[i] = u_if.mon_cb.uart_tx;
-            repeat (BIT_PERIOD) @(posedge u_if.clk);
+            repeat (BIT_PERIOD) @(u_if.mon_cb);
         end
 
         if (u_if.mon_cb.uart_tx != 1'b1)
