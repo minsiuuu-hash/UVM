@@ -37,14 +37,14 @@ class uart_scoreboard extends uvm_scoreboard;
                 `uvm_info(get_type_name(), $sformatf(
                                                "PASS exp=0x%02h act=0x%02h",
                                                exp_item.tx_data,
-                                               act_item.rx_data), UVM_MEDIUM)
+                    act_item.rx_data), UVM_MEDIUM);
             end else begin
                 fail_cnt++;
                 `uvm_error(get_type_name(), $sformatf(
                            "FAIL exp=0x%02h act=0x%02h",
                            exp_item.tx_data,
                            act_item.rx_data
-                           ))
+                ));
             end
         end
     endtask
