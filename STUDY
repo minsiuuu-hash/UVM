@@ -21,11 +21,14 @@ monport
   interface에 다양한 신호들이 있는데, 아무 제한없이 모두 접근하게되면, 헷갈릴 수 있음.
   따라서 어떤 class에서는 몇몇의 신호들만 사용하게 임의로 정해줄수있음.(역할 고정)
 
-uvm_analysis_port 
+uvm_analysis_port(값 보냄)
   그냥 데이터의 값을 보내기만 함.
-  받는 쪽에서 처리할 구조를 따로 만들어야함.
-  write(item)을 구현해서 받음.
-uvm_tlm_analysis_fifo
+
+uvm_analysis_imp(값 받음)
+  write()함수 구현해서 받음.
+
+uvm_tlm_analysis_fifo(값 받음)
   analysis에서 들어온 데이터를 queue처럼 저장함.
   나중에 get()으로 꺼내씀.
   expected/actual 처럼 도착시간이 서로 다른 데이터들을 맞추기에 편함.
+
