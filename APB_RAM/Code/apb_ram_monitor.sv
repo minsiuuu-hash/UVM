@@ -18,12 +18,12 @@ class apb_monitor extends uvm_monitor;
         super.build_phase(phase);
         ap = new("ap", this);
         if (!uvm_config_db#(virtual apb_if)::get(this, "", "vif", vif)) begin
-            `uvm_fatal(get_type_name(), "can't find vif")
+            `uvm_fatal(get_type_name(), "can't find vif");
         end
     endfunction
 
     virtual task run_phase(uvm_phase phase);
-        `uvm_info(get_type_name(), " start APB BUS monitor ..", UVM_MEDIUM)
+        `uvm_info(get_type_name(), " start APB BUS monitor ..", UVM_MEDIUM);
 
         forever begin
             collect_transaction();
@@ -43,7 +43,7 @@ class apb_monitor extends uvm_monitor;
             tx.penable = vif.mon_cb.penable;
             tx.psel = vif.mon_cb.psel;
             `uvm_info(get_type_name(), $sformatf(
-                      "mon tx: %s", tx.convert2string()), UVM_MEDIUM)
+                "mon tx: %s", tx.convert2string()), UVM_MEDIUM);
             ap.write(tx);
         end
     endtask
