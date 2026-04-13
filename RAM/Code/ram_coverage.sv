@@ -34,24 +34,24 @@ class ram_coverage extends uvm_subscriber #(ram_seq_item);
         item = t;
         ram_cg.sample();
         `uvm_info(get_type_name(), $sformatf(
-                  "ram_cg sampled: %s", item.convert2string()), UVM_MEDIUM)
+            "ram_cg sampled: %s", item.convert2string()), UVM_MEDIUM);
     endfunction
 
     virtual function void report_phase(uvm_phase phase);
-        `uvm_info(get_type_name(), "\n\n===== Coverage Summary =====", UVM_LOW)
+        `uvm_info(get_type_name(), "\n\n===== Coverage Summary =====", UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
-                  "Overall : %.1f%%", ram_cg.get_coverage()), UVM_LOW)
+            "Overall : %.1f%%", ram_cg.get_coverage()), UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
-                  "Write/Read : %.1f%%", ram_cg.cp_wr.get_coverage()), UVM_LOW)
+            "Write/Read : %.1f%%", ram_cg.cp_wr.get_coverage()), UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
-                  "Addr : %.1f%%", ram_cg.cp_addr.get_coverage()), UVM_LOW)
+            "Addr : %.1f%%", ram_cg.cp_addr.get_coverage()), UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
-                  "Rdata : %.1f%%", ram_cg.cp_rdata.get_coverage()), UVM_LOW)
+            "Rdata : %.1f%%", ram_cg.cp_rdata.get_coverage()), UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
                   "cross(write,addr) : %.1f%%", ram_cg.cx_wr_addr.get_coverage()
-                  ), UVM_LOW)
+        ), UVM_LOW);
         `uvm_info(get_type_name(), " ===== Coverage Summary =====\n\n",
-                  UVM_LOW)
+                  UVM_LOW);
     endfunction
 endclass
 `endif
