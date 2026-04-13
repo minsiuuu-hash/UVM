@@ -49,21 +49,21 @@ class apb_coverage extends uvm_subscriber #(apb_seq_item);
     endfunction
 
     virtual function void report_phase(uvm_phase phase);
-        `uvm_info(get_type_name(), "\n\n===== Coverage Summary =====", UVM_LOW)
+        `uvm_info(get_type_name(), "\n\n===== Coverage Summary =====", UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
-                  " Overall : %.1f%%", apb_cg.get_coverage()), UVM_LOW)
+            " Overall : %.1f%%", apb_cg.get_coverage()), UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
-                  " addr : %.1f%%", apb_cg.cp_addr.get_coverage()), UVM_LOW)
+            " addr : %.1f%%", apb_cg.cp_addr.get_coverage()), UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
-                  " rw : %.1f%%", apb_cg.cp_rw.get_coverage()), UVM_LOW)
+            " rw : %.1f%%", apb_cg.cp_rw.get_coverage()), UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
-                  " wdata : %.1f%%", apb_cg.cp_wdata.get_coverage()), UVM_LOW)
+            " wdata : %.1f%%", apb_cg.cp_wdata.get_coverage()), UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
-                  " rdata : %.1f%%", apb_cg.cp_rdata.get_coverage()), UVM_LOW)
+            " rdata : %.1f%%", apb_cg.cp_rdata.get_coverage()), UVM_LOW);
         `uvm_info(get_type_name(), $sformatf(
                   " cross(rw,addr) : %.1f%%", apb_cg.cx_addr_rw.get_coverage()),
-                  UVM_LOW)
-        `uvm_info(get_type_name(), "===== Coverage Summary =====\n\n", UVM_LOW)
+                  UVM_LOW);
+        `uvm_info(get_type_name(), "===== Coverage Summary =====\n\n", UVM_LOW);
     endfunction
 endclass
 
