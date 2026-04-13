@@ -23,7 +23,7 @@ class ram_base_test extends uvm_test;
         phase.raise_objection(this);
         run_test_seq();
         phase.drop_objection(this);
-        `uvm_info("TEST", "complete ram test", UVM_NONE)
+        `uvm_info("TEST", "complete ram test", UVM_NONE);
     endtask
 
     virtual task run_test_seq();
