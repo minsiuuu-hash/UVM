@@ -20,7 +20,7 @@ class ram_monitor extends uvm_monitor;
         super.build_phase(phase);
         ap = new("ap", this);
         if (!uvm_config_db#(virtual ram_if)::get(this, "", "r_if", r_if))
-            `uvm_fatal(get_type_name(), "can't find ram_if")
+            `uvm_fatal(get_type_name(), "can't find ram_if");
     endfunction
 
     virtual task run_phase(uvm_phase phase);
@@ -34,7 +34,7 @@ class ram_monitor extends uvm_monitor;
                 @(r_if.mon_cb);
                 item.rdata = r_if.mon_cb.rdata;
             end
-            `uvm_info(get_type_name(), item.convert2string(), UVM_MEDIUM)
+            `uvm_info(get_type_name(), item.convert2string(), UVM_MEDIUM);
             ap.write(item);
         end
     endtask
