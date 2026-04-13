@@ -23,7 +23,7 @@ class apb_driver extends uvm_driver #(apb_seq_item);
 	virtual task run_phase(uvm_phase phase);
 		apb_bus_init();
 		wait(vif.presetn == 1);
-		`uvm_info(get_type_name(), " check reset off, wait for transaction..", UVM_MEDIUM)
+		`uvm_info(get_type_name(), " check reset off, wait for transaction..", UVM_MEDIUM);
 
 		forever begin
 			apb_seq_item tx;
@@ -65,7 +65,7 @@ class apb_driver extends uvm_driver #(apb_seq_item);
 		vif.drv_cb.penable <= 0;
 
 		`uvm_info(get_type_name(), $sformatf("complete drv apb: %s",
-						 tx.convert2string()),UVM_MEDIUM)
+											 tx.convert2string()),UVM_MEDIUM);
 	endtask
 endclass
 
