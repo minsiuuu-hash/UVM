@@ -37,3 +37,25 @@ uvm_tlm_analysis_fifo
 - 나중에 get()으로 꺼내서 사용함
 - expected/actual처럼 도착 시간이 다른 데이터를 맞춰 비교할 때 편함
 
+component를 생성할 때
+  ex)
+    drv = uart_driver::type_id::create("drv", this);
+    mon = uart_monitor::type_id::create("mon", this);
+    sqr = uvm_sequencer#(uart_seq_item)::type_id::create("sqr", this);
+item을 생성할 때
+  ex) item = uart_seq_item::type_id::create("item");
+
+new로 생성할 때
+  constructor 내부의 기본 초기화
+  factory override 필요 없는 일반 로컬 객체
+  analysis port 생성 같은 것
+  ex) ap = new("ap", this);
+    
+
+
+
+
+
+
+
+
