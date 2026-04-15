@@ -1,5 +1,9 @@
-UVM(객체지향 기반 표준 검증 방법론)
-  test/sequence만 변경하여 다양한 시나리오 검증 가능 (재사용성)
+UVM(Unviersal Verification Methodology) 
+  표준화된 검증 방법론
+OOP (Object Oriented Programing) 
+  객체지향 기반 표준 검증 방법론
+
+test/sequence만 변경하여 다양한 시나리오 검증 가능 (재사용성)
 
 run_phase(시간 흐름이 있는 phase)
   delay, event 사용 가능 → task로 선언
