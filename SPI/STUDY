@@ -1,3 +1,34 @@
 SPI(Serial Peripheral Interface)
   비동기식인 UART와 달리, 동기식 통신 프로토콜.
   UART는 1:1 통신이지만 SPI는 1:N 통신임.
+
+SCLK: master가 만드는 clock
+MOSI: Master Out Slave In
+MISO: Master In Slave Out
+CS_n: chip select, 보통 active low
+
+SPI의 핵심은 클럭의 어느 edge에서 데이터를 내보내고, 어느 edge에서 샘플링할 지.
+
+CPOL(polarity)
+  클럭의 idle 상태를 결정
+    cpol = 0 → idle일 때 SCLK = 0
+    cpol = 1 → idle일 때 SCLK = 1
+
+CPHA(phase)
+  첫 번째 edge에서 샘플링할지, 두 번째 edge에서 샘플링할지 결정
+    cpha = 0
+      첫 edge에서 sample. 그래서 첫 sample 전에 데이터가 이미 세팅되어 있어야 함
+    cpha = 1
+      첫 edge에서는 데이터 변화, 두 번째 edge에서 sample
+
+시스템 clk은 너무 빠르기때문에, 의도적으로 div_cnt를 활용하여 자체 clk을 만들고
+반주기일때, 즉 half_tick이 발생될때마다 토글되도록 함.
+
+MSB FIRST로 shift_reg 구조를 활용.
+
+sclk_r <= cpol : spi가 통신을 하지 않을때, idle level이 cpol에 맞아야하기때문.
+
+cpha = 0일 경우
+  첫 샘플하기전에, mosi가 준비되어있어야하므로 start state에서 미리 넣어줌. bit_cnt == 7일때 바로 rx_data에 값을넣음. (start상태에서 1번, data상태에서 7번. 총 8번) 
+cpha = 1일 경우
+  data state에서 값이 준비되고 두번째에서 샘플하기때문에, bit_cnt == 7일때 한번 더 shift한 후 rx_data에 값을 넣음.  (data상태에서 8번. 총 8번) 
