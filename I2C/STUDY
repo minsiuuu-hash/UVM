@@ -4,11 +4,15 @@ I2C (Inter-Integrated-Circuit)
 
 100MHz 시스템 clk을기준으로 100Khz I2C 기준 clk을 만듦.
 
+ACK = Acknowledge
+NACK = Not Acknowledge
+
 ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트 값으로 총 8비트
 WRITE일 경우
-  ACK(0) = Slave가 제대로 받음. NACK(1) = Slave가 값을 제대로 받지 못했거나 응답을 안했다라는 의미.
-READ일 경우 8비트의 데이터값 + ACK/NACK 1비트 값으로총 9비트
-  ACK(0) = 더 읽고싶음. NACK(1) = 마지막 바이트.
+  slave가 값을 줌 : ACK(0) = 수신 확인 응답. NACK(1) = Slave가 값을 제대로 받지 못했거나 응답을 안했다라는 의미.
+READ일 경우
+  8비트의 데이터값 + ACK/NACK 1비트 값으로총 9비트
+  master가 값을 줌 : ACK(0) = 수신 확인 + 계속 전송 요청. NACK(1) = 마지막 바이트.
 
 ack_out
   write 후 슬레이브가 준 ACK/NACK를, 마스터가 읽어서 밖으로 내보내는 신호
@@ -27,4 +31,8 @@ write 상태일때는 sda_r값을 0으로 받아서 output이 0이 되어서 입
 read 상태일때는 sda_r값을 1로 받아서 output이 high-impedence가 되어 open circuit이 됌. 따라서 read만 가능. 
 MSB First로, shift_reg구조를 활용함. 값을저장하고, shift함.
 
-d
+Repeated START 장점
+  STOP 없이 방향 전환 가능
+  버스를 계속 점유 가능
+  레지스터 읽기 같은 표준 I2C 동작 구현 가능
+  슬레이브 내부 상태 유지에 유리
