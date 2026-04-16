@@ -1,2 +1,30 @@
 I2C (Inter-Integrated-Circuit)
+  동기식 프로토
   1:N 연결
+
+100MHz 시스템 clk을기준으로 100Khz I2C 기준 clk을 만듦.
+
+ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트 값으로 총 8비트
+WRITE일 경우
+  ACK(0) = Slave가 제대로 받음. NACK(1) = Slave가 값을 제대로 받지 못했거나 응답을 안했다라는 의미.
+READ일 경우 8비트의 데이터값 + ACK/NACK 1비트 값으로총 9비트
+  ACK(0) = 더 읽고싶음. NACK(1) = 마지막 바이트.
+
+ack_out
+  write 후 슬레이브가 준 ACK/NACK를, 마스터가 읽어서 밖으로 내보내는 신호
+ack_in
+  read 후 마스터가 슬레이브에게 줄 ACK/NACK를 외부에서 넣어주는 신호
+
+각 state별 내용.
+IDLE = 아무것도 안 함. 버스 유휴 상태. SCL=1, SDA=1
+START = START condition 생성
+WAIT_CMD = 다음 명령 기다림, 여기서 write/read/stop/start 중 하나를 받음
+DATA = 8비트 데이터를 실제로 주고받음(write/read)
+DATA_ACK = 9번째 clock bit에서 ACK 처리
+STOP = STOP condition 생성
+
+write 상태일때는 sda_r값을 0으로 받아서 output이 0이 되어서 입출력이 둘다 가능. 
+read 상태일때는 sda_r값을 1로 받아서 output이 high-impedence가 되어 open circuit이 됌. 따라서 read만 가능. 
+MSB First로, shift_reg구조를 활용함. 값을저장하고, shift함.
+
+d
