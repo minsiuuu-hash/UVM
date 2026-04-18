@@ -19,9 +19,11 @@ clocking block
 driver class 
   run_phase에서는 dut에서 값들이 실제로 구동하니까 보통 <=를 사용해서 넣어줌.
   driver에서는 item을 직접 만들지 않고, sequence에서 만든 item을 가져옴. (spi_seq_item item;  seq_item_port.get_next_item(item);)
+
 monitor class
   run_phase에서는 구동 된 값을 복사하기만 하는것, 즉 읽기만 하니까 보통 =를 사용해서 복사함.
   monitor에서는 item을 직접 만들어야함. (item = spi_seq_item::type_id::create("item");)
+
 monport
   interface에 다양한 신호들이 있는데, 아무 제한없이 모두 접근하게되면, 헷갈릴 수 있음.
   따라서 어떤 class에서는 몇몇의 신호들만 사용하게 임의로 정해줄수있음.(역할 고정)
