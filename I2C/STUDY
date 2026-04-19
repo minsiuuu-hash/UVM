@@ -11,8 +11,12 @@ NACK = Not Acknowledge
 
 ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트 값으로 총 8비트
 WRITE일 경우
+  Master가 SDA를 제어하고 Slave가 읽는다.
+  하지만 ACK를 보낼 때는 Slave가 제어함.
   slave가 값을 줌 : ACK(0) = 수신 확인 응답. NACK(1) = Slave가 값을 제대로 받지 못했거나 응답을 안했다라는 의미.
 READ일 경우
+  Slave가 SDA를 제어하고 Master가 읽는다.
+  하지만 ACK를 보낼 때는 Master가 제어함.
   8비트의 데이터값 + ACK/NACK 1비트 값으로총 9비트
   master가 값을 줌 : ACK(0) = 수신 확인 + 계속 전송 요청. NACK(1) = 마지막 바이트.
 
