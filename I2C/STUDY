@@ -18,7 +18,7 @@ READ일 경우
   Slave가 SDA를 제어하고 Master가 읽는다.
   하지만 ACK를 보낼 때는 Master가 제어함.
   8비트의 데이터값 + ACK/NACK 1비트 값으로총 9비트
-  master가 값을 줌 : ACK(0) = 수신 확인 + 계속 전송 요청. NACK(1) = 마지막 바이트.
+  master가 값을 줌 : ACK(0) = 수신 확인 + 계속 전송 요청. NACK(1) = 그만 읽고싶다.
 
 ack_out
   write 후 슬레이브가 준 ACK/NACK를, 마스터가 읽어서 밖으로 내보내는 신호
