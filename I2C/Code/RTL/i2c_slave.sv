@@ -106,9 +106,6 @@ module i2c_slave (
             ack_phase    <= 1'b0;
         end else begin
             done <= 1'b0;
-
-            // STOP condition은 어느 상태에서든 우선 감지
-            // SCL high에서 SDA가 0 -> 1이면 STOP
             if (sda_rising) begin
                 done         <= 1'b1;
                 sda_r        <= 1'b1;  // release
@@ -125,7 +122,6 @@ module i2c_slave (
                             state <= ADDR;
                         end
                     end
-
                     ADDR: begin
                         if (scl_rising) begin
                             tx_shift_reg <= {tx_shift_reg[6:0], sda_i};
@@ -149,7 +145,6 @@ module i2c_slave (
                             end
                         end
                     end
-
                     ADDR_ACK: begin
                         if (!ack_phase) begin
                             sda_r <= 1'b0;
@@ -173,13 +168,11 @@ module i2c_slave (
                             end
                         end
                     end
-
                     DATA: begin
                         if (rw_flag) begin
                             if (scl_falling) begin
                                 sda_r <= tx_shift_reg[7];
                             end
-
                             if (scl_rising) begin
                                 if (bit_cnt == 7) begin
                                     bit_cnt <= 0;
@@ -189,10 +182,8 @@ module i2c_slave (
                                     tx_shift_reg <= {tx_shift_reg[6:0], 1'b0};
                                 end
                             end
-
                         end else if (scl_rising) begin
                             sda_r <= 1'b1;
-
                             if (bit_cnt == 7) begin
                                 rx_shift_reg <= {rx_shift_reg[6:0], sda_i};
                                 bit_cnt      <= 0;
@@ -204,73 +195,51 @@ module i2c_slave (
                             end
                         end
                     end
-
                     DATA_ACK: begin
                         if (rw_flag) begin
-                            // =====================================================
-                            // READ 동작 후 ACK/NACK 구간
-                            //
-                            // master가 ACK(0)를 보내면 다음 byte 계속 전송
-                            // master가 NACK(1)를 보내면 read 종료
-                            // =====================================================
-
                             if (!ack_phase) begin
-                                // 마지막 data bit가 끝날 때까지 기다림
-                                // SCL falling 이후에야 SDA release해서 ACK/NACK 받을 준비
                                 if (scl_falling) begin
                                     sda_r     <= 1'b1;  // release
                                     ack_phase <= 1'b1;
                                 end
                             end else begin
-                                // master ACK/NACK 읽는 구간
                                 if (scl_rising) begin
                                     ack_out   <= sda_i;
                                     ack_phase <= 1'b0;
                                     bit_cnt   <= 0;
-
                                     if (sda_i == 1'b0) begin
-                                        // master가 ACK를 보냄
-                                        // 그러면 다음 byte 계속 전송
-                                        tx_shift_reg <= tx_data;   // 현재 switch 값 다시 로드
+                                        tx_shift_reg <= tx_data;   
                                         state <= DATA;
                                     end else begin
-                                        // master가 NACK를 보냄
-                                        // 그러면 read 종료
                                         state <= STOP;
                                     end
                                 end
                             end
                         end else begin
-                            // slave receive 후 slave가 ACK 내기
                             rx_data <= rx_shift_reg;
-
                             if (!ack_phase) begin
-                                sda_r <= ack_in_r;  // 0이면 ACK
-
+                                sda_r <= ack_in_r;  // 0 : ACK
                                 if (scl_rising) begin
                                     ack_phase <= 1'b1;
                                 end
                             end else begin
                                 if (scl_falling) begin
-                                    sda_r <= 1'b1;  // ACK 끝난 뒤 release
+                                    sda_r <= 1'b1;  // after ack : release
                                     ack_phase <= 1'b0;
                                     bit_cnt <= 0;
                                     rx_shift_reg <= 8'd0;
-                                    state        <= DATA;   // 핵심: 다음 byte 받으러 감
+                                    state        <= DATA;  
                                 end
                             end
                         end
                     end
-
                     STOP: begin
-                        // 전역 STOP 감지를 위에서 하므로 여기서는 대기만 해도 됨
                         if (sda_rising) begin
                             done  <= 1'b1;
                             sda_r <= 1'b1;
                             state <= IDLE;
                         end
                     end
-
                     default: begin
                         state <= IDLE;
                     end
