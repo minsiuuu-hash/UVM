@@ -10,6 +10,7 @@ ACK = Acknowledge
 NACK = Not Acknowledge
 
 ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트 값으로 총 8비트
+DATA를 보낼때는 8비트의 데이터값 + ACK/NACK 1비트 값으로 총 9비트
 WRITE일 경우
   Master가 SDA를 제어하고 Slave가 읽는다.
   하지만 ACK를 보낼 때는 Slave가 제어함.
@@ -17,7 +18,6 @@ WRITE일 경우
 READ일 경우
   Slave가 SDA를 제어하고 Master가 읽는다.
   하지만 ACK를 보낼 때는 Master가 제어함.
-  8비트의 데이터값 + ACK/NACK 1비트 값으로총 9비트
   master가 값을 줌 : ACK(0) = 수신 확인 + 계속 전송 요청. NACK(1) = 그만 읽고싶다.
 
 ack_out
@@ -25,20 +25,52 @@ ack_out
 ack_in
   read 후 마스터가 슬레이브에게 줄 ACK/NACK를 외부에서 넣어주는 신호
 
-각 state별 내용.
-IDLE = 아무것도 안 함. 버스 유휴 상태. SCL=1, SDA=1
-START = START condition 생성
-WAIT_CMD = 다음 명령 기다림, 여기서 write/read/stop/start 중 하나를 받음
-DATA = 8비트 데이터를 실제로 주고받음(write/read)
-DATA_ACK = 9번째 clock bit에서 ACK 처리
-STOP = STOP condition 생성
+Master 각 state별 내용.
+  IDLE = 아무것도 안 함. 버스 유휴 상태. SCL=1, SDA=1
+  START = START condition 생성
+  WAIT_CMD = 다음 명령 기다림, 여기서 write/read/stop/start 중 하나를 받음
+  DATA = 8비트 데이터를 실제로 주고받음(write/read)
+  DATA_ACK = 9번째 clock bit에서 ACK 처리
+  STOP = STOP condition 생성
 
 write 상태일때는 sda_r값을 0으로 받아서 output이 0이 되어서 입출력이 둘다 가능. 
 read 상태일때는 sda_r값을 1로 받아서 output이 high-impedence가 되어 open circuit이 됌. 따라서 read만 가능. 
-MSB First로, shift_reg구조를 활용함. 값을저장하고, shift함.
+MSB First로, shift_reg구조를 활용함. 값을 저장하고, shift함.
 
 Repeated START 장점
   STOP 없이 방향 전환 가능
   버스를 계속 점유 가능
   레지스터 읽기 같은 표준 I2C 동작 구현 가능
   슬레이브 내부 상태 유지에 유리
+
+Slave 각 state별 내용.
+  IDLE
+    버스 유휴 상태. SDA를 release하고 START condition을 기다림.
+    SCL이 High일 때 SDA가 1→0으로 떨어지면 START로 판단하고 ADDR 상태로 이동.
+  ADDR
+    master가 보낸 8비트 주소 프레임을 수신함.
+    앞 7비트는 slave address, 마지막 1비트는 R/W bit.
+    주소가 local address와 같으면 rw_flag를 저장하고 ADDR_ACK로 이동.
+    주소가 다르면 STOP 상태로 이동.
+  ADDR_ACK
+    주소가 맞았다는 의미로 slave가 9번째 clock에서 SDA를 0으로 당겨 ACK를 보냄.
+    ACK가 끝나면 rw_flag에 따라 DATA 상태로 이동.
+    rw_flag=0이면 master write라서 slave가 데이터를 받을 준비를 함.
+    rw_flag=1이면 master read라서 slave가 데이터를 보낼 준비를 함.
+  DATA
+    실제 8비트 데이터를 송수신하는 상태.
+    rw_flag=0이면 master write이므로 slave가 SDA를 읽어서 rx_shift_reg에 저장함.
+    rw_flag=1이면 master read이므로 slave가 tx_shift_reg의 데이터를 SDA로 출력함.
+    8비트 송수신이 끝나면 DATA_ACK 상태로 이동.
+  DATA_ACK
+    데이터 8비트 전송 후 9번째 clock에서 ACK를 처리하는 상태.
+    rw_flag=0, master write일 때는 slave가 수신자이므로 slave가 ACK를 보냄.
+    rw_flag=1, master read일 때는 master가 수신자이므로 slave는 SDA를 release하고 master의 ACK/NACK를 읽음.
+    master가 ACK를 보내면 다음 byte를 계속 전송하고, NACK를 보내면 STOP 상태로 이동.
+  STOP
+    STOP condition을 기다리는 상태.
+    SCL이 High일 때 SDA가 0→1로 올라가면 STOP으로 판단하고 IDLE로 돌아감.
+
+
+
+
