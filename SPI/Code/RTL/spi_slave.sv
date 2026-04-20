@@ -47,7 +47,7 @@ module spi_slave (
             rx_done      <= 1'b0;
             tx_shift_reg <= 0;
             rx_shift_reg <= 0;
-            rx_data      <= 0;  // modify.
+            rx_data      <= 0; 
         end else begin
             rx_done <= 1'b0;
             case (state)
