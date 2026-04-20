@@ -41,3 +41,43 @@ edge dectector
   edge detector는 신호가 0→1 또는 1→0으로 바뀌는 순간만 딱 1클럭짜리 펄스로 뽑아내는 회로.
   즉, 계속 High인 상태를 보는 게 아니라 변화가 일어난 그 “순간 이벤트”만 잡아서 다른 로직이 안전하게 사용하게 해줌.
 
+Master state
+  IDLE
+    통신 대기 상태.
+    CS_N=1로 slave를 비활성화하고, SCLK는 CPOL 값으로 idle 상태를 유지함.
+    start가 들어오면 tx_data를 tx_shift_reg에 저장하고 CS_N을 0으로 내려 slave를 선택함.
+  START
+    실제 DATA 전송 전에 첫 MOSI 값을 준비하는 상태.
+    CPHA=0이면 첫 번째 edge에서 바로 sampling해야 하므로 DATA 진입 전에 MOSI에 tx_shift_reg[7]을 미리 올려둠.
+    CPHA=1이면 첫 번째 edge에서는 데이터를 바꾸고 두 번째 edge에서 sampling하므로 여기서 미리 올리지 않음.
+  DATA
+    SCLK를 토글하면서 8비트 데이터를 송수신하는 상태.
+    half_tick마다 SCLK를 반전시킴.
+    CPHA=0이면 첫 번째 edge에서 MISO를 sampling하고, 두 번째 edge에서 다음 MOSI bit를 준비함.
+    CPHA=1이면 첫 번째 edge에서 MOSI를 변경하고, 두 번째 edge에서 MISO를 sampling함.
+    8비트 송수신이 끝나면 rx_data를 저장하고 STOP 상태로 이동함.
+  STOP
+    통신 종료 상태.
+    SCLK를 CPOL idle 값으로 되돌리고, CS_N=1로 slave 선택을 해제함.
+    done을 1로 한 clock 발생시키고 busy를 0으로 내린 뒤 IDLE로 복귀함.
+
+Slave state
+  IDLE
+    통신 대기 상태.
+    CS_N=1이면 slave는 선택되지 않은 상태임.
+    CS_N이 0으로 내려가면 master가 통신을 시작한 것으로 보고 tx_data의 MSB를 MISO에 미리 출력한 뒤 DATA 상태로 이동함.
+  DATA
+    master가 만든 SCLK edge에 맞춰 8비트 데이터를 송수신하는 상태.
+    SCLK rising edge에서 MOSI 값을 읽어 rx_shift_reg에 저장함.
+    SCLK falling edge에서 다음 MISO 값을 준비함.
+    8비트를 모두 처리하면 rx_data에 수신 데이터를 저장하고 STOP 상태로 이동함.
+  STOP
+    1 byte 송수신 완료 상태.
+    rx_done을 1로 한 clock 발생시키고 MISO를 idle 값으로 둠.
+    CS_N이 1로 올라가면 통신이 완전히 끝난 것으로 보고 IDLE로 복귀함.
+
+
+
+
+
+
