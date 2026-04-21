@@ -21,6 +21,9 @@ Source(VALID)와 Destination(READY)가 HANDSHAKE
   MASTER, SLAVE 둘다 Source, Destination 가능.
   모든 채널에 다 존재함(INFO도).
 
+INFO에 대한 처리 유무 = READY 
+전체 WRITE/READ Transaction에 대한 처리 유무 = RESP
+
 Burst
   주소를 한 번만 주고, 데이터를 여러 개 연속으로 보내거나 받는 전송 방식.
 
