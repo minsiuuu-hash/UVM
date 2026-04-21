@@ -19,3 +19,5 @@ Source(VALID)와 Destination(READY)가 HANDSHAKE
 
 Burst
   주소를 한 번만 주고, 데이터를 여러 개 연속으로 보내거나 받는 전송 방식.
+
+ADDRESS 받고 바로 데이터가 들어오기때문에 ADDRESS가 들어온후부터는 READY를 1로 고정시켜놓으면 1CLK을 아낄수있음.
