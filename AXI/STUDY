@@ -1,10 +1,14 @@
 AXI
+  읽기/쓰기 동시가능.
+  5개의 메인 채널 존재.
+  point to point specification, not a bus specification. (describes only the signals and timing between interface)
+    BUS : MASTER에서 하나의 선으로 데이터를 모든 SLAVE에 뿌려주는것.(DECODER, MUX를 활용하여 값을 다 뿌렸었음 CHIP_SELECT, APB에서) 
+          CPU Master → 공통 bus 선들 → decoder/select → 선택된 Slave
+    AXI : 한개의 MASTER에서 한개의 SLAVE만 DIRECT로 값을 주고받음.(CHIP_SELECT 없음)
+          CPU Master → Interconnect → 선택된 Slave
 
-AXI = point to point specification, not a bus specification. (describes only the signals and timing between interface)
-  BUS : MASTER에서 하나의 선으로 데이터를 모든 SLAVE에 뿌려주는것.(DECODER, MUX를 활용하여 값을 다 뿌렸었음 CHIP_SELECT, APB에서) 
-  AXI : 한개의 MASTER에서 한개의 SLAVE만 DIRECT로 값을 주고받음.(CHIP_SELECT 없음)
-
-MASTER > SLAVE
-AW(WRITE ADDRESS), W(WRITE DATA), AR(READ ADDRESS)
-SLAVE > MASTER
-B(WRITE RESPONSE), R(READ DATA)
+채널 종류
+  MASTER > SLAVE
+    AW(WRITE ADDRESS), W(WRITE DATA), AR(READ ADDRESS)
+  SLAVE > MASTER
+    B(WRITE RESPONSE), R(READ DATA)
