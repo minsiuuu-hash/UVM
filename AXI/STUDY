@@ -1,0 +1,5 @@
+AXI
+
+AXI = point to point specification, not a bus specification. (describes only the signals and timing between interface)
+  BUS : MASTER에서 하나의 선으로 데이터를 모든 SLAVE에 뿌려주는것.(DECODER, MUX를 활용하여 값을 다 뿌렸었음 CHIP_SELECT, APB에서) 
+  AXI : 한개의 MASTER에서 한개의 SLAVE만 DIRECT로 값을 주고받음.(CHIP_SELECT 없음)
