@@ -15,3 +15,4 @@ AXI
 
 Source(VALID)와 Destination(READY)가 HANDSHAKE 
   MASTER, SLAVE 둘다 Source, Destination 가능.
+  모든 채널에 다 존재함.
