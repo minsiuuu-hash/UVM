@@ -20,7 +20,7 @@ AXI4-Stream : 단방향 통신, Address 없이 Data만 연속 송신
 Source(VALID)와 Destination(READY)가 HANDSHAKE 
   MASTER, SLAVE 둘다 Source, Destination 가능.
   모든 채널에 다 존재함(INFO도).
-    INFO = ADDRESS, DATA, RESPONSE
+    INFO = ADDRESS, DATA, STROBE, RESPONSE(주소 정보 + 데이터 정보 + 제어 정보 + 응답 정보)
 
 INFO에 대한 처리 유무 = READY 
   AW channel, W channel, AR channel
