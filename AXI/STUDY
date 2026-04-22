@@ -27,6 +27,9 @@ INFO에 대한 처리 유무 = READY
 전체 WRITE/READ Transaction에 대한 처리 유무 = RESP  
   B channel, R channel에서 관리.
 
+VALID = INFO를 보내는 쪽이 데이터/주소 준비 완료
+READY = INFO를 받는 쪽이 받을 준비 완료
+
 Burst
   주소를 한 번만 주고, 데이터를 여러 개 연속으로 보내거나 받는 전송 방식.
 
