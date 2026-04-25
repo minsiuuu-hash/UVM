@@ -36,3 +36,64 @@ Burst
 ADDRESS 받고 바로 데이터가 들어오기때문에 ADDRESS가 들어온후부터는 READY를 1로 고정시켜놓으면 1CLK을 아낄수있음.
 
 CPU가 보통 AXI Master를 가지고 있음 > 따라서 Slave만 만들어줌.
+
+
+
+
+
+
+
+
+
+
+C언어 공부
+
+#include "xparameters.h"
+  Vivado/Vitis가 자동으로 만들어주는 하드웨어 정보 파일(각 IP의 시작 주소(base address)를 알려주는 파일)
+#include "sleep.h"
+  usleep() 같은 지연 함수가 있음.
+  ex) usleep(2000); 
+#include <stdint.h>
+  C 표준 라이브러리
+  uint8_t, uint16_t, uint32_t 같은 타입을 쓰기 위해 넣은 것. (8비트,16비트,32비트 부호없는 정수)
+#define A 10
+  A를 쓰면 컴파일 전에 10으로 바뀌는 거임.
+
+static const
+  static : 이 파일 안에서만 쓰겠다는 뜻
+  const  : 값을 바꾸지 않겠다는 뜻
+
+함수만들때
+ex) void gpio_write(...)
+      void : 반환값 없음
+함수 사용할때
+ex) gpio_write(...);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
