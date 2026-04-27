@@ -77,6 +77,16 @@ Data/Type (자료/형)
   실수형
     float = 4 byte, double = 8 byte
 
+* : 포인터(Memory 주소)
+int *변수 : 주소를 저장하는 변수.
+int 변수 : 값(Data)을 저장하는 변수.
+&변수 : 변수의 주소를 의미.
+
+#define GPIOA_CR (*(uint32_t *) (GPIOA_BASE_ADDR + 0x00))
+  (uint32_t *) : casting 연산자
+  (GPIOA_BASE_ADDR + 0x00) : 상수값 숫자 
+  (uint32_t *) (GPIOA_BASE_ADDR + 0x00) : 주소
+  (*(uint32_t *) (GPIOA_BASE_ADDR + 0x00)) : Memory 주소의 공간
 
 
 
