@@ -71,11 +71,16 @@ ex) gpio_write(...);
 
 Data/Type (자료/형)
   Data 형태 : Memory 공간 형태
-기본 자료형
-  정수형
-    char = 1 byte, short = 2 byte, int = 4 byte, long = 4 byte, long long = 8 bye
-  실수형
-    float = 4 byte, double = 8 byte
+      기본 자료형
+          정수형
+            char = 1 byte, short = 2 byte, int = 4 byte, long = 4 byte, long long = 8 bye
+          실수형
+            float = 4 byte, double = 8 byte
+      사용자 정의 자료형
+          struct 구조체
+            구조체 : 변수들의 묶음.
+
+          
 
 * : 포인터(Memory 주소)
 int *변수 : 주소를 저장하는 변수.
