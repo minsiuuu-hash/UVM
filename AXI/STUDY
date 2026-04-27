@@ -69,7 +69,13 @@ ex) void gpio_write(...)
 함수 사용할때
 ex) gpio_write(...);
 
-
+Data/Type (자료/형)
+  Data 형태 : Memory 공간 형태
+기본 자료형
+  정수형
+    char = 1 byte, short = 2 byte, int = 4 byte, long = 4 byte, long long = 8 bye
+  실수형
+    float = 4 byte, double = 8 byte
 
 
 
