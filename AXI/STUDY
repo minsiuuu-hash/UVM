@@ -107,6 +107,8 @@ bit reset (특정 비트를 0으로 만들기) 중요함
   (uint32_t *) (GPIOA_BASE_ADDR + 0x00) : 주소
   (*(uint32_t *) (GPIOA_BASE_ADDR + 0x00)) : Memory 주소의 공간
 
+조건을 사용할때 0은 거짓이지만, 0이 아닌 나머지 값들은 전부 참임.
+
 
 
 
