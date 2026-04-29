@@ -63,11 +63,17 @@ static const
   static : 이 파일 안에서만 쓰겠다는 뜻
   const  : 값을 바꾸지 않겠다는 뜻
 
+static uint32_t prevTimeCounter = 0;
+  함수가 끝나도 prevTimeCounter 변수의 값이 사라지지 않고 계속 유지되게 하겠다는 뜻
+
 함수만들때
 ex) void gpio_write(...)
       void : 반환값 없음
 함수 사용할때
 ex) gpio_write(...);
+
+return;
+  함수를 끝냄.
 
 Data/Type (자료/형)
   Data 형태 : Memory 공간 형태
