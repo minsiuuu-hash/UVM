@@ -1,11 +1,16 @@
-스위치 값 읽기
-↓
-START 버튼 누름 감지
-↓
-스위치 값을 SPI로 전송
-↓
-SPI에서 받은 값 읽기
-↓
-LED에 출력
-↓
-FND에 숫자로 표시
+스위치 값 읽기 > START 버튼 누름 감지 > 스위치 값을 SPI로 전송 > SPI에서 받은 값 읽기 > LED에 출력 > FND에 숫자로 표시
+
+전체 흐름
+main.c
+ └─ ap_init()       // 처음 한 번 초기화
+ └─ while(1)
+      └─ ap_execute()   // 무한 반복 실행
+           ├─ FND_DispDigit()
+           ├─ Switch_Read()
+           ├─ Button_GetState()
+           ├─ SPI_SetTxData()
+           ├─ SPI_Start()
+           ├─ SPI_IsBusy()
+           ├─ SPI_ReadRxData()
+           ├─ GPIO_WritePort(GPIOC, rx_data)
+           └─ FND_SetNum(rx_data)
