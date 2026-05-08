@@ -1,0 +1,19 @@
+I2C 버전은 START / WRITE / READ 버튼을 따로 눌러서 I2C 프로토콜 단계를 직접 실행하는 구조
+
+write 상황(master > slave)
+1. 스위치 값을 0x54로 맞춤
+2. START 버튼 누름
+3. WRITE 버튼 누름
+   → 0x54 전송, ACK 확인
+4. 스위치 값을 0xAA로 맞춤
+5. WRITE 버튼 누름
+   → 0xAA 전송, ACK 확인
+
+read 상황(slave > master)
+1. 스위치 값을 0x55로 맞춤
+2. START 버튼 누름
+3. WRITE 버튼 누름
+   → 0x55 전송, ACK 확인
+4. READ 버튼 누름
+   → Slave 데이터 읽음
+   → Master LED에 표시
