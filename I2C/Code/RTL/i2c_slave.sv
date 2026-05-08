@@ -156,14 +156,11 @@ module i2c_slave (
                             if (scl_falling) begin
                                 ack_phase <= 1'b0;
                                 bit_cnt   <= 0;
-
                                 if (rw_flag) begin
-                                    // read일 때 첫 tx bit 미리 준비
                                     sda_r <= tx_shift_reg[7];
                                 end else begin
                                     sda_r <= 1'b1;
                                 end
-
                                 state <= DATA;
                             end
                         end
