@@ -1,0 +1,20 @@
+UpCounter기능 
+TimeClock(HH/MM/SS/MS) 기능
+UART 기능
+  간단하게 reset시 terminal에 hello world 띄우기.
+
+Left Btn
+  mode 설정 (Upcounter, TimeClock)
+Right Btn
+  TimeClock 7-SEG에 설정 (HH/MM, SS/MS)
+Up Btn
+  UpCounter, TimeClock run,stop 설정
+Down Btn
+  UpCounter ,TimeClock clear 설정
+    
+LED[7:0] 사용
+UpCounter mode 시 : LED[7] On
+  짧은 시간 간격으로 rand left shift LED[3:0]  
+TimeClock mode 시 : LED[6] On
+   HH:MM 시 LED[5] On, SS/MS 시 LED[4] On
+  짧은 시간 간격으로 rand right shift LED[3:0] 
