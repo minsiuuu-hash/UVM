@@ -17,3 +17,20 @@ main.c
 
 done을 기준으로보는 hw와 달리 busy를 보고 판단함. 
 1tick으로 일어나는 done 신호를 제대로 그 타이밍에 맞춰 읽게하기 힘들기때문이다.
+
+UVM
+랜덤 tx_data 생성
+↓
+AXI-Lite로 SPI IP 레지스터에 값 씀
+↓
+SPI start 발생
+↓
+DUT가 MOSI로 실제 데이터를 내보냄
+↓
+monitor가 MOSI를 관찰
+↓
+scoreboard가 기대값과 실제 MOSI 비교
+↓
+pass/fail 출력
+↓
+coverage로 어떤 값들이 테스트됐는지 기록
