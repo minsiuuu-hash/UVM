@@ -33,7 +33,6 @@ OOP (Object Oriented Programing)
 	추상화(abstraction) : 단순화 용
 		복잡한 내부 동작은 숨기고, 필요한 기능 이름만 보여주는 것 = 사용자는 “무엇을 하는지”만 알고, “어떻게 하는지”는 몰라도 되게 만드는 것
 
-
 CLASS = 동적개체 (소프트웨어) 
 Interface, Module = 정적개체 (하드웨어)
 
@@ -41,9 +40,6 @@ new() = 생성자이며, class 설계도를 바탕으로 실제 객체를 메모
 handle = 객체를 가르킬수있는 것.
 그래서 transaction tr;을 한 후에, tr = new();를 해야함.
 근데 UVM에서는 factory기능을 사용하기 위해 new() 대신 tr = my_transaction::type_id::create("tr"); 이런식으로 사용함.
-
-share memory > mailbox > event (크기)
-mailbox의 put,get으로도 순서를 부분적으로 맞출수있다.(데이터 전달 순서)
 
 Class 타입
 1. 다른 class를 가져올때 handler를 생성해줘야함.
@@ -55,6 +51,9 @@ Class 타입
 	그래서 interface의 “참조”를 받아야 함
 
 시간과 관련된 동작은 task에서만 가능함. function은 불가함.
+
+share memory > mailbox > event (크기)
+mailbox의 put,get으로도 순서를 부분적으로 맞출수있다.(데이터 전달 순서)
 
 rand = 항상 랜덤
 randc = 나온거 빼고 랜덤
@@ -68,15 +67,13 @@ fork/join_none = 바로 다음 line 실행.(TASK 실행중)
 fork/join 결은 프로세스들을 동시에 시작시켜주지만, event를 활용해서 순서를 제어할수있음.
 
 assert = 반드시 일어나야만 하는데 발생하지않을 경우 error를 monitoring 함.
-porperty를 사용하는듯??
+property를 사용하는듯??
 
-debugging 할 때 display로 메시지 나타내서 확인해보는 게 좋은 방향인듯? >> monitor, strobe를 사용하는게 더 좋음.
+debugging 할 때 display로 메시지 나타내서 확인해보는 게 좋은 방향임 >> monitor, strobe를 사용하는게 더 좋음.
 ex)
 task display(string name);
 	$display("%t : [%s] wdata = %h, rdata = %h", $time, name, wdata, rdata);
 endtask 하고 tr.display("gen") 이런식으로
-
-test/sequence만 변경하여 다양한 시나리오 검증 가능 (재사용성)
 
 run_phase(시간 흐름이 있는 phase)
   delay, event 사용 가능 → task로 선언
