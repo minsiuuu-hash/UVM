@@ -108,6 +108,8 @@ bit set (특정 비트를 1로 만들기) 중요함
   REG |= (1 << n);
 bit reset (특정 비트를 0으로 만들기) 중요함
   REG &= ~(1 << n);
+bit inverse (특정 비트를 반전시키기) 중요함
+  REG ^= (1 << n);
 
 #define GPIOA_CR (*(uint32_t *) (GPIOA_BASE_ADDR + 0x00))
   (uint32_t *) : casting 연산자(뒤의 숫자를 주소로 취급함)
