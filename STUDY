@@ -60,7 +60,7 @@ randc = 나온거 빼고 랜덤
 function 함수는 시간개념이 없음.
 task 함수는 시간개념이 있음.
 
-racecondtion 조심사항.
+race condtion 조심사항.
 	fork/join 결은 프로세스들을 동시에 시작시켜주지만, event를 활용해서 순서를 제어할수있음.
 		1. fork/join = 동시에 전부 실행, 모든 TASK가 끝나야 다음 line 실행.
 		2. fork/join_any = 어떤 TASK든 끝나면 다음 line 실행. (TASK중 안끝난 부분들은 계 실행중)
