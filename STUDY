@@ -3,8 +3,8 @@ DAY 22
 SYSTEM VERILOG  - 검증용(Verification)
 
 VERILOG > SYSTEM VERILOG
-reg , wire > logic
-bit(1state)  > bit(2state) 시뮬레이션 용, resource 감소, 사실 logic 써도된긴함.
+reg , wire > logic(4state)
+bit(1state)  > bit(2state) 시뮬레이션 용, resource 감소, 사실 logic 써도됌.
 always @(posedge clk) > always_ff@(posedge clk)		순차회로
 always (*) > always_comb(*) 						조합회로
 
@@ -42,7 +42,7 @@ handle = 객체를 가르킬수있는 것.
 근데 UVM에서는 factory기능을 사용하기 위해 new() 대신 tr = my_transaction::type_id::create("tr"); 이런식으로 사용함.
 
 Class 타입
-1. 다른 class를 가져올때 handler를 생성해줘야함.
+1. 다른 class를 가져올때 handle를 생성해줘야함.
 2. 다른 Class를 받을 때, new() 필요하다. 안쓰면 null값이 됌.
    Constructor의 이름은 반드시 new이여야함.   constructor =  function new() -- endfunction 
 3. class에서 interface에 접근하려면 virtual interface로 받아야 한다.
