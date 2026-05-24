@@ -66,8 +66,7 @@ race condtion 조심사항.
 		2. fork/join_any = 어떤 TASK든 끝나면 다음 line 실행. (TASK중 안끝난 부분들은 계 실행중)
 		3. fork/join_none = 바로 다음 line 실행.(TASK 실행중)
 
-assert = 반드시 일어나야만 하는데 발생하지않을 경우 error를 monitoring 함.
-property를 사용하는듯??
+assert = 반드시 일어나야만 하는데 발생하지않을 경우 error를 monitoring 함. property를 사용하는듯??
 
 debugging 할 때 display로 메시지 나타내서 확인해보는 게 좋은 방향임 >> monitor, strobe를 사용하는게 더 좋음.
 ex)
