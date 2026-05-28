@@ -5,8 +5,8 @@ SPI(Serial Peripheral Interface)
   Master와 Slave가 full-duplex구조(데이터 선이 두개, MOSI, MISO)로 동시에 주고받음.
 
 SCLK: master가 만드는 clock
-MOSI: Master Out Slave In
-MISO: Master In Slave Out
+MOSI: Master Out Slave In(직렬 전송)
+MISO: Master In Slave Out(직렬 전송)
 CS_n: chip select, 보통 active low
 
 SPI의 핵심은 클럭의 어느 edge에서 데이터를 내보내고, 어느 edge에서 샘플링할 지.
