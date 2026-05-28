@@ -1,4 +1,5 @@
 I2C (Inter-Integrated-Circuit)
+  Philips에서 개발
   동기식 직렬 통신 프로토콜
   1:N 연결
   풀업 저항이 연결된 직렬 데이터(SDA)와 직렬 클럭(SCL)이라는 두개의 양방향 오픈 컬렉터 라인을 사용함.
