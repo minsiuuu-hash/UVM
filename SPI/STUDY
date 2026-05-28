@@ -1,4 +1,5 @@
 SPI(Serial Peripheral Interface)
+  Motorola에서 개발한 통신 방식.
   비동기식인 UART와 달리, 동기식 통신 프로토콜.
   UART는 1:1 통신이지만 SPI는 1:N 통신임.
   Master와 Slave가 full-duplex구조(데이터 선이 두개, MOSI, MISO)로 동시에 주고받음.
