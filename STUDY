@@ -74,6 +74,20 @@ task display(string name);
 	$display("%t : [%s] wdata = %h, rdata = %h", $time, name, wdata, rdata);
 endtask 하고 tr.display("gen") 이런식으로
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 run_phase(시간 흐름이 있는 phase)
   delay, event 사용 가능 → task로 선언
   function은 시간 흐름 사용 불가
