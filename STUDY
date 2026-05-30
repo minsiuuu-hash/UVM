@@ -132,8 +132,8 @@ clocking block
   race condition 방지용
   입력은 안정된 후 샘플링
   출력은 DUT와 충돌하지 않게 늦게 구동
-  EX) input/output #1 : clock edge 기준 1 time unit 뒤에 샘플링/구동
-      input/output #1step : 매우 작은 simulation step 기준으로 샘플링/구동
+  EX) 	input  #1 : clock edge보다 1 time unit 전에 샘플링
+		output #1 : clock edge보다 1 time unit 후에 구동
 
 driver class 
   run_phase에서는 dut에서 값들이 실제로 구동하니까 보통 <=를 사용해서 넣어줌.
