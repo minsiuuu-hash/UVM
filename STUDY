@@ -124,9 +124,15 @@ UVM 구조
 UVM_Component 
 	UVM hierarchy 안에 들어가고, build_phase, connect_phase, run_phase, report_phase 같은 phase를 가짐(테스트벤치의 부품).
 	ex) ram_test, ram_env, ram_agent, ram_driver, ram_monitor, ram_scoreboard, ram_coverage
+	function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction
 UVM_Object
 	일시적으로 생성돼서 transaction/stimulus 역할을 하고, component hierarchy에는 고정으로 박혀 있지 않음(테스트 중 왔다 갔다 하는 데이터 또는 시나리오).
 	ex) ram_seq_item, ram_sequence
+	function new(string name = "ram_seq_item");
+        super.new(name);
+    endfunction
 
 
 
