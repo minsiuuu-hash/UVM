@@ -151,6 +151,7 @@ UVM 구조
 	1)Scoreboard -> uvm_scoreboard
 		기대값과 실제값 비교
 		uvm_analysis_imp #(*_seq_item, *_scoreboard) ap_imp; (imp = 실제 도착지)
+		*_seq_item 타입 item을 받으면, *_scoreboard 안의 write(*_seq_item item)을 호출하겠다.
 	2)Coverage -> uvm_subscriber #(ram_seq_item)
 		“테스트가 얼마나 다양한 경우를 건드렸는가”
 		agt.mon.ap.connect(cov.analysis_export); (export = 중간입구) 
@@ -182,11 +183,15 @@ UVM_Object(무슨 데이터를 가지고 있는가)
         super.new(name);
     endfunction
 
+#(*_seq_item)이 붙는 class
+= 특정 transaction type을 주고받는 generic UVM class
+= sequence, sequencer, driver, analysis_port, subscriber 등에 사용
 phase = UVM testbench가 동작하는 순서표
-	build_phase   : component 생성
-	connect_phase : component끼리 연결
-	run_phase     : 실제 simulation 동작
-	report_phase  : 결과 출력
+
+build_phase   : component 생성
+connect_phase : component끼리 연결
+run_phase     : 실제 simulation 동작
+report_phase  : 결과 출력
 
 component를 생성할 때
   ex)
