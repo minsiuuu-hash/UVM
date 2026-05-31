@@ -42,12 +42,6 @@ OOP (Object Oriented Programing)
 			= 부모 타입 handle을 자식 타입 handle로 변환하는 것
 			= 자동으로 안 됨
 			= $cast로 실제 객체 타입 확인 필요
-		factory override
-			= create할 때 원래 class 대신 다른 class 생성
-			= UVM factory 기능
-			= utils 매크로로 factory 등록 필요
-			= function virtual과는 다른 얘기
-			→ 어떤 객체를 만들지 바꿈
 
 	캡슐화(encapsulation) : 데이터 보호 용
 		변수와 함수를 class 안에 묶는 것 = 데이터를 class 내부에 숨기고(외부에서 함부로 못 건드리게 막는 것), 정해진 method로만 접근하게 하는 것
@@ -61,10 +55,29 @@ Interface, Module = 정적개체 (하드웨어)
 new() = 생성자이며, class 설계도를 바탕으로 실제 객체를 메모리에 생성하는 함수. (리모콘으로 조종할수있는 TV를 만드는것), (객체를 만드는 함수라 virtual 안붙힘)
 handle = 객체를 가르킬수있는 것. (리모컨을 만드는것)
 그래서 transaction tr;을 한 후에, tr = new();를 해야함.
+
 Factory(new() 대신 type_id::create() 사용)
 = 객체 생성을 factory에 맡김
 = 나중에 override 가능
 = 기존 testbench 코드를 안 바꾸고 다른 class로 교체 가능
+
+factory가 중요한 이유 = UVM에서 “객체를 누가 만들지”를 중앙에서 관리하는 곳이기 때문이야
+	1. 어떤 class들이 등록되어 있는지
+	2. 그 class를 어떻게 create 해야 하는지
+	3. 어떤 class를 다른 class로 override할지
+	`uvm_object_utils(my_item) -> my_item이라는 class를 factory에 등록
+	my_item::type_id 생성
+	my_item::get_type() 같은 함수 제공
+	factory 등록 = 객체 생성 X
+	factory 등록 = 나중에 객체를 만들 수 있게 class 정보를 알려줌
+
+factory override
+	= create할 때 원래 class 대신 다른 class 생성
+	= UVM factory 기능
+	= utils 매크로로 factory 등록 필요
+	= function virtual과는 다른 얘기
+	→ 어떤 객체를 만들지 바꿈
+
 Singleton
 = 객체 하나만 만들고 전역에서 공유
 = 전역 관리자에 중요
