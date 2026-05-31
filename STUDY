@@ -20,7 +20,7 @@ OOP (Object Oriented Programing)
 		ex) class write_packet extends packet;
 	다형성(polymorphism) : 코드 수정 없이 다양한 동작 가능 용도
 		부모 타입 변수로 자식 객체를 가리키고, 실제 객체에 따라 다른 동작을 하게 하는 것 = 부모 class의 함수 앞에 "virtual" 을 붙여야 실제 자식 객체의 함수가 실행됨.
-		virtual task = class 기능(override = 덮어쓰기) >> 대부분의 UVM느낌
+		virtual task,function = class 기능(override = 덮어쓰기) >> 대부분의 UVM느낌
 		override = “부모 클래스에 이미 있는 같은 이름/같은 형태의 함수를 자식 클래스에서 다시 정의해서, 자식 상황에 맞게 다르게 동작하게 만드는 것”
 		ex) packet p; -> 부모에는 transmit(); 함수가 실행되면, $display("normal packet transmit"); 이 구문을 실행함.
 			p = new uart_packet(); 
