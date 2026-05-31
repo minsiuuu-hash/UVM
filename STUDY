@@ -184,14 +184,15 @@ UVM_Object(무슨 데이터를 가지고 있는가)
     endfunction
 
 #(*_seq_item)이 붙는 class(상속하는 부모 class가 parameterized class)
-= 특정 transaction type을 주고받는 generic UVM class
-= sequence, sequencer, driver, analysis_port, subscriber 등에 사용
+	parameterized class = class를 만들 때 안에 들어갈 타입을 나중에 정할 수 있게 만든 class(직접 transaction을 다루냐 안다루냐로 대체로 구분)
+	= 특정 transaction type을 주고받는 generic UVM class
+	= sequence, sequencer, driver, analysis_port, subscriber 등에 사용
+	
 phase = UVM testbench가 동작하는 순서표
-
-build_phase   : component 생성
-connect_phase : component끼리 연결
-run_phase     : 실제 simulation 동작
-report_phase  : 결과 출력
+	build_phase   : component 생성
+	connect_phase : component끼리 연결
+	run_phase     : 실제 simulation 동작
+	report_phase  : 결과 출력
 
 component를 생성할 때
   ex)
