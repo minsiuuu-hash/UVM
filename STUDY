@@ -92,11 +92,6 @@ Class 타입
 	class는 정적 하드웨어 신호를 직접 가질 수 없음
 	그래서 interface의 “참조”를 받아야 함
 
-시간과 관련된 동작은 task에서만 가능함. function은 불가함.
-
-rand = 항상 랜덤
-randc = 나온거 빼고 랜덤
-
 function 함수는 시간개념이 없음.
 task 함수는 시간개념이 있음.
 
@@ -119,6 +114,9 @@ UVM 구조
  		출력은 DUT와 충돌하지 않게 늦게 구동
 		EX) input  #1 : clock edge보다 1 time unit 전에 샘플링
 			output #1 : clock edge보다 1 time unit 후에 구동
+	monport
+		interface에 다양한 신호들이 있는데, 아무 제한없이 모두 접근하게되면, 헷갈릴 수 있음.
+		따라서 어떤 class에서는 몇몇의 신호들만 사용하게 임의로 정해줄수있음.(역할 고정)
 3. TestBench(tb_*.sv, HW)
 	UVM class인 driver/monitor는 module의 port처럼 직접 RTL 신호에 연결될 수 없기 때문에,
 	virtual interface를 uvm_config_db에 넣어주고, driver/monitor가 나중에 꺼내 쓰게 만드는 구조야. 
@@ -156,9 +154,14 @@ UVM 구조
 	1)Driver
 		driver는 sequence_item을 sequencer로부터 받아서 interface 신호로 바꿔서 DUT에 갈 수 있게 하는 역할.
 		virtual *_if *_if; 필수.
+		run_phase에서는 dut에서 값들이 실제로 구동하니까 보통 <=를 사용해서 넣어줌.
+		driver에서는 item을 직접 만들지 않고, sequence에서 만든 item을 가져옴. (spi_seq_item item;  seq_item_port.get_next_item(item);)
 	2)Monitor
 		DUT 신호를 관찰해서 sequence_item으로 복원
-		uvm_analysis_port #(*_seq_item) ap;
+		virtual *_if *_if; 필수.
+		uvm_analysis_port #(*_seq_item) ap;를 사용해서 scoreboard와 coverage에 보냄.
+  		run_phase에서는 구동 된 값을 복사하기만 하는것, 즉 읽기만 하니까 보통 =를 사용해서 복사함.
+		monitor에서는 item을 직접 만들어야함. (item = spi_seq_item::type_id::create("item");)
 
 UVM_Component(어디에 소속해있는가) 
 	UVM hierarchy 안에 들어가고, build_phase, connect_phase, run_phase, report_phase 같은 phase를 가짐(테스트벤치의 구조물).
@@ -166,6 +169,7 @@ UVM_Component(어디에 소속해있는가)
 	function new(string name, uvm_component parent); -> hierachy 때문에 parent를 적는것. 장점(hierarchy 생성, phase 자동 실행, config_db 경로 설정 가능, report message에 위치가 찍힘)
         super.new(name, parent);
     endfunction
+
 UVM_Object(무슨 데이터를 가지고 있는가)
 	일시적으로 생성돼서 transaction/stimulus 역할을 하고, component hierarchy에는 고정으로 박혀 있지 않음(데이터/임시 객체).
 	ex) ram_seq_item, ram_sequence
@@ -173,26 +177,12 @@ UVM_Object(무슨 데이터를 가지고 있는가)
         super.new(name);
     endfunction
 
+phase = UVM testbench가 동작하는 순서표
+	build_phase   : component 생성
+	connect_phase : component끼리 연결
+	run_phase     : 실제 simulation 동작
+	report_phase  : 결과 출력
 
-
-
-run_phase(시간 흐름이 있는 phase)
-  delay, event 사용 가능 → task로 선언
-  function은 시간 흐름 사용 불가
-
-
-
-driver class 
-  run_phase에서는 dut에서 값들이 실제로 구동하니까 보통 <=를 사용해서 넣어줌.
-  driver에서는 item을 직접 만들지 않고, sequence에서 만든 item을 가져옴. (spi_seq_item item;  seq_item_port.get_next_item(item);)
-
-monitor class
-  run_phase에서는 구동 된 값을 복사하기만 하는것, 즉 읽기만 하니까 보통 =를 사용해서 복사함.
-  monitor에서는 item을 직접 만들어야함. (item = spi_seq_item::type_id::create("item");)
-
-monport
-  interface에 다양한 신호들이 있는데, 아무 제한없이 모두 접근하게되면, 헷갈릴 수 있음.
-  따라서 어떤 class에서는 몇몇의 신호들만 사용하게 임의로 정해줄수있음.(역할 고정)
 
 uvm_analysis_port
 - 값을 보내는 쪽
