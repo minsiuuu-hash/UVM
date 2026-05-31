@@ -150,8 +150,10 @@ UVM 구조
 	agt.mon.ap.connect(cov.analysis_export); -> ap와 scoreboard, coverage를 연결해주는 역할.
 	1)Scoreboard
 		기대값과 실제값 비교
+		uvm_analysis_imp #(ram_seq_item, ram_scoreboard) ap_imp; (imp = 실제 도착지)
 	2)Coverage
 		“테스트가 얼마나 다양한 경우를 건드렸는가”
+		agt.mon.ap.connect(cov.analysis_export); (export = 중간입구) 
 6. Agent(Sequencer, Driver, Monitor)
 	1)Driver
 		driver는 sequence_item을 sequencer로부터 받아서 interface 신호로 바꿔서 DUT에 갈 수 있게 하는 역할.
