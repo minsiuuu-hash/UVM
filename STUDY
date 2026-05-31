@@ -183,7 +183,7 @@ UVM_Object(무슨 데이터를 가지고 있는가)
         super.new(name);
     endfunction
 
-#(*_seq_item)이 붙는 class
+#(*_seq_item)이 붙는 class(상속하는 부모 class가 parameterized class)
 = 특정 transaction type을 주고받는 generic UVM class
 = sequence, sequencer, driver, analysis_port, subscriber 등에 사용
 phase = UVM testbench가 동작하는 순서표
