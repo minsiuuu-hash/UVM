@@ -37,6 +37,18 @@ OOP (Object Oriented Programing)
 			= 부모 타입 handle을 자식 타입 handle로 변환하는 것
 			= 자동으로 안 됨
 			= $cast로 실제 객체 타입 확인 필요
+		method override
+			= 자식 class가 부모 function을 재정의
+			= 다형성과 직접 관련 있음
+			= 부모 function에 virtual 필요
+			→ 만들어진 객체의 실제 타입에 맞는 함수가 호출되게 함
+		factory override
+			= create할 때 원래 class 대신 다른 class 생성
+			= UVM factory 기능
+			= utils 매크로로 factory 등록 필요
+			= function virtual과는 다른 얘기
+			→ 어떤 객체를 만들지 바꿈
+
 	캡슐화(encapsulation) : 데이터 보호 용
 		변수와 함수를 class 안에 묶는 것 = 데이터를 class 내부에 숨기고(외부에서 함부로 못 건드리게 막는 것), 정해진 method로만 접근하게 하는 것
 	추상화(abstraction) : 단순화 용
