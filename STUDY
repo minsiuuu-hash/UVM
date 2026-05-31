@@ -94,9 +94,6 @@ Class 타입
 
 시간과 관련된 동작은 task에서만 가능함. function은 불가함.
 
-share memory > mailbox > event (크기)
-mailbox의 put,get으로도 순서를 부분적으로 맞출수있다.(데이터 전달 순서)
-
 rand = 항상 랜덤
 randc = 나온거 빼고 랜덤
 
@@ -110,12 +107,6 @@ race condtion 조심사항.
 		3. fork/join_none = 바로 다음 line 실행.(TASK 실행중)
 
 assert = 반드시 일어나야만 하는데 발생하지않을 경우 error를 monitoring 함. property를 사용하는듯??
-
-debugging 할 때 display로 메시지 나타내서 확인해보는 게 좋은 방향임 >> monitor, strobe를 사용하는게 더 좋음.
-ex)
-task display(string name);
-	$display("%t : [%s] wdata = %h, rdata = %h", $time, name, wdata, rdata);
-endtask 하고 tr.display("gen") 이런식으로
 
 UVM 구조
 1. DUT
