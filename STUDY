@@ -50,9 +50,12 @@ new() = 생성자이며, class 설계도를 바탕으로 실제 객체를 메모
 handle = 객체를 가르킬수있는 것. (리모컨을 만드는것)
 그래서 transaction tr;을 한 후에, tr = new();를 해야함.
 근데 UVM에서는 factory기능을 사용하기 위해 new() 대신 tr = my_transaction::type_id::create("tr"); 이런식으로 사용함.
-new() 대신 type_id::create() 사용
+Factory(new() 대신 type_id::create() 사용)
 → 나중에 override 가능
 → 기존 testbench 코드를 안 바꾸고 다른 class로 교체 가능
+Singleton(어떤 class의 객체가 전체 시뮬레이션에서 하나만 존재하도록 만드는 패턴)
+-> 객체를 하나만 만들기
+-> uvm_root, factory manager, resource/config 계열 (1개만 있어야함)
 
 Class 타입
 1. 다른 class를 가져올때 handle를 생성해줘야함.
