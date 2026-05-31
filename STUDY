@@ -27,6 +27,16 @@ OOP (Object Oriented Programing)
 			p.transmit();   // $display("UART packet transmit"); 실행
 			p = new spi_packet();
 			p.transmit();   // $display("SPI packet transmit"); 실행
+		자식은 부모껄 다갖고 있어서 부모 = 자식 됌.
+		부모는 자식껄 다갖고  있지않아서 자식 = 부모가 안됌(downcast필요)
+		Upcasting
+			= 자식 객체를 부모 타입 handle에 넣는 것
+			= 자동으로 가능
+			= 안전함
+		Downcasting
+			= 부모 타입 handle을 자식 타입 handle로 변환하는 것
+			= 자동으로 안 됨
+			= $cast로 실제 객체 타입 확인 필요
 	캡슐화(encapsulation) : 데이터 보호 용
 		변수와 함수를 class 안에 묶는 것 = 데이터를 class 내부에 숨기고(외부에서 함부로 못 건드리게 막는 것), 정해진 method로만 접근하게 하는 것
 	추상화(abstraction) : 단순화 용
