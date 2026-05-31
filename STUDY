@@ -127,7 +127,7 @@ UVM 구조
 	test는 env를 만들고, 어떤 sequence를 돌릴지 결정하는 최상위 UVM class
 	나 아직 테스트 중이야 → raise_objection
 	테스트 끝났어 → drop_objection
-	1)sequence_item -> uvm_sequence_item (transaction)
+	1)sequence_item -> uvm_sequence_item
 		DUT_seq_item 하나 = DUT에 보낼 명령 하나.
 		convert2string()은 로그 찍을 때 보기 좋게 문자열로 바꾸는 함수.
 	2)Sequence -> uvm_sequence #(*_seq_item)
@@ -150,12 +150,12 @@ UVM 구조
 	agt.mon.ap.connect(cov.analysis_export); -> ap와 scoreboard, coverage를 연결해주는 역할.
 	1)Scoreboard -> uvm_scoreboard
 		기대값과 실제값 비교
-		uvm_analysis_imp #(ram_seq_item, ram_scoreboard) ap_imp; (imp = 실제 도착지)
+		uvm_analysis_imp #(*_seq_item, *_scoreboard) ap_imp; (imp = 실제 도착지)
 	2)Coverage -> uvm_subscriber #(ram_seq_item)
 		“테스트가 얼마나 다양한 경우를 건드렸는가”
 		agt.mon.ap.connect(cov.analysis_export); (export = 중간입구) 
 6. Agent -> uvm_agent (Sequencer, Driver, Monitor)
-	1)Driver -> uvm_driver #(ram_seq_item)
+	1)Driver -> uvm_driver #(*_seq_item)
 		driver는 sequence_item을 sequencer로부터 받아서 interface 신호로 바꿔서 DUT에 갈 수 있게 하는 역할.
 		driver에서는 item을 직접 만들지 않고, sequence에서 만든 item을 가져옴. (spi_seq_item item;  seq_item_port.get_next_item(item);)
 		virtual *_if *_if; 필수.
