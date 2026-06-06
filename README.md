@@ -18,7 +18,7 @@ The `AXI` folder contains AXI-Lite peripheral wrapper and integration study mate
 | `APB_RAM` | APB-based RAM verification using UVM | APB setup/access phase, `PREADY` wait, write/read data comparison |
 | `SPI` | SPI RTL design and UVM verification | Master/slave RTL design, random 8-bit transfer, data matching, and two-board Basys3 test |
 | `I2C` | I2C RTL design and UVM verification | Master/slave RTL design, START/STOP/ACK check, data matching, and two-board Basys3 test |
-| `AXI` | AXI-Lite peripheral wrapper and study | Memory-mapped register interface and peripheral integration |
+| `AXI` | AXI-Lite peripheral wrapper and Vitis test | Vivado-generated processor system, memory-mapped register access, and peripheral integration |
 
 ---
 
@@ -59,7 +59,7 @@ The scoreboard compares the expected data with the actual DUT output and checks 
 | APB RAM | APB SETUP/ACCESS phase driving, `PREADY` wait, and `PRDATA` comparison using reference memory |
 | SPI | SPI master/slave RTL design, random 8-bit transfer, `start` control, `slave_done` capture, TX/RX data matching, and two-board Basys3 test |
 | I2C | I2C master/slave RTL design, START → address write → data write → STOP sequence, ACK check, received-data comparison, and two-board Basys3 test |
-| AXI | AXI-Lite slave register wrapper and memory-mapped peripheral integration study |
+| AXI | AXI-Lite wrapper, Vivado-generated processor system, Vitis C code test, and memory-mapped peripheral access |
 
 ---
 
