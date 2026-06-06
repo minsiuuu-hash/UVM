@@ -16,8 +16,8 @@ The `AXI` folder contains AXI-Lite peripheral wrapper and integration study mate
 | `UART` | UART verification using UVM | Random 8-bit UART transaction, serial bit driving, TX/RX data comparison |
 | `UART2` | Additional UART verification project | UART transaction and interface-based verification |
 | `APB_RAM` | APB-based RAM verification using UVM | APB setup/access phase, `PREADY` wait, write/read data comparison |
-| `SPI` | SPI protocol verification using UVM | Random 8-bit SPI transfer, master transmit, slave receive data matching |
-| `I2C` | I2C protocol verification using UVM | START/address write/data write/STOP sequence, ACK check, data matching |
+| `SPI` | SPI RTL design and UVM verification | Master/slave RTL design, random 8-bit transfer, data matching, and two-board Basys3 test |
+| `I2C` | I2C RTL design and UVM verification | Master/slave RTL design, START/STOP/ACK check, data matching, and two-board Basys3 test |
 | `AXI` | AXI-Lite peripheral wrapper and study | Memory-mapped register interface and peripheral integration |
 
 ---
@@ -57,8 +57,8 @@ The scoreboard compares the expected data with the actual DUT output and checks 
 | RAM | Random sequence, write-read sequence, full address sweep, and reference memory based read-data comparison |
 | UART | UART start/data/stop bit driving using fixed bit period and TX/RX data comparison |
 | APB RAM | APB SETUP/ACCESS phase driving, `PREADY` wait, and `PRDATA` comparison using reference memory |
-| SPI | Random 8-bit SPI transfer, `start` control, `slave_done` capture, and TX/RX data matching |
-| I2C | START → address write → data write → STOP sequence, ACK check, and received-data comparison |
+| SPI | SPI master/slave RTL design, random 8-bit transfer, `start` control, `slave_done` capture, TX/RX data matching, and two-board Basys3 test |
+| I2C | I2C master/slave RTL design, START → address write → data write → STOP sequence, ACK check, received-data comparison, and two-board Basys3 test |
 | AXI | AXI-Lite slave register wrapper and memory-mapped peripheral integration study |
 
 ---
@@ -115,39 +115,56 @@ The scoreboard stores write data into a reference memory and compares read data 
 
 ---
 
-## SPI Verification
+## SPI RTL Design and Verification
 
 SPI is a synchronous serial communication protocol using `SCLK`, `MOSI`, `MISO`, and `CS` signals.
 
-The SPI UVM testbench generates random 8-bit transmit data.  
-The driver sends the data through the SPI master using the `start` signal.  
-The monitor captures transmit data and received slave data, and the scoreboard compares them.
+In this project, the SPI master and slave RTL modules were designed and verified.  
+The RTL design was implemented to transfer 8-bit data serially between master and slave using SPI signals.
+
+The SPI operation was first verified through a SystemVerilog UVM-based testbench.  
+The UVM testbench generates random 8-bit transmit data, drives the SPI master using the `start` signal, and monitors the received slave data.  
+The scoreboard compares the transmitted data and received data to check whether the SPI transfer works correctly.
+
+After simulation, the SPI communication was also tested on hardware using two Basys3 FPGA boards.  
+One board was used as the SPI master, and the other board was used as the SPI slave.  
+The data transfer between the two boards was checked to verify that the SPI RTL design works correctly on real hardware.
 
 | Verification Item | Description |
 |---|---|
+| RTL Design | Designed SPI master and slave modules |
 | Random Transaction | Generates randomized 8-bit SPI data |
 | Master Transfer | Sends data using `start` control |
-| Receive Capture | Captures received data when `slave_done` is asserted |
+| Slave Receive | Receives serial data from SPI master |
 | Scoreboard | Compares transmitted data and received data |
 | Coverage | Checks important TX data patterns and data ranges |
+| Board Test | Verified SPI communication using two Basys3 boards |
 
 ---
 
-## I2C Verification
+## I2C RTL Design and Verification
 
 I2C is a two-wire serial communication protocol using `SCL` and `SDA`.
 
-The I2C UVM testbench verifies write transaction behavior.  
+In this project, the I2C master and slave RTL modules were designed and verified.  
+The RTL design was implemented to transfer data using start condition, slave address, write data, ACK response, and stop condition.
+
+The I2C operation was first verified through a SystemVerilog UVM-based testbench.  
 The driver performs the transaction sequence using START, address write, data write, and STOP.  
-The driver also checks ACK response after write operation.  
-The monitor captures written data and slave received data, and the scoreboard compares them.
+The driver also checks the ACK response after the write operation.  
+The monitor captures the transmitted data and slave received data, and the scoreboard compares them.
 
 ```text
 START → WRITE(address + W) → WRITE(random data) → STOP
 ```
 
+After simulation, the I2C communication was also tested on hardware using two Basys3 FPGA boards.  
+One board was used as the I2C master, and the other board was used as the I2C slave.  
+The data transfer and ACK response between the two boards were checked to verify that the I2C RTL design works correctly on real hardware.
+
 | Verification Item | Description |
 |---|---|
+| RTL Design | Designed I2C master and slave modules |
 | START Condition | Starts I2C transaction |
 | Address Write | Sends slave address with write bit |
 | Data Write | Sends randomized 8-bit data |
@@ -155,6 +172,7 @@ START → WRITE(address + W) → WRITE(random data) → STOP
 | STOP Condition | Ends I2C transaction |
 | Scoreboard | Compares transmitted data and received slave data |
 | Coverage | Checks important TX data patterns and data ranges |
+| Board Test | Verified I2C communication using two Basys3 boards |
 
 ---
 
@@ -177,7 +195,7 @@ This part focuses on understanding AXI-Lite peripheral integration rather than a
 
 ## Results
 
-Each project includes verification-related results such as simulation results, coverage results, timing results, or reports.
+Each project includes verification-related results such as simulation results, coverage results, timing results, reports, and hardware test results.
 
 | Result Folder | Description |
 |---|---|
@@ -185,6 +203,10 @@ Each project includes verification-related results such as simulation results, c
 | `Coverage_verdi` | Coverage result checked using Verdi |
 | `Timing` | Timing-related result |
 | `report` | Verification or synthesis report |
+
+For SPI and I2C, the RTL designs were also verified on hardware using two Basys3 FPGA boards.  
+One board operated as the master, and the other board operated as the slave.  
+The board-level test was performed to check whether the designed communication protocol works correctly in real FPGA hardware.
 
 ---
 
