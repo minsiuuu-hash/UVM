@@ -19,7 +19,6 @@ The `AXI` folder contains AXI-Lite peripheral wrapper and integration study mate
 | `SPI` | SPI protocol verification using UVM | Random 8-bit SPI transfer, master transmit, slave receive data matching |
 | `I2C` | I2C protocol verification using UVM | START/address write/data write/STOP sequence, ACK check, data matching |
 | `AXI` | AXI-Lite peripheral wrapper and study | Memory-mapped register interface and peripheral integration |
-| `STUDY` | UVM study materials | Basic UVM structure and practice examples |
 
 ---
 
