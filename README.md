@@ -178,6 +178,9 @@ The data transfer and ACK response between the two boards were checked to verify
 
 ## AXI-Lite Peripheral Study
 
+Unlike the previous RISC-V project, where peripherals were connected to a custom RISC-V CPU, this AXI project used a Vivado-generated processor system and AXI-Lite wrapper.  
+The custom peripheral registers were accessed from Vitis C code through memory-mapped I/O.
+
 The `AXI` folder contains AXI-Lite based peripheral wrapper and integration materials.
 
 The AXI peripheral files include memory-mapped slave register interfaces and AXI-Lite channels for write address, write data, write response, read address, and read data.  
