@@ -17,7 +17,6 @@ The main goal of this repository is to build reusable UVM testbench structures a
 | `SPI` | SPI protocol verification using UVM | Master/slave serial transfer and data matching |
 | `I2C` | I2C protocol verification using UVM | Start/stop condition, data transfer, and ACK check |
 | `AXI` | AXI-based peripheral verification | AXI handshake, address/data transfer, and peripheral access |
-| `STUDY` | UVM study materials | Basic UVM structure and practice examples |
 
 ---
 
