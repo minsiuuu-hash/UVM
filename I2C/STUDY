@@ -2,7 +2,7 @@ I2C (Inter-Integrated-Circuit)
   Philips에서 개발
   동기식 직렬 통신 프로토콜
   1:N 연결
-  풀업 저항이 연결된 직렬 데이터(SDA)와 직렬 클럭(SCL)이라는 두개의 양방향 오픈 컬렉터 라인을 사용함.
+  풀업(Pull-Up) 저항이 연결된 직렬 데이터(SDA)와 직렬 클럭(SCL)이라는 두개의 양방향 오픈 컬렉터 라인을 사용함.
   데이터 방향이 한 방향으로 정해져있음(데이터 선 한개, SDA). master > slave, slave > master. 동시에 불가.
 
 100MHz 시스템 clk을기준으로 100Khz I2C 기준 clk을 만듦.
@@ -12,9 +12,10 @@ NACK = Not Acknowledge
 
 ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트 값으로 총 8비트
 DATA를 보낼때는 8비트의 데이터값 + ACK/NACK 1비트 값으로 총 9비트
+
 WRITE일 경우
   Master가 SDA를 제어하고 Slave가 읽는다.
-  하지만 ACK를 보낼 때는 Slave가 제어함.
+  하지만 ACK를 보낼 때는 Slave가 SDA를 제어함.
   slave가 값을 줌 : ACK(0) = 수신 확인 응답. NACK(1) = Slave가 값을 제대로 받지 못했거나 응답을 안했다라는 의미.
 READ일 경우
   Slave가 SDA를 제어하고 Master가 읽는다.
