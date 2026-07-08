@@ -30,8 +30,13 @@ ack_in
   read 후 마스터가 슬레이브에게 줄 ACK/NACK를 외부에서 넣어주는 신호
 
 
-write 상태일때는 sda_r값을 0으로 받아서 output이 0이 되어서 입출력이 둘다 가능. 
-read 상태일때는 sda_r값을 1로 받아서 output이 high-impedence가 되어 open circuit이 됌. 따라서 read만 가능. 
+write 상태에서 보낼 data bit가 0이면 SDA를 0으로 drive한다.
+보낼 data bit가 1이면 SDA를 release해서 pull-up에 의해 1이 되게 한다.
+즉 I2C에서는 1을 직접 출력하지 않고, release로 표현한다.
+
+read 상태에서는 Master가 SDA를 release하여 high-impedance 상태로 두고,
+Slave가 SDA를 0으로 당기거나 release하는 값을 Master가 읽는다.
+
 MSB First로, shift_reg구조를 활용함. 값을 저장하고, shift함.
 
 Repeated START 장점
