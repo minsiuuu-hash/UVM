@@ -29,13 +29,6 @@ ack_out
 ack_in
   read 후 마스터가 슬레이브에게 줄 ACK/NACK를 외부에서 넣어주는 신호
 
-Master 각 state별 내용.
-  IDLE = 아무것도 안 함. 버스 유휴 상태. SCL=1, SDA=1
-  START = START condition 생성
-  WAIT_CMD = 다음 명령 기다림, 여기서 write/read/stop/start 중 하나를 받음
-  DATA = 8비트 데이터를 실제로 주고받음(write/read)
-  DATA_ACK = 9번째 clock bit에서 ACK 처리
-  STOP = STOP condition 생성
 
 write 상태일때는 sda_r값을 0으로 받아서 output이 0이 되어서 입출력이 둘다 가능. 
 read 상태일때는 sda_r값을 1로 받아서 output이 high-impedence가 되어 open circuit이 됌. 따라서 read만 가능. 
@@ -47,6 +40,58 @@ Repeated START 장점
   레지스터 읽기 같은 표준 I2C 동작 구현 가능
   슬레이브 내부 상태 유지에 유리
 
+----------------------------------------------------------------------------------------------------------------------------
+Master 각 state별 내용.
+
+  IDLE
+    버스 유휴 상태. SCL과 SDA를 release해서 둘 다 HIGH 상태를 유지함.
+    SCL=1, SDA=1 상태에서 START 명령이 들어오면 START 상태로 이동.
+
+  START
+    START condition을 생성함.
+    SCL이 High일 때 SDA를 1→0으로 떨어뜨리면 START로 판단됨.
+    START 생성 후 WAIT_CMD 상태로 이동.
+
+  WAIT_CMD
+    다음 명령을 기다리는 상태.
+    여기서 write/read/stop/start 중 하나를 받음.
+    write 명령이면 DATA 상태로 이동해서 데이터를 전송함.
+    read 명령이면 DATA 상태로 이동해서 데이터를 수신함.
+    stop 명령이면 STOP 상태로 이동.
+    start 명령이면 다시 START 상태로 이동해서 repeated START를 생성함.
+
+  DATA
+    실제 8비트 데이터를 송수신하는 상태.
+    write 명령이면 master가 SDA를 제어해서 tx_data를 전송함.
+    data bit가 0이면 master가 SDA를 0으로 당김.
+    data bit가 1이면 master가 SDA를 release해서 pull-up에 의해 1이 되게 함.
+    read 명령이면 master는 SDA를 release하고 slave가 보내는 데이터를 읽음.
+    데이터는 보통 MSB first로 bit7부터 bit0까지 전송함.
+    DATA 전송 중에는 SCL이 Low일 때 SDA 값을 바꾸고, SCL이 High일 때 SDA 값을 샘플링함.
+    8비트 송수신이 끝나면 DATA_ACK 상태로 이동.
+
+  DATA_ACK
+    데이터 8비트 전송 후 9번째 clock에서 ACK/NACK를 처리하는 상태.
+    write 동작일 때는 master가 데이터를 보낸 쪽이므로 master는 SDA를 release하고 slave의 ACK를 읽음.
+    slave가 SDA를 0으로 당기면 ACK, slave가 SDA를 release하면 pull-up에 의해 1이 되어 NACK로 판단함.
+    read 동작일 때는 master가 데이터를 받은 쪽이므로 master가 ACK/NACK를 보냄.
+    master가 SDA를 0으로 당기면 ACK로 다음 byte를 계속 읽겠다는 의미이고, SDA를 release하면 NACK로 read를 종료하겠다는 의미임.
+    ACK 처리가 끝나면 WAIT_CMD 상태로 이동해서 다음 명령을 기다림.
+
+  STOP
+    STOP condition을 생성함.
+    SCL이 High일 때 SDA를 0→1로 올리면 STOP으로 판단됨.
+    STOP 생성 후 버스는 다시 SCL=1, SDA=1의 유휴 상태가 되고 IDLE 상태로 돌아감.
+
+  핵심 정리.
+    IDLE     : 버스 유휴 상태. SCL=1, SDA=1
+    START    : SCL=1일 때 SDA 1→0
+    WAIT_CMD : write/read/stop/start 명령 대기
+    DATA     : 8비트 송수신. SCL Low에서 SDA 변경, SCL High에서 샘플링
+    DATA_ACK : 8비트 이후 9번째 clock에서 ACK/NACK 처리
+    STOP     : SCL=1일 때 SDA 0→1
+
+----------------------------------------------------------------------------------------------------------------------------
 Slave 각 state별 내용.
   IDLE
     버스 유휴 상태. SDA를 release하고 START condition을 기다림.
