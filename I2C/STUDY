@@ -5,7 +5,7 @@ I2C (Inter-Integrated-Circuit)
   풀업(Pull-Up) 저항이 연결된 직렬 데이터(SDA)와 직렬 클럭(SCL)이라는 두개의 양방향 오픈 컬렉터 라인을 사용함.
   데이터 방향이 한 방향으로 정해져있음(데이터 선 한개, SDA). master > slave, slave > master. 동시에 불가.
 
-Pull-Up 저항 -> Z값이면 1의 값임
+Pull-Up 저항이 있기 때문에, 아무도 SDA/SCL을 0으로 당기지 않고 Z로 release하면 실제 버스 전압은 1이 된다.
 
 100MHz 시스템 clk을기준으로 100Khz I2C 기준 clk을 만듦.
 
