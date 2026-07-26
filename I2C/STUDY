@@ -15,6 +15,9 @@ NACK = Not Acknowledge
 ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트 + ACK/NACK으로 총 9비트
 DATA를 보낼때는 8비트의 데이터값 + ACK/NACK 1비트 값으로 총 9비트
 
+SDA는 SCL이 LOW일때 값 변환
+SCL이 HIGH일때는 샘플링
+
 WRITE일 경우
   Master가 SDA를 제어하고 Slave가 읽는다.
   하지만 ACK를 보낼 때는 Slave가 SDA를 제어함.
