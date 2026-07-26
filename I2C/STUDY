@@ -121,8 +121,9 @@ Slave 각 state별 내용.
     8비트 송수신이 끝나면 DATA_ACK 상태로 이동.
   DATA_ACK
     데이터 8비트 전송 후 9번째 clock에서 ACK를 처리하는 상태.
-    rw_flag=0, master write일 때는 slave가 수신자이므로 slave가 ACK를 보냄.
-    rw_flag=1, master read일 때는 master가 수신자이므로 slave는 SDA를 release하고 master의 ACK/NACK를 읽음.
+    rw_flag = 0 → Master Write → Master가 데이터 전송 → Slave가 데이터 수신 후 ACK 전송
+    rw_flag = 1 → Master Read → Slave가 데이터 전송 → Master가 데이터 수신 후 ACK/NACK 전송
+
     master가 ACK를 보내면 다음 byte를 계속 전송하고, NACK를 보내면 STOP 상태로 이동.
   STOP
     STOP condition을 기다리는 상태.
