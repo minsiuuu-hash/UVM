@@ -27,11 +27,15 @@ OOP (Object Oriented Programing)
 			= 다형성과 직접 관련 있음
 			= 부모 function에 virtual 필요
 			→ 만들어진 객체의 실제 타입에 맞는 함수가 호출되게 함
-		ex) packet p; -> 부모에는 transmit(); 함수가 실행되면, $display("normal packet transmit"); 이 구문을 실행함.
-			p = new uart_packet(); 
-			p.transmit();   // $display("UART packet transmit"); 실행
-			p = new spi_packet();
-			p.transmit();   // $display("SPI packet transmit"); 실행
+		ex) uart_packet = parent, uart_error_packet = child 일 경우 아래 코드가 예시.
+				uart_packet       base_handle;
+				uart_error_packet child_object;
+				child_object = uart_error_packet::type_id::create("child_object");
+				child_object.data  = 8'h55;
+				child_object.error = 1'b1;
+				base_handle = child_object;
+				base_handle.print_info();
+				base_handle은 부모 개체인데, base_handle의 print_info()를 실행하는게 아니라 실제로 실행되는거는 child_object.print_info()가 실행됌.
 		자식은 부모껄 다갖고 있어서 부모 = 자식 됌.
 		부모는 자식껄 다갖고  있지않아서 자식 = 부모가 안됌(downcast필요)
 		Upcasting
