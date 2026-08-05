@@ -68,8 +68,8 @@ factory가 중요한 이유 = UVM에서 “객체를 누가 만들지”를 중�
 	2. 그 class를 어떻게 create 해야 하는지
 	3. 어떤 class를 다른 class로 override할지
 	`uvm_object_utils(my_item) -> my_item이라는 class를 factory에 등록
-	my_item::type_id 생성(Proxy)
-	my_item::get_type() 같은 함수 제공
+	my_item::type_id::create() 객체 생성
+	my_item::get_type() -> Override 설정에 사용
 	factory 등록 = 객체 생성 X
 	factory 등록 = 나중에 객체를 만들 수 있게 class 정보를 알려줌
 
