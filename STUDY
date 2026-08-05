@@ -112,8 +112,11 @@ race condtion 조심사항.
 
 Assertion = 설계가 반드시 지켜야 할 조건이나 시간적 규칙을 선언하고, 위반하면 즉시 오류를 발생시키는 검증 코드
 		장점 : 일반적으로 입력과 결과만 보는데, 중간에 잘못되었다가 정상으로 돌아온경우는 캐치하지 못함. 하지만 Assertion은 내부 또는 인터페이스 신호를 매 클럭 검사해서 오류가 발생한 정확한 클럭과 규칙을 알 수 있다.
-Immediate Assertion(현재 순간의 조건 검사)
+Immediate Assertion(현재 순간의 조건 검사) = procedural block이나 클래스 내부에서 사용
+	ex) assert (req.randomize()); = Transaction randomize가 성공했는가?
 Concurrent Assertion(여러 클럭에 걸친 시간적 관계 검사)
+	ex) assert property ( @(posedge clk) req |-> ack ); = 클럭 상승 에지에서 req가 1이면 같은 시점에 ack도 1이어야 한다.
+		assert property ( @(posedge clk) req |=> ack ); = req가 발생하면 다음 클럭에 ack가 발생해야 한다.
 
 RAL(Register Abstraction Layer) = 레지스터 추상화 계층
 	DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
