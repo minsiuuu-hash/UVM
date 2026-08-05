@@ -213,10 +213,10 @@ phase = UVM testbench가 동작하는 순서표
 	report_phase  : 결과 출력
 
 component를 생성할 때
-  ex)
-    drv = uart_driver::type_id::create("drv", this);
-    mon = uart_monitor::type_id::create("mon", this);
-    sqr = uvm_sequencer#(uart_seq_item)::type_id::create("sqr", this);
+	ex) drv = uart_driver::type_id::create("drv", this);
+		mon = uart_monitor::type_id::create("mon", this);
+    	sqr = uvm_sequencer#(uart_seq_item)::type_id::create("sqr", this);
+
 item을 생성할 때
   ex) item = uart_seq_item::type_id::create("item");
 
