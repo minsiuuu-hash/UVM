@@ -112,6 +112,13 @@ race condtion 조심사항.
 
 Assertion은 설계가 정해진 조건이나 시간적 동작 규칙을 만족하는지 자동으로 검사하고, 위반 시 error를 발생시키는 검증 기능이다. 주로 property를 이용해 작성한다.(SVA)
 
+RAL(Register Abstraction Layer) = 레지스터 추상화 계층
+	DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
+
+
+
+
+
 UVM 구조
 1. DUT
 	RTL file(HW Code)
