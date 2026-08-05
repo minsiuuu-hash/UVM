@@ -114,6 +114,8 @@ Assertion은 설계가 정해진 조건이나 시간적 동작 규칙을 만족�
 
 RAL(Register Abstraction Layer) = 레지스터 추상화 계층
 	DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
+	구조
+		uvm_reg_field → 레지스터의 개별 필드, uvm_reg → 레지스터 하나, uvm_reg_block → 여러 레지스터를 묶은 블록, uvm_reg_map → 레지스터 주소 관리, uvm_reg_adapter → RAL 접근을 APB/AXI 트랜잭션으로 변환
 
 
 
