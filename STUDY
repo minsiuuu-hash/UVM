@@ -52,9 +52,11 @@ CLASS = 동적개체 (소프트웨어)
 	this. = 현재 객체 자기 자신을 가리키는 handle (이름이 겹칠 때 구분하려고 사용)
 Interface, Module = 정적개체 (하드웨어)
 
-new() = 생성자이며, class 설계도를 바탕으로 실제 객체를 메모리에 생성하는 함수. (리모콘으로 조종할수있는 TV를 만드는것), (객체를 만드는 함수라 virtual 안붙힘)
+new() = 생성자이며, class 설계도를 바탕으로 실제 객체를 메모리에 생성하는 함수. (리모콘으로 조종할수있는 TV를 만드는것), (객체를 만드는 함수라 virtual 안붙힘), (SystemVerilog 자체의 객체 생성 기능)
 handle = 객체를 가르킬수있는 것. (리모컨을 만드는것)
 그래서 transaction tr;을 한 후에, tr = new();를 해야함.
+
+super.new() = 부모 클래스의 생성자 호출
 
 Factory(new() 대신 type_id::create() 사용)
 = 객체 생성을 factory에 맡김
