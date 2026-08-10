@@ -1,11 +1,118 @@
 SYSTEM VERILOG  - 검증용(Verification)
+기초내용
+1. logic / bit
+   logic = 4-state → 0, 1, X, Z 표현 가능
+   bit   = 2-state → 0, 1만 표현 가능
+   - RTL 신호는 보통 logic 사용
+   - X/Z 상태까지 확인해야 할 때 logic이 유리
+   - 단순 플래그나 TB 변수는 bit를 쓰기도 함
 
-VERILOG > SYSTEM VERILOG
-reg , wire > logic(4state)
-bit(1state)  > bit(2state) 시뮬레이션 용, resource 감소, 사실 logic 써도됌.
-always @(posedge clk) > always_ff@(posedge clk)		순차회로
-always (*) > always_comb(*) 						조합회로
+   ex)
+   logic [7:0] data;   // 8bit, X/Z 가능
+   bit   [7:0] flag;   // 8bit, 0/1만 가능
 
+2. typedef / enum
+   enum    = 특정 값들에 이름을 붙여서 사용
+   typedef = 새로운 타입 이름을 만들어 사용
+
+   ex)
+   typedef enum logic [1:0] {
+       IDLE,
+       TEST,
+       START
+   } state_e;
+
+   state_e current_state;
+   → IDLE=00, TEST=01, START=10처럼 자동 할당
+   → current_state는 2bit 상태값을 가지는 변수
+
+   장점:
+   2'b00, 2'b01처럼 숫자로 쓰는 것보다
+   IDLE, TEST처럼 이름으로 써서 가독성이 좋음
+
+3. Packed / Unpacked
+   Packed   = 변수 이름 앞에 [ ]
+   Unpacked = 변수 이름 뒤에 [ ]
+
+   logic [7:0] data;
+   → Packed
+   → 8개의 bit가 하나의 8bit 데이터로 묶임
+   → data[3], data[7:4]처럼 bit 단위 접근 가능
+
+   logic data [0:7];
+   → Unpacked
+   → 1bit짜리 logic 데이터가 8개 존재하는 배열
+
+   logic [7:0] mem [0:255];
+   → 8bit짜리 데이터가 256개 존재
+   → 앞 [7:0] = 한 원소의 크기
+   → 뒤 [0:255] = 원소의 개수
+
+4. Loop
+   for     → 반복 횟수가 정해져 있을 때
+   foreach → 배열의 모든 원소를 순회할 때
+   repeat  → 특정 동작을 N번 반복할 때
+   forever → 계속 무한 반복할 때
+   while   → 조건이 참인 동안 반복
+
+   ex)
+   for (int i=0; i<8; i++)
+       data[i] = 0;
+
+   foreach (array[i])
+       $display("%d", array[i]);
+
+   repeat (10)
+       @(posedge clk);
+
+   forever begin
+       @(posedge clk);
+   end
+
+   while (count < 10)
+       count++;
+
+   - for      : RTL/TB 둘 다 많이 사용
+   - foreach  : 배열 처리, 특히 TB/UVM에서 편함
+   - repeat   : TB에서 클럭 N번 기다릴 때 편함
+   - forever  : UVM Driver/Monitor에서 자주 사용
+
+5. Associative Array
+   → 필요한 index만 생성해서 사용하는 배열
+   → 일반 배열처럼 index가 연속일 필요가 없음
+
+   ex)
+   byte data[int];
+
+   data[3]   = 10;
+   data[100] = 20;
+   data[500] = 30;
+
+   → 실제 존재하는 원소는
+     data[3], data[100], data[500] 3개뿐
+
+   문자열을 index로 사용할 수도 있음
+
+   byte opcode[string];
+
+   opcode["ADD"] = 10;
+   opcode["SUB"] = 20;
+
+   주요 함수:
+   data.num()         → 현재 원소 개수
+   data.first(index)  → 첫 번째 index 찾기
+   data.next(index)   → 다음 index 찾기
+
+   순회할 때는 보통
+   foreach (data[i])
+       ...
+   형태가 편함
+
+   → TB/UVM에서 ID별 데이터 저장,
+     scoreboard 데이터 관리 등에 유용
+
+
+--------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
   표준화된 검증 방법론
 OOP (Object Oriented Programing) 
