@@ -200,6 +200,15 @@ CLASS = 동적개체 (소프트웨어)
 	this. = 현재 객체 자기 자신을 가리키는 handle (이름이 겹칠 때 구분하려고 사용)
 Interface, Module = 정적개체 (하드웨어)
 
+Class 타입
+1. 다른 class를 가져올때 handle를 생성해줘야함.
+2. 다른 Class를 받을 때, new() 필요하다. 안쓰면 null값이 됌.
+   Constructor의 이름은 반드시 new이여야함.   constructor =  function new() -- endfunction 
+3. class에서 interface에 접근하려면 virtual interface로 받아야 한다.
+	이유
+	class는 정적 하드웨어 신호를 직접 가질 수 없음
+	그래서 interface의 “참조”를 받아야 함
+
 new() = 생성자이며, class 설계도를 바탕으로 실제 객체를 메모리에 생성하는 함수. (리모콘으로 조종할수있는 TV를 만드는것), (객체를 만드는 함수라 virtual 안붙힘), (SystemVerilog 자체의 객체 생성 기능)
 handle = 객체를 가르킬수있는 것. (리모컨을 만드는것)
 그래서 transaction tr;을 한 후에, tr = new();를 해야함.
@@ -232,15 +241,6 @@ Singleton
 = 객체 하나만 만들고 전역에서 공유
 = 전역 관리자에 중요
 = 예: uvm_root, factory manager, resource/config 계열
-
-Class 타입
-1. 다른 class를 가져올때 handle를 생성해줘야함.
-2. 다른 Class를 받을 때, new() 필요하다. 안쓰면 null값이 됌.
-   Constructor의 이름은 반드시 new이여야함.   constructor =  function new() -- endfunction 
-3. class에서 interface에 접근하려면 virtual interface로 받아야 한다.
-	이유
-	class는 정적 하드웨어 신호를 직접 가질 수 없음
-	그래서 interface의 “참조”를 받아야 함
 
 race condtion 조심사항.
 	fork/join 결은 프로세스들을 동시에 시작시켜주지만, event를 활용해서 순서를 제어할수있음.
@@ -277,7 +277,7 @@ UVM 구조
  		출력은 DUT와 충돌하지 않게 늦게 구동
 		EX) input  #1 : clock edge보다 1 time unit 전에 샘플링
 			output #1 : clock edge보다 1 time unit 후에 구동
-	monport
+	modport
 		interface의 신호 방향과 접근 권한을 사용자별로 정의하며, 잘못된 신호 구동을 방지하고 역할을 명확히 한다.
 		DUT, driver, monitor 등의 역할에 따라 신호 접근 방향을 제한하여, 검증 설계자의 실수로 monitor가 신호를 구동하거나 DUT 출력을 driver가 덮어쓰는 것을 방지한다.
 3. TestBench(tb_*.sv, HW)
