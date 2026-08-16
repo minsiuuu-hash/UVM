@@ -272,20 +272,28 @@ Mailbox
 7. Coverage (중요!!!!!!!!!!!!!)
 Code Coverage => 기술된 DUT의 코드가 얼마나 실행되고 테스트되었는지 확인 (RTL 코드를 얼마나 테스트 했는가?)
 Functional Coverage => Specification에 정의된 기능과 시나리오가 얼마나 테스트되었는지 확인 (검증해야 할 기능을 얼마나 테스트했는가?)
-(1) CoverGroup(Coverage Model 전체를 정의하는 단위)
-	covergroup ~ endgroup으로 사용하며, 2 state만 가능.
-	new()로 생성해서 사용
-(2) Coverpoint(어떤 변수의 값이 테스트되었는지 확인할지 지정)
-	coverpoint addr이면 addr이 4비트라면, 0~15까지 얼마나 발생했는지 Coverage로 측정가능.
-(3) Bins(Coverpoint의 값들을 Coverage 측정 단위로 나눈 것)
-	- 검증자가 직접 지정가능
-	- 자동 가능
-	- ignore_bins / illegal_bins처럼 필요없는 값들과 나오면 안되는 값들을 지정 가능.
-	- 특정값이 변화가 생겼는 지도 지정 가능 (ex. 0 => 1)
-	- wildcard, with를 사용해서 유연하게 가능.
-(4) Cross Coverage (두 개 이상의 Coverpoint 조합을 검사)
-	- 각각의 값은 테스트했더라도 특정 조합을 테스트하지 않았을 수 있기 때문에 사용
-(5) Sampling (변수 값이 변할 때마다 무조건 측정하는 것이 아니라 정해진 Sampling 시점에 값을 확인한다)
+(1) CoverGroup
+    - Coverage Model 전체를 정의하는 단위
+    - covergroup ~ endgroup으로 정의
+    - new()로 객체를 생성하여 사용
+(2) Coverpoint
+    - 어떤 변수/값을 Coverage 대상으로 볼 것인지 지정
+    - ex) coverpoint addr
+      addr가 4bit라면 0~15 값의 발생 여부를 Coverage로 측정 가능
+(3) Bins
+    - Coverpoint의 값들을 Coverage 측정 단위로 나눈 것
+    - 검증자가 직접 범위를 지정하거나 자동 생성 가능
+    - ignore_bins : Coverage에서 제외할 값
+    - illegal_bins : 나오면 안 되는 값
+    - Transition bins : 특정 값의 변화 측정 (ex. 0 => 1)
+    - wildcard, with 등을 사용하여 원하는 조건으로 구성 가능
+(4) Cross Coverage
+    - 두 개 이상의 Coverpoint 조합을 검사
+    - 각각의 값은 테스트했더라도 특정 조합은 테스트하지 않았을 수 있기 때문에 사용
+(5) Sampling
+    - 변수 값이 변할 때마다 무조건 측정하는 것이 아니라
+      정해진 Sampling 시점의 값을 Coverage에 반영
+    - Event 또는 sample()을 사용
 --------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
   표준화된 검증 방법론
