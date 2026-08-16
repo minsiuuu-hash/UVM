@@ -285,6 +285,7 @@ Functional Coverage => Specification에 정의된 기능과 시나리오가 얼�
 	- wildcard, with를 사용해서 유연하게 가능.
 (4) Cross Coverage (두 개 이상의 Coverpoint 조합을 검사)
 	- 각각의 값은 테스트했더라도 특정 조합을 테스트하지 않았을 수 있기 때문에 사용
+(5) Sampling (변수 값이 변할 때마다 무조건 측정하는 것이 아니라 정해진 Sampling 시점에 값을 확인한다)
 --------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
   표준화된 검증 방법론
