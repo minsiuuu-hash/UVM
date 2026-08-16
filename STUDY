@@ -278,7 +278,10 @@ Functional Coverage => Specification에 정의된 기능과 시나리오가 얼�
 (2) Coverpoint(어떤 변수의 값이 테스트되었는지 확인할지 지정)
 	coverpoint addr이면 addr이 4비트라면, 0~15까지 얼마나 발생했는지 Coverage로 측정가능.
 (3) Bins(Coverpoint의 값들을 Coverage 측정 단위로 나눈 것)
-	사용자가 직접 지정할수도, 자동으로 할수도, ignore_bins / illegal_bins처럼 필요없는 값들과 나오면 안되는 값들을 지정 가능.
+	- 검증자가 직접 지정가능
+	- 자동 가능
+	- ignore_bins / illegal_bins처럼 필요없는 값들과 나오면 안되는 값들을 지정 가능.
+	- 특정값이 변화가 생겼는 지도 지정 가능 (ex. 0 => 1)
 --------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
   표준화된 검증 방법론
