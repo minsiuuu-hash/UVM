@@ -500,6 +500,10 @@ UVM_Component(어디에 소속해있는가)
         super.new(name, parent);
     endfunction
 
+Configuration = testbench 여러 component에 설정값을 전달하기 위한 기능
+	ex) uvm_resource, uvm_resource_db, uvm_config_db
+
+
 #(*_seq_item)이 붙는 class(상속하는 부모 class가 parameterized class)
 	parameterized class = class를 만들 때 안에 들어갈 타입을 나중에 정할 수 있게 만든 class
 	= 특정 transaction type을 주고받는 generic UVM class
