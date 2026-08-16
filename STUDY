@@ -441,7 +441,7 @@ UVM 구조
 		DUT_seq_item 하나 = DUT에 보낼 명령 하나.
 		convert2string()은 로그 찍을 때 보기 좋게 문자열로 바꾸는 함수.
 	2)Sequence -> uvm_sequence #(*_seq_item)
-		sequence는 transaction을 여러 개 만들어서 sequencer에게 보내는 역할
+		Transaction을 어떤 순서/값으로 발생시킬지 결정하는 역할
 		Constraint를 만들어서 신호들을 제어할 수 있으며 Corner Case를 검증하기 쉬움.
 			Explicit 방식(직접 순서처리하는 방식)
 				start_item
@@ -480,10 +480,10 @@ UVM 구조
 		ap.write(item); 연결된 모든 component에 write()함수가 실행됌.
 
 UVM_Object > UVM_report_object > UVM_Component > UVM_Driver > UART_Driver
-UVM_Object > UVM_sequence_item > UART_seq_item
+UVM_Object > UVM_Transaction > UVM_sequence_item > UART_seq_item
 이러한 순서로 왼쪽부터 상위 parent
 
-UVM_Object(무슨 데이터를 가지고 있는가)
+UVM_Object(Hierarchy에 속하지 않는 데이터/동작 객체)
 	일시적으로 생성돼서 transaction/stimulus 역할을 하고, component hierarchy에는 고정으로 박혀 있지 않음(데이터/임시 객체).
 	ex) ram_seq_item, ram_sequence
 	function new(string name = "ram_seq_item");
@@ -510,6 +510,8 @@ Configuration = testbench 여러 component에 설정값을 전달하기 위한 �
 	uvm_resource = 좀 더 일반적인 resource 관리
 	uvm_resource_db
 	uvm_config_db = UVM component configuration에 특화(virtual interface 전달, configuration 값 전달, agent active/passive 설정)
+	uvm_config_db#(virtual ram_if)::set(...);
+	uvm_config_db#(virtual ram_if)::get(...);
 
 Register Modeling
 	RAL = DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
