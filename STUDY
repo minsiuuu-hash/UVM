@@ -1,20 +1,15 @@
 기본적인 검증 흐름
 1. Verification Plan
    => 무엇을 검증할지 계획
-
 2. Verification Method
    => Formal / Simulation / Emulation 등 검증 방법 결정
-
 3. Build Test Environment
    => Testbench(UVM Environment) 구성
-
 4. Broad-range Testing
    => Constrained Random으로 넓은 범위 테스트
-
 5. Corner-case Testing
    => Coverage에서 빠진 부분을 Directed Test나
       좁은 Constraint로 집중 테스트
-
 6. Verification Closure
    => 목표 Coverage를 만족하면 검증 종료
 
