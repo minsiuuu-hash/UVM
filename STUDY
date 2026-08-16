@@ -507,8 +507,8 @@ UVM_Component(어디에 소속해있는가)
 
 Configuration = testbench 여러 component에 설정값을 전달하기 위한 기능
 	ex) 
-	uvm_resource = 좀 더 일반적인 resource 관리
-	uvm_resource_db
+	uvm_resource = 실제 resource(설정 데이터)를 표현
+	uvm_resource_db = resource를 set/get하기 위한 DB 인터페이스
 	uvm_config_db = UVM component configuration에 특화(virtual interface 전달, configuration 값 전달, agent active/passive 설정)
 	uvm_config_db#(virtual ram_if)::set(...);
 	uvm_config_db#(virtual ram_if)::get(...);
