@@ -2,13 +2,7 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
 1. logic / bit
    logic = 4-state → 0, 1, X, Z 표현 가능
    bit   = 2-state → 0, 1만 표현 가능
-   - RTL 신호는 보통 logic 사용
-   - X/Z 상태까지 확인해야 할 때 logic이 유리
-   - 단순 플래그나 TB 변수는 bit를 쓰기도 함
-
-   ex)
-   logic [7:0] data;   // 8bit, X/Z 가능
-   bit   [7:0] flag;   // 8bit, 0/1만 가능
+   - RTL 신호는 보통 logic 사용, X/Z 상태까지 확인해야 할 때 logic이 유리, 단순 플래그나 TB 변수는 bit를 쓰기도 함
 
 2. typedef / enum
    enum    = 특정 값들에 이름을 붙여서 사용
