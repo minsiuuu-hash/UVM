@@ -479,12 +479,24 @@ UVM 구조
 		uvm_analysis_port #(*_seq_item) ap; = monitor가 관찰한 transaction을 다른 component들에게 뿌려주는 방송 포트
 		ap.write(item); 연결된 모든 component에 write()함수가 실행됌.
 
+UVM_Object > UVM_report_object > UVM_Component > UVM_Driver > UART_Driver
+UVM_Object > UVM_sequence_item > UART_seq_item
+이러한 순서로 왼쪽부터 상위 parent
+
 UVM_Object(무슨 데이터를 가지고 있는가)
 	일시적으로 생성돼서 transaction/stimulus 역할을 하고, component hierarchy에는 고정으로 박혀 있지 않음(데이터/임시 객체).
 	ex) ram_seq_item, ram_sequence
 	function new(string name = "ram_seq_item");
         super.new(name);
     endfunction
+
+UVM_report_object
+	UVM의 report 기능
+	ex)
+	`uvm_info(...)
+	`uvm_warning(...)
+	`uvm_error(...)
+	`uvm_fatal(...)
 
 UVM_Component(어디에 소속해있는가) 
 	UVM hierarchy(TestBench의 구조) 안에 들어가고, build_phase, connect_phase, run_phase, report_phase 같은 phase를 가짐(component들이 simulation 구조를 구성).
