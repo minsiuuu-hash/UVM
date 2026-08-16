@@ -189,20 +189,13 @@ event done;
 
 initial begin
     #10;
-    -> done;           // Event 발생
+    -> done;           // Event 발생 : -> event_name
 end
 
 initial begin
-    @(done);           // Event 발생까지 대기
+    @(done);           // Event 발생까지 대기 : @(event_name)
     $display("DONE");
 end
-
-정리)
--> event_name  : Event 발생
-@(event_name)  : Event 발생까지 대기
-
-Event = "작업 끝났어!", "이제 시작해!" 같은 신호 전달
-
 
 (2) Semaphore
 - 여러 Thread가 하나의 공유 자원을 동시에 사용하지 못하도록 접근을 제어한다.
