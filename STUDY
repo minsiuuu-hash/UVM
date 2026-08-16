@@ -22,8 +22,8 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
    - RTL 신호는 보통 logic 사용, X/Z 상태까지 확인해야 할 때 logic이 유리, 단순 플래그나 TB 변수는 bit를 쓰기도 함
 
 2. typedef / enum
-   enum    = 특정 값들에 이름을 붙여서 사용
-   typedef = 새로운 타입 이름을 만들어 사용
+   enum    = 여러 상태값에 이름을 붙여서 사용하는 자료형(FSM에서 자주 사용)
+   typedef = 기존 자료형에 새로운 타입 이름을 붙이는 문법
 
    ex)
    typedef enum logic [1:0] {
