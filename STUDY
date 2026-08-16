@@ -282,6 +282,9 @@ Functional Coverage => Specification에 정의된 기능과 시나리오가 얼�
 	- 자동 가능
 	- ignore_bins / illegal_bins처럼 필요없는 값들과 나오면 안되는 값들을 지정 가능.
 	- 특정값이 변화가 생겼는 지도 지정 가능 (ex. 0 => 1)
+	- wildcard, with를 사용해서 유연하게 가능.
+(4) Cross Coverage (두 개 이상의 Coverpoint 조합을 검사)
+	- 각각의 값은 테스트했더라도 특정 조합을 테스트하지 않았을 수 있기 때문에 사용
 --------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
   표준화된 검증 방법론
