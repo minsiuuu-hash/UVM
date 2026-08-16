@@ -36,10 +36,6 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
    → IDLE=00, TEST=01, START=10처럼 자동 할당
    → current_state는 2bit 상태값을 가지는 변수
 
-   장점:
-   2'b00, 2'b01처럼 숫자로 쓰는 것보다
-   IDLE, TEST처럼 이름으로 써서 가독성이 좋음
-
 3. Packed / Unpacked
    Packed   = 변수 이름 앞에 [ ]
    Unpacked = 변수 이름 뒤에 [ ]
