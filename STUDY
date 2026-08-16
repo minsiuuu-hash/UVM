@@ -276,7 +276,7 @@ Functional Coverage => Specification에 정의된 기능과 시나리오가 얼�
 	covergroup ~ endgroup으로 사용하며, 2 state만 가능.
 	new()로 생성해서 사용
 (2) Coverpoint(어떤 변수의 값이 테스트되었는지 확인할지 지정)
-	coverpoint addr이면 addr이 4비트라면, 0~15까지 확인.
+	coverpoint addr이면 addr이 4비트라면, 0~15까지 얼마나 발생했는지 Coverage로 측정가능.
 (3) bin()
 --------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
