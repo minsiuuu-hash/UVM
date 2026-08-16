@@ -86,44 +86,50 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
    - repeat   : TB에서 클럭 N번 기다릴 때 편함
    - forever  : UVM Driver/Monitor에서 자주 사용
 
-5. Associative Array
-   → 필요한 index만 생성해서 사용하는 배열
-   → 일반 배열처럼 index가 연속일 필요가 없음
+5. Data Arrays
+(1) Fixed-size Array
+- 크기가 미리 정해져 있는 배열
+ex)
+int data[5];
 
-   ex)
-   byte data[int];
+(2) Dynamic Array
+- Simulation 중 배열 크기를 결정하거나 변경할 수 있음
+- []로 선언하고 new[]로 크기 생성
+ex)
+int data[];
+data = new[10];
 
-   data[3]   = 10;
-   data[100] = 20;
-   data[500] = 30;
+- delete() : 배열 삭제
 
-   → 실제 존재하는 원소는
-     data[3], data[100], data[500] 3개뿐
+(3) Associative Array
+- 연속된 index가 아닌 원하는 index/key를 사용할 수 있는 배열
+- 실제 사용하는 index에 대해서만 memory가 생성됨
+- int뿐 아니라 string 등도 key로 사용 가능
+ex)
+int data[int];
+data[100] = 10;
 
-   문자열을 index로 사용할 수도 있음
+int opcode[string];
+opcode["ADD"] = 1;
 
-   byte opcode[string];
+(4) Queue
+- Simulation 중 크기가 자유롭게 변하는 배열
+- [$]로 선언하며 new[]가 필요 없음
+- FIFO / Stack처럼 사용 가능
+ex)
+int q[$];
 
-   opcode["ADD"] = 10;
-   opcode["SUB"] = 20;
+push_front() : 앞에 추가
+push_back()  : 뒤에 추가
+pop_front()  : 앞에서 제거
+pop_back()   : 뒤에서 제거
+insert()     : 원하는 위치에 추가
+delete()     : 삭제
 
-   주요 함수:
-   data.num()         → 현재 원소 개수
-   data.first(index)  → 첫 번째 index 찾기
-   data.next(index)   → 다음 index 찾기
+특히 UVM/Testbench에서는
+Dynamic Array, Associative Array, Queue를 자주 사용함.
 
-   순회할 때는 보통
-   foreach (data[i])
-       ...
-   형태가 편함
-
-   → TB/UVM에서 ID별 데이터 저장,
-     scoreboard 데이터 관리 등에 유용
-
-Task / Function
-→ 반복되는 동작을 묶어서 사용하는 Subroutine
-
-[가장 핵심]
+6. Subroutine(Task / Function)
 Task      = 시간 개념 O
 Function  = 시간 개념 X
 
@@ -158,7 +164,7 @@ run_phase()   → task
 → 실제 clk/DUT 신호를 기다려야 하는 run_phase는
   시간 개념이 필요하기 때문에 task
 
-6. Inter-Thread Communication
+7. Inter-Thread Communication
 Thread
 - 독립적으로 실행되는 하나의 실행 흐름.
 - 여러 initial, always, fork 내부 구문들은 서로 동시에 실행될 수 있다.
@@ -264,7 +270,7 @@ Mailbox
 = Thread 사이의 실제 데이터 전달
 = "이 데이터 받아!"
 
-7. Coverage (중요!!!!!!!!!!!!!)
+8. Coverage (중요!!!!!!!!!!!!!)
 Code Coverage => 기술된 DUT의 코드가 얼마나 실행되고 테스트되었는지 확인 (RTL 코드를 얼마나 테스트 했는가?)
 - Simulator에서 자동으로 측정하므로 별도의 SV 구현이 거의 필요 없음.
 - Line, Branch, Toggle, FSM, Expression Coverage 등이 있음.
