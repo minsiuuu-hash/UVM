@@ -298,28 +298,11 @@ Functional Coverage => Specification에 정의된 기능과 시나리오가 얼�
     - Event 또는 sample()을 사용
 
 8. Package
-- 여러 곳에서 공통으로 사용할 class, typedef, parameter,
-  function/task 등을 하나로 묶어서 관리하는 공간
+- 여러 곳에서 공통으로 사용할 class, typedef, parameter, function/task 등을 하나로 묶어서 관리하는 공간
 - package ~ endpackage로 정의
-- 사용할 때
-  import package_name::*;
-- 또는 package_name::이름 으로 직접 접근 가능
-
-ex)
-
-package my_pkg;
-    typedef enum {IDLE, RUN} state_t;
-
-    class packet;
-        ...
-    endclass
-endpackage
-
-module top;
-    import my_pkg::*;
-
-    state_t state;
-endmoduIe
+- import package_name::*; 으로 Package 내부 내용을 가져와 사용
+- package_name::이름 형태로 특정 항목에 직접 접근 가능
+- UVM에서는 여러 Class들을 하나의 Package로 묶어서 관리할 때 많이 사용
 --------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
   표준화된 검증 방법론
