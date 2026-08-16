@@ -205,19 +205,12 @@ ex)
 semaphore sem = new(1);    // Key 1개
 
 initial begin
-    sem.get();             // Key 획득
+    sem.get();             // get() : 자원 사용권 획득
 
     // 공유 자원 사용
 
-    sem.put();             // Key 반환
+    sem.put();             // put() : 자원 사용권 반환
 end
-
-정리)
-get() : 자원 사용권 획득
-put() : 자원 사용권 반환
-
-Semaphore = 공유 자원의 사용 순서/접근 제어
-
 
 (3) Mailbox
 - 서로 다른 Thread 사이에서 실제 데이터를 전달할 때 사용.
@@ -228,39 +221,14 @@ mailbox mbx = new();
 
 initial begin
     int data = 100;
-    mbx.put(data);         // 데이터 저장
+    mbx.put(data);         // put()  : Mailbox에 데이터 저장
 end
 
 initial begin
     int data;
-    mbx.get(data);         // 데이터 가져오기
+    mbx.get(data);         // get()  : 데이터를 가져오고 Mailbox에서 삭제
     $display("%0d", data);
 end
-
-정리)
-put()  : Mailbox에 데이터 저장
-get()  : 데이터를 가져오고 Mailbox에서 삭제
-peek() : 데이터를 확인하지만 Mailbox에서는 삭제하지 않음
-
-Mailbox = Thread 사이의 실제 데이터 전달
-
-
-[최종 정리]
-
-Thread
-= 독립적으로 실행되는 실행 흐름
-
-Event
-= Thread 사이의 발생 신호 전달
-= "작업 끝났어!"
-
-Semaphore
-= 공유 자원의 접근 제어
-= "지금 내가 쓰고 있으니까 기다려!"
-
-Mailbox
-= Thread 사이의 실제 데이터 전달
-= "이 데이터 받아!"
 
 8. Coverage (중요!!!!!!!!!!!!!)
 Code Coverage => 기술된 DUT의 코드가 얼마나 실행되고 테스트되었는지 확인 (RTL 코드를 얼마나 테스트 했는가?)
