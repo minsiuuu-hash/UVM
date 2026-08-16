@@ -271,6 +271,8 @@ Mailbox
 
 7. Coverage (중요!!!!!!!!!!!!!)
 Code Coverage => 기술된 DUT의 코드가 얼마나 실행되고 테스트되었는지 확인 (RTL 코드를 얼마나 테스트 했는가?)
+- Simulator에서 자동으로 측정하므로 별도의 SV 구현이 거의 필요 없음.
+- Line, Branch, Toggle, FSM, Expression Coverage 등이 있음.
 Functional Coverage => Specification에 정의된 기능과 시나리오가 얼마나 테스트되었는지 확인 (검증해야 할 기능을 얼마나 테스트했는가?)
 (1) CoverGroup
     - Coverage Model 전체를 정의하는 단위
