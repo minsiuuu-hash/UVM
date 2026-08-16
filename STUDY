@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------
 
 SYSTEM VERILOG  - 검증용(Verification) 기초내용
+
 1. logic / bit
    logic = 4-state → 0, 1, X, Z 표현 가능
    bit   = 2-state → 0, 1만 표현 가능
@@ -24,15 +25,15 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
 2. typedef / enum
    enum    = 여러 상태값에 이름을 붙여서 사용하는 자료형(FSM에서 자주 사용)
    typedef = 기존 자료형에 새로운 타입 이름을 붙이는 문법
-
    ex)
    typedef enum logic [1:0] {
        IDLE,
        TEST,
        START
    } state_e;
+   
+	state_e current_state;
 
-   state_e current_state;
    → IDLE=00, TEST=01, START=10처럼 자동 할당
    → current_state는 2bit 상태값을 가지는 변수
 
