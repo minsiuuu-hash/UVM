@@ -254,8 +254,7 @@ Functional Coverage => Specification에 정의된 기능과 시나리오가 얼�
     - 두 개 이상의 Coverpoint 조합을 검사
     - 각각의 값은 테스트했더라도 특정 조합은 테스트하지 않았을 수 있기 때문에 사용
 (5) Sampling
-    - 변수 값이 변할 때마다 무조건 측정하는 것이 아니라
-      정해진 Sampling 시점의 값을 Coverage에 반영
+    - 변수 값이 변할 때마다 무조건 측정하는 것이 아니라 정해진 Sampling 시점의 값을 Coverage에 반영
     - Event 또는 sample()을 사용
 
 8. Package
