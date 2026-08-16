@@ -157,44 +157,44 @@ OOP (Object Oriented Programing)
 1. ramdomized stimulus 값 생성 TEST > 임의의 값을 자동으로 생성하여 DUT에 신호입력, constraints randomize
 2. 객체화
 	CLASS 객체지향 언어 : 상속(inheritance), 다형성(polymorphism), 캡슐화(encapsulation), 추상화(abstraction)
-	상속(inheritance) : 공통 코드 재사용 용도
-		기존 class를 기반으로 새로운 class를 만드는 것(extends) = 공통 기능은 부모 class에 만들고, 세부 기능은 자식 class에서 추가하거나 수정하는 것.
-		ex) class write_packet extends packet;
-	다형성(polymorphism) : 코드 수정 없이 다양한 동작 가능 용도
-		부모 타입 변수로 자식 객체를 가리키고, 실제 객체에 따라 다른 동작을 하게 하는 것 = 부모 class의 함수 앞에 "virtual" 을 붙여야 실제 자식 객체의 함수가 실행됨.
-		virtual task,function = class 기능(override = 덮어쓰기) >> 대부분의 UVM느낌
-		override = “부모 클래스에 이미 있는 같은 이름/같은 형태의 함수를 자식 클래스에서 다시 정의해서, 자식 상황에 맞게 다르게 동작하게 만드는 것”
-		method override
-			= 자식 class가 부모 function을 재정의
-			= 다형성과 직접 관련 있음
-			= 부모 function에 virtual 필요
-			→ 만들어진 객체의 실제 타입에 맞는 함수가 호출되게 함
-		ex) uart_packet = parent, uart_error_packet = child 일 경우 아래 코드가 예시.
-				uart_packet       base_handle;
-				uart_error_packet child_object;
-				child_object = uart_error_packet::type_id::create("child_object");
-				child_object.data  = 8'h55;
-				child_object.error = 1'b1;
-				base_handle = child_object;
-				base_handle.print_info();
-				base_handle은 부모 개체인데, base_handle의 print_info()를 실행하는게 아니라 실제로 실행되는거는 child_object.print_info()가 실행됌.
-		자식은 부모껄 다갖고 있어서 부모 = 자식 됌.
-		부모는 자식껄 다갖고  있지않아서 자식 = 부모가 안됌(downcast필요)
-		Upcasting
-			= 자식 객체를 부모 타입 handle에 넣는 것
-			= 자동으로 가능
-			= 안전함
-		Downcasting
-			= 부모 타입 handle을 자식 타입 handle로 변환하는 것
-			= 자동으로 안 됨
-			= $cast로 실제 객체 타입 확인 필요
-	캡슐화(encapsulation) : 데이터 보호 용
-		변수와 함수를 class 안에 묶는 것 = 데이터를 class 내부에 숨기고(외부에서 함부로 못 건드리게 막는 것), 정해진 method로만 접근하게 하는 것
-		local = 선언된 클래스 내부에서만 접근 가능.
-		protected = 선언한 클래스와 이를 상속받은 자식 클래스에서 접근 가능.
-	추상화(abstraction) : 단순화 용
-		복잡한 내부 동작은 숨기고, 필요한 기능 이름만 보여주는 것 = 사용자는 “무엇을 하는지”만 알고, “어떻게 하는지”는 몰라도 되게 만드는 것
-		ex) 전송 기능이 있다는 것만 정의하고, UART/SPI 전송 방법은 자식 클래스가 구현한다.
+		(1) 상속(inheritance) : 공통 코드 재사용 용도
+			기존 class를 기반으로 새로운 class를 만드는 것(extends) = 공통 기능은 부모 class에 만들고, 세부 기능은 자식 class에서 추가하거나 수정하는 것.
+			ex) class write_packet extends packet;
+		(2) 다형성(polymorphism) : 코드 수정 없이 다양한 동작 가능 용도
+			부모 타입 변수로 자식 객체를 가리키고, 실제 객체에 따라 다른 동작을 하게 하는 것 = 부모 class의 함수 앞에 "virtual" 을 붙여야 실제 자식 객체의 함수가 실행됨.
+			virtual task,function = class 기능(override = 덮어쓰기) >> 대부분의 UVM느낌
+			override = “부모 클래스에 이미 있는 같은 이름/같은 형태의 함수를 자식 클래스에서 다시 정의해서, 자식 상황에 맞게 다르게 동작하게 만드는 것”
+			method override
+				= 자식 class가 부모 function을 재정의
+				= 다형성과 직접 관련 있음
+				= 부모 function에 virtual 필요
+				→ 만들어진 객체의 실제 타입에 맞는 함수가 호출되게 함
+			ex) uart_packet = parent, uart_error_packet = child 일 경우 아래 코드가 예시.
+					uart_packet       base_handle;
+					uart_error_packet child_object;
+					child_object = uart_error_packet::type_id::create("child_object");
+					child_object.data  = 8'h55;
+					child_object.error = 1'b1;
+					base_handle = child_object;
+					base_handle.print_info();
+					base_handle은 부모 개체인데, base_handle의 print_info()를 실행하는게 아니라 실제로 실행되는거는 child_object.print_info()가 실행됌.
+			자식은 부모껄 다갖고 있어서 부모 = 자식 됌.
+			부모는 자식껄 다갖고  있지않아서 자식 = 부모가 안됌(downcast필요)
+			Upcasting
+				= 자식 객체를 부모 타입 handle에 넣는 것
+				= 자동으로 가능
+				= 안전함
+			Downcasting
+				= 부모 타입 handle을 자식 타입 handle로 변환하는 것
+				= 자동으로 안 됨
+				= $cast로 실제 객체 타입 확인 필요
+		(3) 캡슐화(encapsulation) : 데이터 보호 용
+			변수와 함수를 class 안에 묶는 것 = 데이터를 class 내부에 숨기고(외부에서 함부로 못 건드리게 막는 것), 정해진 method로만 접근하게 하는 것
+			local = 선언된 클래스 내부에서만 접근 가능.
+			protected = 선언한 클래스와 이를 상속받은 자식 클래스에서 접근 가능.
+		(4) 추상화(abstraction) : 단순화 용
+			복잡한 내부 동작은 숨기고, 필요한 기능 이름만 보여주는 것 = 사용자는 “무엇을 하는지”만 알고, “어떻게 하는지”는 몰라도 되게 만드는 것
+			ex) 전송 기능이 있다는 것만 정의하고, UART/SPI 전송 방법은 자식 클래스가 구현한다.
 
 CLASS = 동적개체 (소프트웨어) 
 	this. = 현재 객체 자기 자신을 가리키는 handle (이름이 겹칠 때 구분하려고 사용)
