@@ -40,7 +40,7 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
 3. Packed / Unpacked
    Packed   = 변수 이름 앞에 [ ]
    Unpacked = 변수 이름 뒤에 [ ]
-
+   ex)	
    logic [7:0] data;
    → Packed
    → 8개의 bit가 하나의 8bit 데이터로 묶임
