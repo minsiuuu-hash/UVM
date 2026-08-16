@@ -268,6 +268,7 @@ Functional Coverage => Specification에 정의된 기능과 시나리오가 얼�
 - SystemVerilog와 C/C++ 코드를 서로 연결하기 위한 Interface
 - 기존에 C/C++로 작성된 함수, 알고리즘, Reference Model 등을 SV/UVM Testbench에서 재사용할 때 사용
 - SV와 C/C++ 사이에 변수/데이터 전달도 가능
+- 검증에서는 주로 C/C++로 작성된 Reference(Golden) Model의 Expected Result와 DUT의 Actual Result를 비교하기 위해 사용
 (1) import
 => SystemVerilog에서 C/C++ 함수를 호출
 ex)
