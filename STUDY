@@ -248,6 +248,9 @@ Mailbox
 = Thread 사이의 실제 데이터 전달
 = "이 데이터 받아!"
 
+7. Coverage (중요!!!!!!!!!!!!!)
+Code Coverage => 기술된 DUT의 코드가 얼마나 실행되고 테스트되었는지 확인 
+Functional Coverage => Specification에 정의된 기능과 시나리오가 얼마나 테스트되었는지 확인  
 --------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
   표준화된 검증 방법론
