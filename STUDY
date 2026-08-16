@@ -90,13 +90,13 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
 (1) Fixed-size Array
 - 크기가 미리 정해져 있는 배열
 ex)
-int data[5]; (0부터 4까지)
+int data[5]; // 0부터 4까지
 (2) Dynamic Array
 - Simulation 중 배열 크기를 결정하거나 변경할 수 있음
 - []로 선언하고 new[]로 크기 생성
 ex)
 int data[];
-data = new[10]; (0~9)까지
+data = new[10]; // 0부터 9까지
 
 - delete() : 배열 삭제
 
