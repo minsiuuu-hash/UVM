@@ -303,7 +303,7 @@ SV logic     ↔ C svLogic
 ------------------------------------------------------------------------------------
 
 UVM(Unviersal Verification Methodology) 
-  표준화된 검증 방법론
+  SystemVerilog로 작성된 base class library와 API를 규정해 놓은 methodology standard 이다
 OOP (Object Oriented Programing) 
   객체지향 기반 표준 검증 방법론
 
