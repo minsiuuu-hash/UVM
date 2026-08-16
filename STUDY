@@ -141,6 +141,113 @@ run_phase()   → task
 
 → 실제 clk/DUT 신호를 기다려야 하는 run_phase는
   시간 개념이 필요하기 때문에 task
+
+6. Inter-Thread Communication
+Thread
+- 독립적으로 실행되는 하나의 실행 흐름.
+- 여러 initial, always, fork 내부 구문들은 서로 동시에 실행될 수 있다.
+ex)
+initial begin
+    #10;
+    $display("Thread A");
+end
+
+initial begin
+    #5;
+    $display("Thread B");
+end
+
+→ 두 initial은 각각 별도의 Thread로 동시에 시작한다.
+
+(1) Event
+- Thread 사이에서 특정 사건이 발생했다는 "신호"를 전달할 때 사용.
+- 실제 데이터를 전달하는 것은 아니며, 주로 동기화 목적으로 사용한다.
+
+ex)
+event done;
+
+initial begin
+    #10;
+    -> done;           // Event 발생
+end
+
+initial begin
+    @(done);           // Event 발생까지 대기
+    $display("DONE");
+end
+
+정리)
+-> event_name  : Event 발생
+@(event_name)  : Event 발생까지 대기
+
+Event = "작업 끝났어!", "이제 시작해!" 같은 신호 전달
+
+
+(2) Semaphore
+- 여러 Thread가 하나의 공유 자원을 동시에 사용하지 못하도록 접근을 제어한다.
+- Key(열쇠)를 획득한 Thread만 공유 자원을 사용할 수 있다.
+
+ex)
+semaphore sem = new(1);    // Key 1개
+
+initial begin
+    sem.get();             // Key 획득
+
+    // 공유 자원 사용
+
+    sem.put();             // Key 반환
+end
+
+정리)
+get() : 자원 사용권 획득
+put() : 자원 사용권 반환
+
+Semaphore = 공유 자원의 사용 순서/접근 제어
+
+
+(3) Mailbox
+- 서로 다른 Thread 사이에서 실제 데이터를 전달할 때 사용.
+- 기본적으로 FIFO 방식으로 동작한다.
+
+ex)
+mailbox mbx = new();
+
+initial begin
+    int data = 100;
+    mbx.put(data);         // 데이터 저장
+end
+
+initial begin
+    int data;
+    mbx.get(data);         // 데이터 가져오기
+    $display("%0d", data);
+end
+
+정리)
+put()  : Mailbox에 데이터 저장
+get()  : 데이터를 가져오고 Mailbox에서 삭제
+peek() : 데이터를 확인하지만 Mailbox에서는 삭제하지 않음
+
+Mailbox = Thread 사이의 실제 데이터 전달
+
+
+[최종 정리]
+
+Thread
+= 독립적으로 실행되는 실행 흐름
+
+Event
+= Thread 사이의 발생 신호 전달
+= "작업 끝났어!"
+
+Semaphore
+= 공유 자원의 접근 제어
+= "지금 내가 쓰고 있으니까 기다려!"
+
+Mailbox
+= Thread 사이의 실제 데이터 전달
+= "이 데이터 받아!"
+
 --------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
   표준화된 검증 방법론
