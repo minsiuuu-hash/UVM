@@ -303,6 +303,57 @@ Functional Coverage => Specification에 정의된 기능과 시나리오가 얼�
 - import package_name::*; 으로 Package 내부 내용을 가져와 사용
 - package_name::이름 형태로 특정 항목에 직접 접근 가능
 - UVM에서는 여러 Class들을 하나의 Package로 묶어서 관리할 때 많이 사용
+
+9. DPI (Direct Programming Interface)
+- SystemVerilog와 C/C++ 코드를 서로 연결하기 위한 Interface
+- 기존에 C/C++로 작성된 함수, 알고리즘, Reference Model 등을
+  SV/UVM Testbench에서 재사용할 때 사용
+- SV와 C/C++ 사이에 변수/데이터 전달도 가능
+(1) import
+=> SystemVerilog에서 C/C++ 함수를 호출
+ex)
+import "DPI-C" function int add(int a, int b);
+
+SV
+   ↓ 호출
+C/C++ Function
+
+(2) export
+=> C/C++에서 SystemVerilog의 function/task를 호출할 수 있도록 공개
+ex)
+export "DPI-C" task apb_write;
+
+C/C++
+   ↓ 호출
+SV Function / Task
+
+(3) Data Type
+- SV와 C/C++ 사이에서 전달되는 Data Type을 서로 맞춰줘야 함.
+ex)
+SV int       ↔ C int
+SV real      ↔ C double
+SV string    ↔ C char*
+SV bit       ↔ C svBit
+SV logic     ↔ C svLogic
+
+(4) chandle
+- C/C++에서 생성한 Memory/Object의 주소(Handle)를
+  SystemVerilog에서 받아서 관리할 때 사용
+- SV가 C의 Pointer를 직접 다루는 대신 chandle을 사용
+
+[핵심 정리]
+
+DPI
+= SystemVerilog ↔ C/C++ 연결
+
+import
+= SV에서 C/C++ 함수 호출
+
+export
+= C/C++에서 SV function/task 호출
+
+chandle
+= C/C++ Pointer를 SV에서 Handle 형태로 사용
 --------------------------------------------------------------
 UVM(Unviersal Verification Methodology) 
   표준화된 검증 방법론
