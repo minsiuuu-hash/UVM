@@ -411,13 +411,6 @@ Concurrent Assertion(여러 클럭에 걸친 시간적 관계 검사)
 		assert property ( @(posedge clk) req |=> ack ); = req가 발생하면 다음 클럭에 ack가 발생해야 한다.
 Property는 신호가 지켜야 할 조건과 시간적 관계를 정의하고, assert property는 해당 규칙을 검사하여 위반 시 오류를 발생시킨다.
 
-RAL(Register Abstraction Layer) = 레지스터 추상화 계층
-	DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
-	구조
-		uvm_reg_field → 레지스터의 개별 필드, uvm_reg → 레지스터 하나, uvm_reg_block → 여러 레지스터를 묶은 블록, uvm_reg_map → 레지스터 주소 관리, uvm_reg_adapter → RAL 접근을 APB/AXI 트랜잭션으로 변환
-
-
-
 
 
 UVM 구조
@@ -505,6 +498,16 @@ Configuration = testbench 여러 component에 설정값을 전달하기 위한 �
 	uvm_resource = 좀 더 일반적인 resource 관리
 	uvm_resource_db
 	uvm_config_db = UVM component configuration에 특화(virtual interface 전달, configuration 값 전달, agent active/passive 설정)
+
+Register Modeling
+	RAL = DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
+	ex)
+	uvm_reg_field → 레지스터의 개별 필드
+	uvm_reg → 레지스터 하나
+	uvm_reg_block → 여러 레지스터를 묶은 블록
+	uvm_reg_map → 레지스터 주소 관리
+	uvm_reg_adapter → RAL 접근을 APB/AXI 트랜잭션으로 변환
+
 
 
 #(*_seq_item)이 붙는 class(상속하는 부모 class가 parameterized class)
