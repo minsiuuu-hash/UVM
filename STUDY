@@ -534,7 +534,8 @@ Register Modeling
 
 #(*_seq_item)이 붙는 class(상속하는 부모 class가 parameterized class)
 	parameterized class = class를 만들 때 안에 들어갈 타입을 나중에 정할 수 있게 만든 class
-	= 특정 transaction type을 주고받는 generic UVM class
+	= 공통 틀을 어떤 transaction에도 재사용할 수 있게 만드는 것
+	= 서로 주고받는 transaction 타입을 명확하게 맞추는 것
 	= sequence, sequencer, driver, analysis_port, subscriber 등에 사용
 	
 phase = UVM testbench가 동작하는 순서표
