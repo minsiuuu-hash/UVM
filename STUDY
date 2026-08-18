@@ -451,20 +451,22 @@ UVM 구조
 	2)Sequence -> uvm_sequence #(*_seq_item)
 		Transaction을 어떤 순서/값으로 발생시킬지 결정하는 역할
 		Constraint를 만들어서 신호들을 제어할 수 있으며 Corner Case를 검증하기 쉬움.
-		Must obey(Hard Constraint) = 반드시 만족, 충돌 시 randomize 실패.
-		Should obey(Soft Constraint) = 우선 적용하지만 더 강한 조건과 충돌하면 무시 가능.
-			직접 순서처리하는 방식
-				start_item
-				→ sequencer.wait_for_grant()
-				→ 이 sequence가 item을 보낼 차례가 될 때까지 대기
-				finish_item
-				→ sequencer.send_request(item)
-				→ driver의 get_next_item(item)이 item을 받음
-				→ driver가 DUT에 drive
-				→ driver가 item_done()
-				→ sequence가 다음 item으로 진행
-			매크로가 대신 해주는 방식
-				`uvm_do 사용
+			1. Must obey(Hard Constraint) = 반드시 만족, 충돌 시 randomize 실패.
+			2. Should obey(Soft Constraint) = 우선 적용하지만 더 강한 조건과 충돌하면 무시 가능.
+		[1단계] Sequence 자체를 어떻게 시작할 것인가?
+		1. Explicit
+			→ 내가 직접 시작
+			→ seq.start(sqr);
+		2. Implicit
+			→ default_sequence로 등록
+			→ phase가 시작되면 UVM이 자동 시작
+		[2단계] 시작된 Sequence 안에서 Item을 어떻게 처리할 것인가?
+		1. 직접 처리
+			→ start_item(item)
+			→ randomize()
+			→ finish_item(item)
+		2. Macro 처리
+			→ `uvm_do(item)
 5. Environment -> uvm_env (Agent, Scoreboard, Coverage)
 	agt.mon.ap.connect(scb.ap_imp);
 	agt.mon.ap.connect(cov.analysis_export); -> ap와 scoreboard, coverage를 연결해주는 역할.
