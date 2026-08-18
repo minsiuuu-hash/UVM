@@ -453,7 +453,7 @@ UVM 구조
 		Constraint를 만들어서 신호들을 제어할 수 있으며 Corner Case를 검증하기 쉬움.
 		Must obey(Hard Constraint) = 반드시 만족, 충돌 시 randomize 실패.
 		Should obey(Soft Constraint) = 우선 적용하지만 더 강한 조건과 충돌하면 무시 가능.
-			Explicit 방식(직접 순서처리하는 방식)
+			직접 순서처리하는 방식
 				start_item
 				→ sequencer.wait_for_grant()
 				→ 이 sequence가 item을 보낼 차례가 될 때까지 대기
@@ -463,7 +463,7 @@ UVM 구조
 				→ driver가 DUT에 drive
 				→ driver가 item_done()
 				→ sequence가 다음 item으로 진행
-			Implicit 방식(매크로가 대신 해주는 방식)
+			매크로가 대신 해주는 방식
 				`uvm_do 사용
 5. Environment -> uvm_env (Agent, Scoreboard, Coverage)
 	agt.mon.ap.connect(scb.ap_imp);
