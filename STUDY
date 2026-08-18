@@ -553,9 +553,6 @@ new로 생성할 때
   analysis port 생성 같은 것
   ex) ap = new("ap", this);
 
-uvm_info
-
-
 TLM(Transaction Level Modeling)
 신호(bit) 하나하나를 주고받는 게 아니라, Transaction 객체 단위로 UVM component끼리 데이터를 주고받는 방식
 
