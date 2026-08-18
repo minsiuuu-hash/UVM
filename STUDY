@@ -368,6 +368,7 @@ handle = 객체를 가르킬수있는 것. (리모컨을 만드는것)
 그래서 transaction tr;을 한 후에, tr = new();를 해야함.
 
 super.new() = 부모 클래스의 생성자 호출
+new() = 자기 객체를 생성할 때 호출되는 생성자
 
 Factory(new() 대신 type_id::create() 사용)
 = 객체 생성을 factory에 맡김
@@ -394,7 +395,10 @@ factory override
 Singleton
 = 객체 하나만 만들고 전역에서 공유
 = 전역 관리자에 중요
-= 예: uvm_root, factory manager, resource/config 계열
+ex)
+uvm_root = UVM hierarchy / phase 관리, simulation에 하나
+factory manager = object/component 생성 및 override 관리, simulation에 하나 
+resource/config
 
 race condtion 조심사항.
 	fork/join 결은 프로세스들을 동시에 시작시켜주지만, event를 활용해서 순서를 제어할수있음.
@@ -548,6 +552,9 @@ new로 생성할 때
   factory override 필요 없는 일반 로컬 객체
   analysis port 생성 같은 것
   ex) ap = new("ap", this);
+
+TLM(Transaction Level Modeling)
+신호(bit) 하나하나를 주고받는 게 아니라, Transaction 객체 단위로 UVM component끼리 데이터를 주고받는 방식
 
 ------------------------------------------ 심화??-----------------------------------------
 Sequence = DUT를 어떻게 검증할지 작성하는 시나리오(이번 테스트에서 DUT에게 무엇을 시키고, 어떤 순서로 하고, 어떤 결과를 기대할 것인가”라는 검증 시나리오를 작성하는 곳)
