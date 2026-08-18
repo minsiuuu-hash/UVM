@@ -412,14 +412,82 @@ ifdef = 특정 매크로가 정의되어 있을 때만 해당 코드를 컴파�
 
 Assertion = 설계가 반드시 지켜야 할 조건이나 시간적 규칙을 선언하고, 위반하면 즉시 오류를 발생시키는 검증 코드
 		장점 : 일반적으로 입력과 결과만 보는데, 중간에 잘못되었다가 정상으로 돌아온경우는 캐치하지 못함. 하지만 Assertion은 내부 또는 인터페이스 신호를 매 클럭 검사해서 오류가 발생한 정확한 클럭과 규칙을 알 수 있다.
-Immediate Assertion(현재 순간의 조건 검사) = procedural block이나 클래스 내부에서 사용
+1. Immediate Assertion(현재 순간의 조건 검사) = procedural block이나 클래스 내부에서 사용
 	ex) assert (req.randomize()); = Transaction randomize가 성공했는가?
-Concurrent Assertion(여러 클럭에 걸친 시간적 관계 검사)
+2. Concurrent Assertion(여러 클럭에 걸친 시간적 관계 검사)
 	ex) assert property ( @(posedge clk) req |-> ack ); = 클럭 상승 에지에서 req가 1이면 같은 시점에 ack도 1이어야 한다.
 		assert property ( @(posedge clk) req |=> ack ); = req가 발생하면 다음 클럭에 ack가 발생해야 한다.
 Property는 신호가 지켜야 할 조건과 시간적 관계를 정의하고, assert property는 해당 규칙을 검사하여 위반 시 오류를 발생시킨다.
 
+UVM_Object > UVM_report_object > UVM_Component > UVM_Driver > UART_Driver
+UVM_Object > UVM_Transaction > UVM_sequence_item > UART_seq_item
+이러한 순서로 왼쪽부터 상위 parent
 
+UVM_Object(Hierarchy에 속하지 않는 데이터/동작 객체)
+	일시적으로 생성돼서 transaction/stimulus 역할을 하고, component hierarchy에는 고정으로 박혀 있지 않음(데이터/임시 객체).
+	ex) ram_seq_item, ram_sequence
+	function new(string name = "ram_seq_item");
+        super.new(name);
+    endfunction
+
+UVM_report_object
+	UVM의 report 기능
+	ex)
+	`uvm_info(...) : verbosity 필터링(NONE ,LOW ,MEDIUM ,HIGH ,FULL, DEBUG) HIGH이면 HIGH기준 왼쪽만 실행. 
+	`uvm_warning(...)
+	`uvm_error(...)
+	`uvm_fatal(...)
+
+UVM_Component(어디에 소속해있는가) 
+	UVM hierarchy(TestBench의 구조) 안에 들어가고, build_phase, connect_phase, run_phase, report_phase 같은 phase를 가짐(component들이 simulation 구조를 구성).
+	ex) ram_test, ram_env, ram_agent, ram_driver, ram_monitor, ram_scoreboard, ram_coverage, ram_sequencer
+	function new(string name, uvm_component parent); -> hierachy 때문에 parent를 적는것. 장점(hierarchy 생성, phase 자동 실행, config_db 경로 설정 가능, report message에 위치가 찍힘)
+        super.new(name, parent);
+    endfunction
+
+Configuration = testbench 여러 component에 설정값을 전달하기 위한 기능
+	ex) 
+	uvm_resource = 실제 resource(설정 데이터)를 표현
+	uvm_resource_db = resource를 set/get하기 위한 DB 인터페이스
+	uvm_config_db = UVM component configuration에 특화(virtual interface 전달, configuration 값 전달, agent active/passive 설정)
+	uvm_config_db#(virtual ram_if)::set(...);
+	uvm_config_db#(virtual ram_if)::get(...);
+
+#(*_seq_item)이 붙는 class(상속하는 부모 class가 parameterized class)
+	parameterized class = class를 만들 때 안에 들어갈 타입을 나중에 정할 수 있게 만든 class
+	= 공통 틀을 어떤 transaction에도 재사용할 수 있게 만드는 것
+	= 서로 주고받는 transaction 타입을 명확하게 맞추는 것
+	= sequence, sequencer, driver, analysis_port, subscriber 등에 사용
+	
+phase = UVM testbench가 동작하는 순서표
+	build_phase   : component 생성 및 configuration 설정/획득
+	connect_phase : component 사이의 TLM port/export 등을 연결
+	run_phase     : 실제 simulation 동작
+	report_phase  : simulation 결과 정리 및 출력
+
+component를 생성할 때
+→ Factory를 사용하여 create()
+	ex) drv = uart_driver::type_id::create("drv", this);
+		mon = uart_monitor::type_id::create("mon", this);
+    	sqr = uvm_sequencer#(uart_seq_item)::type_id::create("sqr", this);
+		→ this = 현재 component를 parent로 지정
+
+item(object)을 생성할 때
+→ Factory를 사용하여 create()
+  ex) item = uart_seq_item::type_id::create("item");
+	 → Object는 component hierarchy에 들어가지 않으므로 parent(this)가 없음
+
+new로 생성할 때
+  Factory를 거치지 않고 직접 생성
+  constructor 내부의 기본 초기화
+  Factory Override가 필요 없는 객체에 사용
+  ex) ap = new("ap", this); // analysis_port 생성
+
+TLM(Transaction Level Modeling)
+신호(bit) 하나하나를 주고받는 게 아니라, Transaction 객체 단위로 UVM component끼리 데이터를 주고받는 방식
+    ex)
+    Sequencer → Driver
+    Monitor → Scoreboard
 
 UVM 구조
 1. DUT
@@ -494,40 +562,6 @@ UVM 구조
 		uvm_analysis_port #(*_seq_item) ap; = monitor가 관찰한 transaction을 다른 component들에게 뿌려주는 방송 포트
 		ap.write(item); 연결된 모든 component에 write()함수가 실행됌.
 
-UVM_Object > UVM_report_object > UVM_Component > UVM_Driver > UART_Driver
-UVM_Object > UVM_Transaction > UVM_sequence_item > UART_seq_item
-이러한 순서로 왼쪽부터 상위 parent
-
-UVM_Object(Hierarchy에 속하지 않는 데이터/동작 객체)
-	일시적으로 생성돼서 transaction/stimulus 역할을 하고, component hierarchy에는 고정으로 박혀 있지 않음(데이터/임시 객체).
-	ex) ram_seq_item, ram_sequence
-	function new(string name = "ram_seq_item");
-        super.new(name);
-    endfunction
-
-UVM_report_object
-	UVM의 report 기능
-	ex)
-	`uvm_info(...) : verbosity 필터링(NONE ,LOW ,MEDIUM ,HIGH ,FULL, DEBUG) HIGH이면 HIGH기준 왼쪽만 실행. 
-	`uvm_warning(...)
-	`uvm_error(...)
-	`uvm_fatal(...)
-
-UVM_Component(어디에 소속해있는가) 
-	UVM hierarchy(TestBench의 구조) 안에 들어가고, build_phase, connect_phase, run_phase, report_phase 같은 phase를 가짐(component들이 simulation 구조를 구성).
-	ex) ram_test, ram_env, ram_agent, ram_driver, ram_monitor, ram_scoreboard, ram_coverage, ram_sequencer
-	function new(string name, uvm_component parent); -> hierachy 때문에 parent를 적는것. 장점(hierarchy 생성, phase 자동 실행, config_db 경로 설정 가능, report message에 위치가 찍힘)
-        super.new(name, parent);
-    endfunction
-
-Configuration = testbench 여러 component에 설정값을 전달하기 위한 기능
-	ex) 
-	uvm_resource = 실제 resource(설정 데이터)를 표현
-	uvm_resource_db = resource를 set/get하기 위한 DB 인터페이스
-	uvm_config_db = UVM component configuration에 특화(virtual interface 전달, configuration 값 전달, agent active/passive 설정)
-	uvm_config_db#(virtual ram_if)::set(...);
-	uvm_config_db#(virtual ram_if)::get(...);
-
 Register Modeling
 	RAL = DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
 	ex)
@@ -538,35 +572,6 @@ Register Modeling
 	uvm_reg_adapter → RAL 접근을 APB/AXI 트랜잭션으로 변환
 
 
-
-#(*_seq_item)이 붙는 class(상속하는 부모 class가 parameterized class)
-	parameterized class = class를 만들 때 안에 들어갈 타입을 나중에 정할 수 있게 만든 class
-	= 공통 틀을 어떤 transaction에도 재사용할 수 있게 만드는 것
-	= 서로 주고받는 transaction 타입을 명확하게 맞추는 것
-	= sequence, sequencer, driver, analysis_port, subscriber 등에 사용
-	
-phase = UVM testbench가 동작하는 순서표
-	build_phase   : component 생성
-	connect_phase : component끼리 연결
-	run_phase     : 실제 simulation 동작
-	report_phase  : 결과 출력
-
-component를 생성할 때
-	ex) drv = uart_driver::type_id::create("drv", this);
-		mon = uart_monitor::type_id::create("mon", this);
-    	sqr = uvm_sequencer#(uart_seq_item)::type_id::create("sqr", this);
-
-item을 생성할 때
-  ex) item = uart_seq_item::type_id::create("item");
-
-new로 생성할 때
-  constructor 내부의 기본 초기화
-  factory override 필요 없는 일반 로컬 객체
-  analysis port 생성 같은 것
-  ex) ap = new("ap", this);
-
-TLM(Transaction Level Modeling)
-신호(bit) 하나하나를 주고받는 게 아니라, Transaction 객체 단위로 UVM component끼리 데이터를 주고받는 방식
 
 ------------------------------------------ 심화??-----------------------------------------
 Sequence = DUT를 어떻게 검증할지 작성하는 시나리오(이번 테스트에서 DUT에게 무엇을 시키고, 어떤 순서로 하고, 어떤 결과를 기대할 것인가”라는 검증 시나리오를 작성하는 곳)
