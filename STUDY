@@ -497,7 +497,7 @@ UVM_Object(Hierarchy에 속하지 않는 데이터/동작 객체)
 UVM_report_object
 	UVM의 report 기능
 	ex)
-	`uvm_info(...)
+	`uvm_info(...) : verbosity 필터링(NONE ,LOW ,MEDIUM ,HIGH ,FULL, DEBUG) HIGH이면 HIGH기준 왼쪽만 실행. 
 	`uvm_warning(...)
 	`uvm_error(...)
 	`uvm_fatal(...)
@@ -552,6 +552,9 @@ new로 생성할 때
   factory override 필요 없는 일반 로컬 객체
   analysis port 생성 같은 것
   ex) ap = new("ap", this);
+
+uvm_info
+
 
 TLM(Transaction Level Modeling)
 신호(bit) 하나하나를 주고받는 게 아니라, Transaction 객체 단위로 UVM component끼리 데이터를 주고받는 방식
