@@ -406,6 +406,10 @@ race condtion 조심사항.
 		2. fork/join_any = 어떤 TASK든 끝나면 다음 line 실행. (TASK중 안끝난 부분들은 계 실행중)
 		3. fork/join_none = 바로 다음 line 실행.(TASK 실행중)
 
+ifdef = 특정 매크로가 정의되어 있을 때만 해당 코드를 컴파일하는 전처리문. 
+		디버그, coverage, 기능 선택, simulator별 코드 분리 등에 사용.
+		if는 실행 중 조건 판단이고, ifdef`는 컴파일 전 코드 포함 여부를 결정한다.
+
 Assertion = 설계가 반드시 지켜야 할 조건이나 시간적 규칙을 선언하고, 위반하면 즉시 오류를 발생시키는 검증 코드
 		장점 : 일반적으로 입력과 결과만 보는데, 중간에 잘못되었다가 정상으로 돌아온경우는 캐치하지 못함. 하지만 Assertion은 내부 또는 인터페이스 신호를 매 클럭 검사해서 오류가 발생한 정확한 클럭과 규칙을 알 수 있다.
 Immediate Assertion(현재 순간의 조건 검사) = procedural block이나 클래스 내부에서 사용
