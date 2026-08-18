@@ -450,6 +450,9 @@ UVM 구조
 		convert2string()은 로그 찍을 때 보기 좋게 문자열로 바꾸는 함수.
 	2)Sequence -> uvm_sequence #(*_seq_item)
 		Transaction을 어떤 순서/값으로 발생시킬지 결정하는 역할
+		2개의 handle을 선언
+			1. REQ Type = driver로 request 하는 transaction
+			2. RSP Type = driver로부터 response 받는 transaction
 		Constraint를 만들어서 신호들을 제어할 수 있으며 Corner Case를 검증하기 쉬움.
 			1. Must obey(Hard Constraint) = 반드시 만족, 충돌 시 randomize 실패.
 			2. Should obey(Soft Constraint) = 우선 적용하지만 더 강한 조건과 충돌하면 무시 가능.
