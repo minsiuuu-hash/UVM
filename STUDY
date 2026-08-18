@@ -465,15 +465,18 @@ phase = UVM testbench가 동작하는 순서표
 	run_phase     : 실제 simulation 동작
 	report_phase  : simulation 결과 정리 및 출력
 
+Driver / Monitor / Agent / Env / Sequence / Sequence Item → create()
+TLM Port / Analysis Port 등 → new()
+
 component를 생성할 때
-→ Factory를 사용하여 create()
+→ Factory를 사용하여 create(), Override 가능
 	ex) drv = uart_driver::type_id::create("drv", this);
 		mon = uart_monitor::type_id::create("mon", this);
     	sqr = uvm_sequencer#(uart_seq_item)::type_id::create("sqr", this);
 		→ this = 현재 component를 parent로 지정
 
 item(object)을 생성할 때
-→ Factory를 사용하여 create()
+→ Factory를 사용하여 create(), Override 가능
   ex) item = uart_seq_item::type_id::create("item");
 	 → Object는 component hierarchy에 들어가지 않으므로 parent(this)가 없음
 
