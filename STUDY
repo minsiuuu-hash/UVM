@@ -489,8 +489,8 @@ new로 생성할 때
 TLM(Transaction Level Modeling)
 신호(bit) 하나하나를 주고받는 게 아니라, Transaction 객체 단위로 UVM component끼리 데이터를 주고받는 방식
     ex)
-    Sequencer → Driver
-    Monitor → Scoreboard
+    Sequencer → Driver = PUSH, PULL MODE
+    BroadCast MODE(Analysis Port) = Monitor → Scoreboard, Coverage = 
 
 UVM 구조
 1. DUT
