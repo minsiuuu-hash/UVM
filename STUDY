@@ -473,6 +473,9 @@ phase = UVM testbench가 동작하는 순서표
 	report_phase(*)  : simulation 결과 정리 및 출력 --> 핵심
 	final_phase : Simulation 종료 직전 마지막 정리 작업을 수행
 
+	build, connect는 정해진 hierarchy 순서로 실행
+	run은 각 component의 run_phase가 병렬 실행
+
 Driver / Monitor / Agent / Env / Sequence / Sequence Item → create()
 TLM Port / Analysis Port 등 → new()
 
