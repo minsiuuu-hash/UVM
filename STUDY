@@ -511,13 +511,52 @@ Callback = 기존 UVM component 코드를 직접 수정하지 않고
 	ex) Error Injection, Debugging, Coverage, Protocol Check
 
 Register Modeling
-	RAL = DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
-	ex)
-	uvm_reg_field → 레지스터의 개별 필드
-	uvm_reg → 레지스터 하나
-	uvm_reg_block → 여러 레지스터를 묶은 블록
-	uvm_reg_map → 레지스터 주소 관리
-	uvm_reg_adapter → RAL 접근을 APB/AXI 트랜잭션으로 변환
+
+RAL(Register Abstraction Layer)
+= DUT 내부 Register를 주소/Bus Signal로 직접 다루지 않고,
+  UVM 객체처럼 Register/Field 이름으로 읽고 쓰는 기능.
+= Register가 많을 때 주소/bit 관리가 편해짐.
+
+구조
+- uvm_reg_field : Register 내부 field
+- uvm_reg       : Register 하나
+- uvm_reg_block : 여러 Register를 묶은 모델
+- uvm_reg_map   : Register 주소 관리
+- uvm_reg_adapter : RAL 접근 ↔ APB/AXI Transaction 변환
+
+접근 흐름
+Sequence
+ → Register Model
+ → Adapter
+ → Sequencer
+ → Driver
+ → DUT
+
+ex)
+reg_model.ctrl.write(status, 32'h1);
+
+Mirror / Desired
+- Mirrored Value : RAL이 기억하는 현재 DUT Register 상태
+- Desired Value  : Testbench가 만들고 싶은 Register 값
+
+주요 API
+- read()/write() : DUT Register 실제 접근
+- get()/set()    : RAL 내부 Desired Value 확인/설정
+- update()       : Desired 값을 DUT에 반영
+- mirror()       : DUT 값을 읽어 Mirror와 비교/갱신
+
+Frontdoor
+= 실제 APB/AXI Bus를 통해 Register 접근
+
+Backdoor
+= Bus를 거치지 않고 Register 직접 접근
+= peek() / poke()
+
+Predictor
+= Monitor가 본 Bus Transaction을 이용해
+  Register Model의 Mirror를 갱신
+
+-------------------------------------------------------------------------------------------------
 
 UVM 구조
 1. DUT
