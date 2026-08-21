@@ -466,7 +466,7 @@ phase = UVM testbench가 동작하는 순서표
 	end_of_elaboration_phase() : Testbench 구조가 최종적으로 제대로 구성되었는지 확인
 	--- Run Time ---
 	start_of_simulation_phase() : Simulation 시작 직전에 최종 설정 상태를 확인
-	run_phase     : 실제 simulation 동작 --> 핵심
+	run_phase(Task)     : 실제 simulation 동작 --> 핵심
 	--- Cleanup ---
 	extract_phase : Testbench 곳곳의 결과/통계 데이터를 수집
 	check_phase : 예상하지 못한 오류나 이상 상태가 있는지 최종 확인
