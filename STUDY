@@ -510,6 +510,15 @@ Callback = 기존 UVM component 코드를 직접 수정하지 않고
 	특정 위치(hook)에 추가 동작을 끼워 넣는 기능.
 	ex) Error Injection, Debugging, Coverage, Protocol Check
 
+Register Modeling
+	RAL = DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
+	ex)
+	uvm_reg_field → 레지스터의 개별 필드
+	uvm_reg → 레지스터 하나
+	uvm_reg_block → 여러 레지스터를 묶은 블록
+	uvm_reg_map → 레지스터 주소 관리
+	uvm_reg_adapter → RAL 접근을 APB/AXI 트랜잭션으로 변환
+
 UVM 구조
 1. DUT
 	RTL file(HW Code)
@@ -563,7 +572,7 @@ UVM 구조
 	agt.mon.ap.connect(scb.ap_imp);
 	agt.mon.ap.connect(cov.analysis_export); -> ap와 scoreboard, coverage를 연결해주는 역할.
 	1)Scoreboard -> uvm_scoreboard
-		기대값과 실제값 비교
+		DUT의 전체적인 데이터 흐름을 계속 감시/비교
 		uvm_analysis_imp #(*_seq_item, *_scoreboard) ap_imp; (imp = 실제 도착지)
 		*_seq_item 타입 item을 받으면, *_scoreboard 안의 write(*_seq_item item)을 호출하겠다.
 	2)Coverage -> uvm_subscriber #(ram_seq_item)
@@ -583,14 +592,7 @@ UVM 구조
 		uvm_analysis_port #(*_seq_item) ap; = monitor가 관찰한 transaction을 다른 component들에게 뿌려주는 방송 포트
 		ap.write(item); 연결된 모든 component에 write()함수가 실행됌.
 
-Register Modeling
-	RAL = DUT 내부의 레지스터를 주소와 버스 신호로 직접 다루지 않고, UVM 클래스 객체처럼 읽고 쓰게 해주는 기능
-	ex)
-	uvm_reg_field → 레지스터의 개별 필드
-	uvm_reg → 레지스터 하나
-	uvm_reg_block → 여러 레지스터를 묶은 블록
-	uvm_reg_map → 레지스터 주소 관리
-	uvm_reg_adapter → RAL 접근을 APB/AXI 트랜잭션으로 변환
+
 
 
 
