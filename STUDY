@@ -476,6 +476,9 @@ phase = UVM testbench가 동작하는 순서표
 	build, connect는 정해진 hierarchy 순서로 실행
 	run은 각 component의 run_phase가 병렬 실행
 
+	phase.raise_objection(this); // 아직 simulation 끝내지 마
+	phase.drop_objection(this);// 내 작업 끝남
+
 Driver / Monitor / Agent / Env / Sequence / Sequence Item → create()
 TLM Port / Analysis Port 등 → new()
 
