@@ -1,215 +1,408 @@
-# UVM Verification Projects
+# AXI4-Lite Peripheral IP and Software Verification
 
-This repository contains several SystemVerilog UVM-based verification projects.
+This project implements custom GPIO, SPI, I2C, and UART peripherals as AXI4-Lite slave IPs and integrates them with a MicroBlaze-based processor system.
 
-The main goal of this repository is to build reusable UVM testbench structures and verify digital IPs and communication protocols such as RAM, UART, APB RAM, SPI, and I2C.
-
-The `AXI` folder contains AXI-Lite peripheral wrapper and integration study materials for GPIO, SPI, I2C, and UART peripherals.
+The hardware peripherals are accessed through memory-mapped registers from Vitis C software. The project covers RTL wrapper design, AXI4-Lite register access, hardware-software integration, and verification.
 
 ---
 
-## Project List
+## Project Goals
 
-| Project | Description | Main Focus |
+- Understand the AXI4-Lite read and write channel handshake
+- Design memory-mapped peripheral registers
+- Wrap existing GPIO, SPI, I2C, and UART RTL as AXI4-Lite slave IPs
+- Connect custom IPs to a MicroBlaze-based Vivado system
+- Access peripheral registers from Vitis C/HAL software
+- Verify peripheral operation through simulation, UVM, and software tests
+
+---
+
+## System Architecture
+
+```text
+Vitis C Application
+        |
+        v
+Application / Driver / HAL
+        |
+        v
+MicroBlaze Processor System
+        |
+        v
+AXI Interconnect
+        |
+        +----------------+----------------+----------------+----------------+
+        |                |                |                |
+        v                v                v                v
+ AXI4-Lite GPIO    AXI4-Lite SPI    AXI4-Lite I2C    AXI4-Lite UART
+        |                |                |                |
+        v                v                v                v
+   GPIO Logic       SPI Master/       I2C Master/       UART TX/RX
+                    Slave Logic       Slave Logic
+```
+
+The processor accesses each peripheral through a base address assigned in the Vivado address map. Software reads and writes the custom slave registers using memory-mapped I/O.
+
+---
+
+## AXI4-Lite Interface
+
+AXI4-Lite uses five independent channels for single-beat memory-mapped transfers.
+
+| Channel | Main Signals | Purpose |
 |---|---|---|
-| `RAM` | RAM verification using UVM | Write/read sequence, full address sweep, reference memory comparison |
-| `UART` | UART verification using UVM | Random 8-bit UART transaction, serial bit driving, TX/RX data comparison |
-| `UART2` | Additional UART verification project | UART transaction and interface-based verification |
-| `APB_RAM` | APB-based RAM verification using UVM | APB setup/access phase, `PREADY` wait, write/read data comparison |
-| `SPI` | SPI RTL design and UVM verification | Master/slave RTL design, random 8-bit transfer, data matching, and two-board Basys3 test |
-| `I2C` | I2C RTL design and UVM verification | Master/slave RTL design, START/STOP/ACK check, data matching, and two-board Basys3 test |
-| `AXI` | AXI-Lite peripheral wrapper and Vitis test | Vivado-generated processor system, memory-mapped register access, and peripheral integration |
+| Write Address | `AWADDR`, `AWVALID`, `AWREADY` | Transfers the target register address |
+| Write Data | `WDATA`, `WSTRB`, `WVALID`, `WREADY` | Transfers write data and byte enables |
+| Write Response | `BRESP`, `BVALID`, `BREADY` | Reports write completion and status |
+| Read Address | `ARADDR`, `ARVALID`, `ARREADY` | Transfers the target register address |
+| Read Data | `RDATA`, `RRESP`, `RVALID`, `RREADY` | Returns register data and read status |
 
----
-
-## UVM Testbench Architecture
-
-The verification environment was built using a typical UVM testbench structure.
+### Write Flow
 
 ```text
-Sequence Item
-     ↓
-Sequence
-     ↓
-Sequencer
-     ↓
-Driver
-     ↓
-Interface
-     ↓
-DUT
-     ↓
-Monitor
-     ↓
-Scoreboard
+Write Address + Write Data
+            |
+            v
+   AXI4-Lite Slave Register
+            |
+            v
+      Write Response
 ```
 
-The sequence generates transaction-level stimulus, and the driver converts the transaction into signal-level behavior through the interface.  
-The monitor observes DUT output signals and sends the collected data to the scoreboard.  
-The scoreboard compares the expected data with the actual DUT output and checks whether the test passed or failed.
-
----
-
-## Code-Based Verification Focus
-
-| Target | Verification Focus |
-|---|---|
-| RAM | Random sequence, write-read sequence, full address sweep, and reference memory based read-data comparison |
-| UART | UART start/data/stop bit driving using fixed bit period and TX/RX data comparison |
-| APB RAM | APB SETUP/ACCESS phase driving, `PREADY` wait, and `PRDATA` comparison using reference memory |
-| SPI | SPI master/slave RTL design, random 8-bit transfer, `start` control, `slave_done` capture, TX/RX data matching, and two-board Basys3 test |
-| I2C | I2C master/slave RTL design, START → address write → data write → STOP sequence, ACK check, received-data comparison, and two-board Basys3 test |
-| AXI | AXI-Lite wrapper, Vivado-generated processor system, Vitis C code test, and memory-mapped peripheral access |
-
----
-
-## RAM Verification
-
-The RAM UVM testbench verifies memory write/read behavior using a reference memory model inside the scoreboard.
-
-The sequence includes random transactions, write-read transactions, and full address sweep transactions.  
-During write operation, the scoreboard stores write data into reference memory.  
-During read operation, the scoreboard compares DUT read data with the expected value stored in the reference memory.
-
-| Verification Item | Description |
-|---|---|
-| Random Sequence | Generates randomized RAM transactions |
-| Write-Read Sequence | Writes data and reads it back |
-| Full Sweep Sequence | Accesses the full address range |
-| Scoreboard | Compares `rdata` with reference memory |
-| Coverage | Checks write/read operation, address range, read data, and write-address cross coverage |
-
----
-
-## UART Verification
-
-The UART UVM testbench verifies serial TX/RX data transfer.
-
-The driver sends UART data using start bit, 8 data bits, stop bit, and idle state based on a fixed bit period.  
-The scoreboard compares the transmitted `tx_data` with the received `rx_data`.
-
-| Verification Item | Description |
-|---|---|
-| Random Transaction | Generates randomized 8-bit UART data |
-| UART Driving | Drives start bit, data bits, stop bit, and idle state |
-| Scoreboard | Compares `tx_data` and `rx_data` |
-| Coverage | Checks TX data, RX data, match result, and TX/RX cross coverage |
-
----
-
-## APB RAM Verification
-
-The APB RAM UVM testbench verifies APB-based memory access.
-
-The driver performs APB transfer using SETUP and ACCESS phases.  
-During ACCESS phase, the driver waits until `PREADY` is asserted.  
-The scoreboard stores write data into a reference memory and compares read data with the expected value.
-
-| Verification Item | Description |
-|---|---|
-| APB SETUP Phase | Drives `PSEL`, `PWRITE`, `PADDR`, and `PWDATA` |
-| APB ACCESS Phase | Asserts `PENABLE` and waits for `PREADY` |
-| Write-Read Sequence | Writes random data and reads it back |
-| Scoreboard | Compares `PRDATA` with reference memory |
-| Coverage | Checks address range, read/write operation, write data, read data, and address-RW cross coverage |
-
----
-
-## SPI RTL Design and Verification
-
-SPI is a synchronous serial communication protocol using `SCLK`, `MOSI`, `MISO`, and `CS` signals.
-
-In this project, the SPI master and slave RTL modules were designed and verified.  
-The RTL design was implemented to transfer 8-bit data serially between master and slave using SPI signals.
-
-The SPI operation was first verified through a SystemVerilog UVM-based testbench.  
-The UVM testbench generates random 8-bit transmit data, drives the SPI master using the `start` signal, and monitors the received slave data.  
-The scoreboard compares the transmitted data and received data to check whether the SPI transfer works correctly.
-
-After simulation, the SPI communication was also tested on hardware using two Basys3 FPGA boards.  
-One board was used as the SPI master, and the other board was used as the SPI slave.  
-The data transfer between the two boards was checked to verify that the SPI RTL design works correctly on real hardware.
-
-| Verification Item | Description |
-|---|---|
-| RTL Design | Designed SPI master and slave modules |
-| Random Transaction | Generates randomized 8-bit SPI data |
-| Master Transfer | Sends data using `start` control |
-| Slave Receive | Receives serial data from SPI master |
-| Scoreboard | Compares transmitted data and received data |
-| Coverage | Checks important TX data patterns and data ranges |
-| Board Test | Verified SPI communication using two Basys3 boards |
-
----
-
-## I2C RTL Design and Verification
-
-I2C is a two-wire serial communication protocol using `SCL` and `SDA`.
-
-In this project, the I2C master and slave RTL modules were designed and verified.  
-The RTL design was implemented to transfer data using start condition, slave address, write data, ACK response, and stop condition.
-
-The I2C operation was first verified through a SystemVerilog UVM-based testbench.  
-The driver performs the transaction sequence using START, address write, data write, and STOP.  
-The driver also checks the ACK response after the write operation.  
-The monitor captures the transmitted data and slave received data, and the scoreboard compares them.
+### Read Flow
 
 ```text
-START → WRITE(address + W) → WRITE(random data) → STOP
+Read Address
+     |
+     v
+AXI4-Lite Slave Register
+     |
+     v
+Read Data + Read Response
 ```
-
-After simulation, the I2C communication was also tested on hardware using two Basys3 FPGA boards.  
-One board was used as the I2C master, and the other board was used as the I2C slave.  
-The data transfer and ACK response between the two boards were checked to verify that the I2C RTL design works correctly on real hardware.
-
-| Verification Item | Description |
-|---|---|
-| RTL Design | Designed I2C master and slave modules |
-| START Condition | Starts I2C transaction |
-| Address Write | Sends slave address with write bit |
-| Data Write | Sends randomized 8-bit data |
-| ACK Check | Checks ACK response after write operation |
-| STOP Condition | Ends I2C transaction |
-| Scoreboard | Compares transmitted data and received slave data |
-| Coverage | Checks important TX data patterns and data ranges |
-| Board Test | Verified I2C communication using two Basys3 boards |
 
 ---
 
-## AXI-Lite Peripheral Study
+## Peripheral IPs
 
-Unlike the previous RISC-V project, where peripherals were connected to a custom RISC-V CPU, this AXI project used a Vivado-generated processor system and AXI-Lite wrapper.  
-The custom peripheral registers were accessed from Vitis C code through memory-mapped I/O.
+| Peripheral | RTL Files | Integration Focus |
+|---|---|---|
+| GPIO | `GPIO/GPIO8_v1_0.v`, `GPIO/GPIO8_v1_0_S00_AXI.v` | Memory-mapped input/output register access |
+| SPI | `SPI/SPI_v1_0.v`, `SPI/SPI_v1_0_S00_AXI.v` | AXI register control, SPI transfer, UVM and software verification |
+| I2C | `I2C/I2C_v1_0.v`, `I2C/I2C_v1_0_S00_AXI.v` | AXI register control, I2C transfer, Vitis HAL access |
+| UART | `UART/uart_v1_0.v`, `UART/uart_v1_0_S00_AXI.v` | AXI register control, UART operation, interrupt-based software application |
 
-The `AXI` folder contains AXI-Lite based peripheral wrapper and integration materials.
+Each top-level peripheral file connects the protocol-specific RTL to the generated AXI4-Lite slave interface in the corresponding `_S00_AXI` module.
 
-The AXI peripheral files include memory-mapped slave register interfaces and AXI-Lite channels for write address, write data, write response, read address, and read data.  
-This part focuses on understanding AXI-Lite peripheral integration rather than a full UVM testbench structure.
+---
 
-| AXI Item | Description |
+## Hardware-Software Integration
+
+The Vitis software follows a layered structure so that application logic is separated from low-level register access.
+
+```text
+Application Layer (`ap`)
+          |
+          v
+Driver Layer (`driver`)
+          |
+          v
+Hardware Abstraction Layer (`HAL`)
+          |
+          v
+AXI4-Lite Peripheral Registers
+```
+
+| Layer | Responsibility |
 |---|---|
-| GPIO | AXI-Lite GPIO peripheral wrapper |
-| SPI | AXI-Lite SPI peripheral wrapper and result files |
-| I2C | AXI-Lite I2C peripheral wrapper and result files |
-| UART | AXI-Lite UART peripheral wrapper and result files |
-| Vitis | Software-level peripheral access test materials |
+| Application | Implements the test scenario and peripheral behavior |
+| Driver | Provides reusable control functions for buttons, LEDs, switches, and FND |
+| HAL | Reads and writes memory-mapped GPIO, SPI, I2C, UART, and timer registers |
+| Hardware | Executes the peripheral function in custom RTL |
+
+This structure allows the same application logic to use clear software APIs without directly handling AXI register addresses in every module.
+
+---
+
+## Verification Strategy
+
+The project verifies both the AXI4-Lite register interface and the connected peripheral behavior.
+
+| Verification Level | Verification Focus |
+|---|---|
+| RTL Simulation | AXI read/write handshake and peripheral control behavior |
+| Register Test | Correct write/read access to memory-mapped slave registers |
+| UVM Testbench | Randomized AXI-SPI transactions, monitoring, scoreboard comparison, and coverage |
+| Vitis Software | Peripheral access through C/HAL APIs |
+| System Integration | MicroBlaze, AXI interconnect, custom IP, and software operation |
+
+### AXI-SPI UVM Verification
+
+The SPI directory contains a dedicated SystemVerilog UVM testbench (`SPI/VITIS/tb_axi_spi_uvm.sv`). The testbench drives randomized AXI transactions, observes SPI behavior, compares expected and actual results, and collects functional coverage.
+
+---
+
+## Repository Structure
+
+```text
+AXI/
+|-- README.md
+|-- STUDY
+|-- GPIO/
+|   |-- GPIO8_v1_0.v
+|   `-- GPIO8_v1_0_S00_AXI.v
+|-- SPI/
+|   |-- SPI_v1_0.v
+|   |-- SPI_v1_0_S00_AXI.v
+|   |-- Sim_Result/
+|   |-- Coverage_verdi/
+|   `-- VITIS/
+|       |-- tb_axi_spi_uvm.sv
+|       `-- src/
+|           |-- HAL/
+|           |-- driver/
+|           |-- ap/
+|           |-- common/
+|           `-- main.c
+|-- I2C/
+|   |-- I2C_v1_0.v
+|   |-- I2C_v1_0_S00_AXI.v
+|   `-- VITIS/
+|       `-- src/
+|           |-- HAL/
+|           |-- driver/
+|           |-- ap/
+|           |-- common/
+|           `-- main.c
+`-- UART/
+    |-- uart_v1_0.v
+    |-- uart_v1_0_S00_AXI.v
+    `-- VITIS/
+        `-- src/
+            |-- HAL/
+            |-- driver/
+            |-- ap/
+            |-- common/
+            `-- main.c
+```
 
 ---
 
 ## Results
 
-Each project includes verification-related results such as simulation results, coverage results, timing results, reports, and hardware test results.
+### AXI-SPI Simulation
 
-| Result Folder | Description |
+![AXI-SPI simulation result](SPI/Sim_Result/rand_sim.png)
+
+### AXI-SPI Functional Coverage
+
+![AXI-SPI coverage result](SPI/Coverage_verdi/AXI_SPI_verdi.png)
+
+---
+
+## Key Takeaways
+
+- Designed custom AXI4-Lite slave wrappers for multiple peripherals
+- Connected protocol RTL to memory-mapped control and status registers
+- Integrated custom IP with a MicroBlaze processor system
+- Built layered Vitis C/HAL software for peripheral access
+- Verified hardware and software operation at simulation and system levels
+
+---
+
+## Presentation
+
+- [SoC AXI Peripheral Integration](https://github.com/user-attachments/files/28446928/260508_SoC_AXI_Peripheral_.pdf)
+
+---
+
+[Back to the UVM Verification Projects](../README.md)
+
+uvm-readme-drafts/UVM_README.md
+# UVM Verification Projects
+
+This repository contains SystemVerilog UVM-based verification projects for memories, bus protocols, and serial communication IPs.
+
+The main goal is to design reusable transaction-level testbenches and verify RTL behavior using constrained-random stimulus, scoreboards, functional coverage, and FPGA board tests.
+
+The repository also includes a separate AXI4-Lite project that integrates custom GPIO, SPI, I2C, and UART peripherals with a MicroBlaze-based processor system and Vitis software.
+
+---
+
+## Project Overview
+
+| Project | Description | Main Focus |
+|---|---|---|
+| [`RAM`](RAM/) | RAM verification using UVM | Random/write-read sequences, full address sweep, reference memory comparison |
+| [`UART`](UART/) | UART verification using UVM | Serial bit driving, randomized 8-bit transactions, TX/RX comparison |
+| [`UART2`](UART2/) | Additional UART verification project | Interface-based UART transaction verification |
+| [`APB_RAM`](APB_RAM/) | APB-based RAM verification using UVM | SETUP/ACCESS phases, `PREADY` handling, read/write comparison |
+| [`SPI`](SPI/) | SPI RTL design and UVM verification | Master/slave RTL, randomized transfer, coverage, two-board test |
+| [`I2C`](I2C/) | I2C RTL design and UVM verification | START/STOP/ACK handling, randomized data transfer, two-board test |
+| [`AXI`](AXI/) | AXI4-Lite peripheral IP and software verification | Custom slave IP, MicroBlaze integration, Vitis C/HAL, memory-mapped I/O |
+
+For the complete AXI4-Lite architecture and software verification flow, see [AXI/README.md](AXI/README.md).
+
+---
+
+## UVM Testbench Architecture
+
+The verification environments follow a reusable UVM testbench structure.
+
+```text
+Sequence Item
+     |
+     v
+Sequence -> Sequencer -> Driver -> Interface -> DUT
+                                             |
+                                             v
+Monitor -> Scoreboard -> Result
+        -> Coverage
+```
+
+| Component | Responsibility |
 |---|---|
-| `Sim_Result` | Simulation waveform or console result |
-| `Coverage_verdi` | Coverage result checked using Verdi |
-| `Timing` | Timing-related result |
-| `report` | Verification or synthesis report |
+| Sequence Item | Defines transaction-level data and constraints |
+| Sequence | Generates directed or randomized transactions |
+| Sequencer | Sends sequence items to the driver |
+| Driver | Converts transactions into signal-level DUT stimulus |
+| Interface | Connects the class-based testbench to RTL signals |
+| Monitor | Samples DUT activity and reconstructs transactions |
+| Scoreboard | Compares expected and actual results |
+| Coverage | Measures whether important scenarios and data ranges were exercised |
 
-For SPI and I2C, the RTL designs were also verified on hardware using two Basys3 FPGA boards.  
-One board operated as the master, and the other board operated as the slave.  
-The board-level test was performed to check whether the designed communication protocol works correctly in real FPGA hardware.
+---
+
+## Verification Summary
+
+| Target | Verification Focus |
+|---|---|
+| RAM | Random access, write-read sequence, full address sweep, reference memory comparison |
+| UART | Start/data/stop bit driving, fixed bit timing, randomized TX/RX comparison |
+| APB RAM | APB SETUP/ACCESS phases, `PREADY` wait, memory-model-based `PRDATA` comparison |
+| SPI | Master/slave RTL, randomized 8-bit transfer, TX/RX matching, functional coverage, FPGA board test |
+| I2C | START, address write, data write, ACK, STOP, received-data comparison, FPGA board test |
+| AXI4-Lite | Custom slave wrappers, memory-mapped registers, Vitis software access, peripheral integration |
+
+---
+
+## RAM Verification
+
+The RAM testbench verifies memory write and read behavior using a reference memory model in the scoreboard.
+
+During a write transaction, the scoreboard stores the expected value in the reference memory. During a read transaction, it compares the DUT output with the stored reference value.
+
+| Verification Item | Description |
+|---|---|
+| Random Sequence | Generates randomized addresses, data, and operations |
+| Write-Read Sequence | Writes data and reads it back from the same address |
+| Full Sweep Sequence | Accesses the complete address range |
+| Scoreboard | Compares `rdata` with the reference memory |
+| Coverage | Checks read/write operations, address ranges, data, and cross coverage |
+
+---
+
+## UART Verification
+
+The UART testbench verifies serial TX/RX data transfer.
+
+The driver generates the idle state, start bit, eight data bits, and stop bit according to the configured bit period. The monitor reconstructs the received transaction, and the scoreboard compares transmitted and received data.
+
+| Verification Item | Description |
+|---|---|
+| Random Transaction | Generates randomized 8-bit UART data |
+| Serial Driving | Drives idle, start, data, and stop bits |
+| Monitor | Reconstructs received serial data |
+| Scoreboard | Compares `tx_data` and `rx_data` |
+| Coverage | Checks TX/RX values, match results, and cross coverage |
+
+---
+
+## APB RAM Verification
+
+The APB RAM testbench verifies memory-mapped read and write transfers through the APB protocol.
+
+The driver performs the SETUP and ACCESS phases and waits for `PREADY` before completing a transfer. The scoreboard stores write data in a reference memory and checks returned read data.
+
+| Verification Item | Description |
+|---|---|
+| SETUP Phase | Drives `PSEL`, `PWRITE`, `PADDR`, and `PWDATA` |
+| ACCESS Phase | Asserts `PENABLE` and waits for `PREADY` |
+| Write-Read Sequence | Writes randomized data and reads it back |
+| Scoreboard | Compares `PRDATA` with the reference memory |
+| Coverage | Checks address ranges, operations, data, and address-operation crosses |
+
+---
+
+## SPI RTL Design and Verification
+
+The SPI project includes master/slave RTL design, UVM simulation, functional coverage, and FPGA board verification.
+
+The UVM testbench generates randomized 8-bit transmit data, starts the master transfer, observes the slave result, and compares transmitted and received data in the scoreboard.
+
+After simulation, the design was tested using two Basys3 boards. One board operated as the SPI master and the other as the SPI slave.
+
+| Verification Item | Description |
+|---|---|
+| RTL Design | SPI master and slave modules |
+| Random Transaction | Randomized 8-bit transmit data |
+| Master Transfer | Starts and controls serial transmission |
+| Slave Receive | Captures serial data from the master |
+| Scoreboard | Compares transmitted and received data |
+| Coverage | Checks important values and data ranges |
+| Board Test | Verifies communication between two Basys3 boards |
+
+---
+
+## I2C RTL Design and Verification
+
+The I2C project includes master/slave RTL design, UVM simulation, ACK checking, functional coverage, and FPGA board verification.
+
+The driver performs the following write transaction:
+
+```text
+START -> WRITE(address + W) -> WRITE(random data) -> ACK check -> STOP
+```
+
+The monitor captures transmitted and received data, and the scoreboard checks whether the slave received the expected value.
+
+After simulation, the design was tested using two Basys3 boards configured as the I2C master and slave.
+
+| Verification Item | Description |
+|---|---|
+| RTL Design | I2C master and slave modules |
+| START/STOP | Generates and checks transaction boundaries |
+| Address Write | Sends the slave address and write bit |
+| Data Write | Sends randomized 8-bit data |
+| ACK Check | Checks the slave response |
+| Scoreboard | Compares transmitted and received data |
+| Coverage | Checks important values and data ranges |
+| Board Test | Verifies communication between two Basys3 boards |
+
+---
+
+## AXI4-Lite Peripheral Integration
+
+The [`AXI`](AXI/) project focuses on hardware-software integration using custom AXI4-Lite slave peripherals.
+
+GPIO, SPI, I2C, and UART IPs are connected to a MicroBlaze-based processor system and accessed through memory-mapped registers from Vitis C software. The AXI project is documented separately because it focuses on SoC integration and software verification in addition to RTL verification.
+
+[View the complete AXI4-Lite project documentation](AXI/README.md)
+
+---
+
+## Results
+
+Each project directory contains the available verification and implementation evidence.
+
+| Result Directory | Description |
+|---|---|
+| `Sim_Result` | Simulation waveforms or console results |
+| `Coverage_verdi` | Functional coverage results viewed with Verdi |
+| `Timing` | Timing analysis results |
+| `report` | Verification, synthesis, or implementation reports |
+
+SPI and I2C also include board-level verification using two Basys3 FPGA boards.
 
 ---
 
