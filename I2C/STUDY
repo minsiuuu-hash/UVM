@@ -12,8 +12,8 @@ Pull-Up 저항이 있기 때문에, 아무도 SDA/SCL을 0으로 당기지 않�
 ACK = Acknowledge
 NACK = Not Acknowledge
 
-ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트 + ACK/NACK으로 총 9비트
-DATA를 보낼때는 8비트의 데이터값 + ACK/NACK 1비트 값으로 총 9비트
+ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트의 결과로 ACK/NACK으로 1비트 = 총 9비트
+DATA를 보낼때는 8비트의 데이터값의 결과로 ACK/NACK 1비트 = 총 9비트
 
 SDA = SCL이 LOW일때 값 변환, SCL이 HIGH일때는 샘플링
 
