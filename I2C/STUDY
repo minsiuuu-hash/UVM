@@ -82,7 +82,7 @@ Master 각 state별 내용.
     write 동작일 때는 master가 데이터를 보낸 쪽이므로 master는 SDA를 release하고 slave의 ACK를 읽음.
     slave가 SDA를 0으로 당기면 ACK, slave가 SDA를 release하면 pull-up에 의해 1이 되어 NACK로 판단함.
     read 동작일 때는 master가 데이터를 받은 쪽이므로 master가 ACK/NACK를 보냄.
-    master가 SDA를 0으로 당기면 ACK로 다음 byte를 계속 읽겠다는 의미이고, SDA를 release하면 NACK로 read를 종료하겠다는 의미임.
+    ACK/NACK 처리가 끝나면 WAIT_CMD 상태로 이동하며,이후 STOP, START 재생성, 추가 write/read 여부는 상위 제어 로직의 명령에 따라 결정됨.
     ACK 처리가 끝나면 WAIT_CMD 상태로 이동해서 다음 명령을 기다림.
 
   STOP
@@ -100,29 +100,37 @@ Master 각 state별 내용.
 
 ----------------------------------------------------------------------------------------------------------------------------
 Slave 각 state별 내용.
+
   IDLE
     버스 유휴 상태. SDA를 release하고 START condition을 기다림.
     SCL이 High일 때 SDA가 1→0으로 떨어지면 START로 판단하고 ADDR 상태로 이동.
+
   ADDR
     master가 보낸 8비트 주소 프레임을 수신함.
     앞 7비트는 slave address, 마지막 1비트는 R/W bit.
     주소가 local address와 같으면 rw_flag를 저장하고 ADDR_ACK로 이동.
-    주소가 다르면 STOP 상태로 이동.
+    주소가 다르면 ACK를 생성하지 않고 STOP 상태로 이동하여 STOP condition을 기다림.
+    (현재 구현에서는 Address NACK 이후 Repeated START 처리는 지원하지 않음.)
+
   ADDR_ACK
     주소가 맞았다는 의미로 slave가 9번째 clock에서 SDA를 0으로 당겨 ACK를 보냄.
     ACK가 끝나면 rw_flag에 따라 DATA 상태로 이동.
     rw_flag=0이면 master write라서 slave가 데이터를 받을 준비를 함.
     rw_flag=1이면 master read라서 slave가 데이터를 보낼 준비를 함.
+
   DATA
     실제 8비트 데이터를 송수신하는 상태.
     rw_flag=0이면 master write이므로 slave가 SDA를 읽어서 rx_shift_reg에 저장함.
     rw_flag=1이면 master read이므로 slave가 tx_shift_reg의 데이터를 SDA로 출력함.
     8비트 송수신이 끝나면 DATA_ACK 상태로 이동.
+
   DATA_ACK
     데이터 8비트 전송 후 9번째 clock에서 ACK를 처리하는 상태.
-    rw_flag = 0 → Master Write → Master가 데이터 전송 → Slave가 데이터 수신 후 ACK 전송
+    rw_flag = 0 → Master Write → Master가 데이터 전송 → Slave가 데이터 수신 후 ACK 전송 → 다시 DATA 상태로 이동하여 다음 byte를 수신함
     rw_flag = 1 → Master Read → Slave가 데이터 전송 → Master가 데이터 수신 후 ACK/NACK 전송
-    master가 ACK를 보내면 다음 byte를 계속 전송하고, NACK를 보내면 STOP 상태로 이동.
+    master가 ACK를 보내면 다음 byte를 계속 전송함.
+    master가 NACK를 보내면 현재 구현에서는 STOP 상태로 이동하여 STOP condition을 기다림.
+
   STOP
     STOP condition을 기다리는 상태.
     SCL이 High일 때 SDA가 0→1로 올라가면 STOP으로 판단하고 IDLE로 돌아감.
