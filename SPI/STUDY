@@ -3,6 +3,8 @@ SPI(Serial Peripheral Interface)
   비동기식인 UART와 달리, 동기식 통신 프로토콜.
   UART는 1:1 통신이지만 SPI는 1:N 통신임.
   Master와 Slave가 full-duplex구조(데이터 선이 두개, MOSI, MISO)로 동시에 주고받음.
+  
+Full-Duplex = 하나의 SCLK를 기준으로 Master와 Slave가 동시에 1bit씩 데이터를 주고받을 수 있음.
 
 SCLK: master가 만드는 clock
 MOSI: Master Out Slave In(직렬 전송)
