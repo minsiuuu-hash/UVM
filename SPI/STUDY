@@ -27,6 +27,7 @@ CPHA(phase)
 시스템 clk은 너무 빠르기때문에, 의도적으로 div_cnt를 활용하여 자체 clk을 만들고 반주기일때, 즉 half_tick이 발생될때마다 토글되도록 함.
 
 MSB FIRST로 shift_reg 구조를 활용.
+shift_reg를 사용하는 이유 = Serial ↔ Parallel 변환을 매우 자연스럽게 구현할 수 있기 때문
 
 sclk_r <= cpol : spi가 통신을 하지 않을때, idle level이 cpol에 맞아야하기때문.
 
