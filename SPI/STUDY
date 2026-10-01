@@ -26,6 +26,11 @@ FPGA의 System Clock은 SPI 통신에 사용하기에는 너무 빠를 수 있�
 div_cnt가 반주기에 도달하면 half_tick을 발생시키고, 이때 SCLK를 Toggle하여 SPI Clock을 생성합니다.
 즉, System Clock을 기준으로 SCLK 신호를 생성한다
 
+CS_n은 통신할 Slave를 선택하는 신호이며, 일반적인 SPI에서는 한 번에 하나의 Slave만 LOW로 활성화한다. 
+MOSI와 SCLK는 여러 Slave가 공유하기 때문에 모든 Slave에 동일한 신호가 전달되지만, CS_n이 LOW인 Slave만 해당 신호를 유효한 통신으로 처리한다. 
+특히 MISO는 여러 Slave가 하나의 선을 공유하므로 둘 이상의 Slave가 동시에 활성화되면 서로 다른 값을 구동하여 충돌할 수 있다. 
+따라서 선택되지 않은 Slave는 MISO를 High-Z 상태로 유지한다.
+
 MSB FIRST로 shift_reg 구조를 활용.
 shift_reg를 사용하는 이유 = Serial ↔ Parallel 변환을 매우 자연스럽게 구현할 수 있기 때문
 
