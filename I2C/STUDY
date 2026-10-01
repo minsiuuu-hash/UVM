@@ -32,7 +32,6 @@ ack_out
 ack_in
   read 후 마스터가 슬레이브에게 줄 ACK/NACK를 외부에서 넣어주는 신호
 
-
 write 상태에서 보낼 data bit가 0이면 SDA를 0으로 drive한다.
 보낼 data bit가 1이면 SDA를 release해서 pull-up에 의해 1이 되게 한다.
 즉 I2C에서는 1을 직접 출력하지 않고, release로 표현한다.
