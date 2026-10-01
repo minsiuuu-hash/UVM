@@ -76,9 +76,8 @@ Slave state
     rx_done을 1로 한 clock 발생시키고 MISO를 idle 값으로 둠.
     CS_N이 1로 올라가면 통신이 완전히 끝난 것으로 보고 IDLE로 복귀함.
 
-
-Slave에서 Master에서 만든 sclk을 그대로 always에서 받게 되면, 나중에 다른 device와 연결할때 cdc환경에 노출될수있음.
-따라서 Edge Detector를 활용해, sclk를 event로 받아 조건문에서 활용할수있게만듦.
+따라서 외부 SCLK를 System Clock 기준으로 동기화한 뒤 Edge Detector를 활용해 SCLK Edge를 Event로 받아 처리할 수 있음. 
+단, System Clock이 SCLK보다 충분히 빨라야 함.
 
 Edge Dectector 
   Edge Detector는 신호가 0→1 또는 1→0으로 바뀌는 순간만 딱 1클럭짜리 펄스로 뽑아내는 회로.
