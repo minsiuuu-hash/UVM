@@ -9,7 +9,12 @@ MOSI: Master Out Slave In(직렬 전송)
 MISO: Master In Slave Out(직렬 전송)
 CS_n: chip select, 보통 active low
 
-SPI의 핵심은 클럭의 어느 edge에서 데이터를 내보내고, 어느 edge에서 샘플링할 지.
+CS_n은 통신할 Slave를 선택하는 신호이며, 일반적인 SPI에서는 한 번에 하나의 Slave만 LOW로 활성화한다. 
+MOSI와 SCLK는 여러 Slave가 공유하기 때문에 모든 Slave에 동일한 신호가 전달되지만, CS_n이 LOW인 Slave만 해당 신호를 유효한 통신으로 처리한다. 
+특히 MISO는 여러 Slave가 하나의 선을 공유하므로 둘 이상의 Slave가 동시에 활성화되면 서로 다른 값을 구동하여 충돌할 수 있다. 
+따라서 선택되지 않은 Slave는 MISO를 High-Z 상태로 유지한다.
+
+SPI의 핵심은 클럭의 어느 Edge에서 데이터를 내보내고, 어느 Edge에서 Sampling할지를 결정하는 것.
 
 CPOL(polarity)
   클럭의 idle 상태를 결정
@@ -26,11 +31,6 @@ FPGA의 System Clock은 SPI 통신에 사용하기에는 너무 빠를 수 있�
 div_cnt가 반주기에 도달하면 half_tick을 발생시키고, 이때 SCLK를 Toggle하여 SPI Clock을 생성합니다.
 즉, System Clock을 기준으로 SCLK 신호를 생성한다
 
-CS_n은 통신할 Slave를 선택하는 신호이며, 일반적인 SPI에서는 한 번에 하나의 Slave만 LOW로 활성화한다. 
-MOSI와 SCLK는 여러 Slave가 공유하기 때문에 모든 Slave에 동일한 신호가 전달되지만, CS_n이 LOW인 Slave만 해당 신호를 유효한 통신으로 처리한다. 
-특히 MISO는 여러 Slave가 하나의 선을 공유하므로 둘 이상의 Slave가 동시에 활성화되면 서로 다른 값을 구동하여 충돌할 수 있다. 
-따라서 선택되지 않은 Slave는 MISO를 High-Z 상태로 유지한다.
-
 MSB FIRST로 shift_reg 구조를 활용.
 shift_reg를 사용하는 이유 = Serial ↔ Parallel 변환을 매우 자연스럽게 구현할 수 있기 때문
 
@@ -43,10 +43,6 @@ cpha = 1일 경우
 
 slave에서 master에서 만든 sclk을 그대로 always에서 받게 되면, 나중에 다른 device와 연결할때 cdc환경에 노출될수있음.
 따라서 edge detector를 활용해, sclk를 event로 받아 조건문에서 활용할수있게만듦.
-
-edge dectector 
-  edge detector는 신호가 0→1 또는 1→0으로 바뀌는 순간만 딱 1클럭짜리 펄스로 뽑아내는 회로.
-  즉, 계속 High인 상태를 보는 게 아니라 변화가 일어난 그 “순간 이벤트”만 잡아서 다른 로직이 안전하게 사용하게 해줌.
 
 Master state
   IDLE
@@ -84,6 +80,9 @@ Slave state
     CS_N이 1로 올라가면 통신이 완전히 끝난 것으로 보고 IDLE로 복귀함.
 
 
+edge dectector 
+  edge detector는 신호가 0→1 또는 1→0으로 바뀌는 순간만 딱 1클럭짜리 펄스로 뽑아내는 회로.
+  즉, 계속 High인 상태를 보는 게 아니라 변화가 일어난 그 “순간 이벤트”만 잡아서 다른 로직이 안전하게 사용하게 해줌.
 
 
 
