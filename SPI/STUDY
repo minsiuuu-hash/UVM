@@ -2,9 +2,7 @@ SPI(Serial Peripheral Interface)
   Motorola에서 개발한 통신 방식.
   비동기식인 UART와 달리, 동기식 통신 프로토콜.
   UART는 1:1 통신이지만 SPI는 1:N 통신임.
-  Master와 Slave가 full-duplex구조(데이터 선이 두개, MOSI, MISO)로 동시에 주고받음.
-  
-Full-Duplex = 하나의 SCLK를 기준으로 Master와 Slave가 동시에 1bit씩 데이터를 주고받을 수 있음.
+  Master와 Slave가 Full-Duplex구조(하나의 SCLK를 기준으로 Master와 Slave가 동시에 1bit씩 데이터를 주고받을 수 있음)로 동시에 주고받음.
 
 SCLK: Master가 만드는 clock
 MOSI: Master Out Slave In(직렬 전송)
@@ -24,7 +22,8 @@ CPHA(phase)
     cpha = 1
       첫 edge에서는 데이터 변화, 두 번째 edge에서 sample
 
-시스템 clk은 너무 빠르기때문에, 의도적으로 div_cnt를 활용하여 자체 clk을 만들고 반주기일때, 즉 half_tick이 발생될때마다 토글되도록 함.
+FPGA의 System Clock은 SPI 통신에 사용하기에는 너무 빠를 수 있기 때문에 div_cnt를 이용해 원하는 SCLK 주기를 생성합니다. 
+div_cnt가 반주기에 도달하면 half_tick을 발생시키고, 이때 SCLK를 Toggle하여 SPI Clock을 생성합니다.
 
 MSB FIRST로 shift_reg 구조를 활용.
 shift_reg를 사용하는 이유 = Serial ↔ Parallel 변환을 매우 자연스럽게 구현할 수 있기 때문
