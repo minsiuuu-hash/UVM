@@ -16,7 +16,7 @@ ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트의 결과로 ACK/
 DATA를 보낼때는 8비트의 데이터값의 결과로 ACK/NACK 1비트 = 총 9비트
 
 일반적인 DATA 전송에서는 SCL이 LOW일 때 SDA를 변경하고, SCL이 HIGH인 동안 SDA를 안정적으로 유지한다. 
-Receiver는 이 HIGH 구간의 유효한 SDA 값을 수신한다.
+Receiver는 이 HIGH 구간의 유효한 SDA 값을 수신한다(SCL HIGH 동안 데이터가 안정적이어야 한다).
 
 WRITE일 경우
   Master가 SDA를 제어하고 Slave가 읽는다.
