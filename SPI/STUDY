@@ -31,7 +31,7 @@ FPGA의 System Clock은 SPI 통신에 사용하기에는 너무 빠를 수 있�
 div_cnt가 반주기에 도달하면 half_tick을 발생시키고, 이때 SCLK를 Toggle하여 SPI Clock을 생성합니다.
 즉, System Clock을 기준으로 SCLK 신호를 생성한다
 
-MSB FIRST로 shift_reg 구조를 활용.
+본 설계에서는 MSB FIRST 방식으로 shift_reg 구조를 활용.
 shift_reg를 사용하는 이유 = Serial ↔ Parallel 변환을 매우 자연스럽게 구현할 수 있기 때문
 
 sclk_r <= cpol : spi가 통신을 하지 않을때, idle level이 cpol에 맞아야하기때문.
