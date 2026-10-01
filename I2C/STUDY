@@ -5,41 +5,46 @@ I2C (Inter-Integrated-Circuit)
   풀업(Pull-Up) 저항이 연결된 직렬 데이터(SDA)와 직렬 클럭(SCL)이라는 두개의 양방향 open-drain을 사용함.
   데이터 방향이 master > slave, slave > master로 SDA(양방향 데이터 선)를 활용해 가능하지만, 동시에는 불가.
 
-Pull-Up 저항이 있기 때문에, 아무도 SDA/SCL을 0으로 당기지 않고 Z로 release하면 실제 버스 전압은 1이 된다.
+Open-Drain / Pull-Up
+  Pull-Up 저항이 있기 때문에, 아무도 SDA/SCL을 0으로 당기지 않고 Z로 release하면 실제 버스 전압은 1이 된다.
 
-100MHz 시스템 clk을기준으로 100kHz I2C 기준 clk을 만듦.
+  write 상태에서 보낼 data bit가 0이면 SDA를 0으로 drive한다.
+  보낼 data bit가 1이면 SDA를 release해서 pull-up에 의해 1이 되게 한다.
+  즉 I2C에서는 1을 직접 출력하지 않고, release로 표현한다.
+
+  read 상태에서는 Master가 SDA를 release하여 high-impedance 상태로 두고,
+  Slave가 SDA를 0으로 당기거나 release하는 값을 Master가 읽는다.
+
+DATA 전송 Timing
+  일반적인 DATA 전송에서는 SCL이 LOW일 때 SDA를 변경하고, SCL이 HIGH인 동안 SDA를 안정적으로 유지한다.
+  Receiver는 이 HIGH 구간의 유효한 SDA 값을 수신한다(SCL HIGH 동안 데이터가 안정적이어야 한다).
+
+  MSB First로, shift_reg구조를 활용함. 값을 저장하고, shift함.
 
 ACK = Acknowledge
 NACK = Not Acknowledge
 
-ADDR를 보낼때는 7비트의 주소값 + READ/WRITE 1비트의 결과로 ACK/NACK으로 1비트 = 총 9비트
-DATA를 보낼때는 8비트의 데이터값의 결과로 ACK/NACK 1비트 = 총 9비트
+Address 전송
+  7-bit Slave Address + 1-bit R/W = 8bit 전송
+  이후 9번째 Clock에서 ACK/NACK 1bit 응답
 
-일반적인 DATA 전송에서는 SCL이 LOW일 때 SDA를 변경하고, SCL이 HIGH인 동안 SDA를 안정적으로 유지한다. 
-Receiver는 이 HIGH 구간의 유효한 SDA 값을 수신한다(SCL HIGH 동안 데이터가 안정적이어야 한다).
+Data 전송
+  8bit Data 전송
+  이후 9번째 Clock에서 ACK/NACK 1bit 응답
 
 WRITE일 경우
   Master가 SDA를 제어하고 Slave가 읽는다.
   하지만 ACK를 보낼 때는 Slave가 SDA를 제어함.
-  Slave가 SDA를 제어함 : ACK(0) = 수신 확인 응답. NACK(1) = Slave가 해당 Byte를 수신하지 않거나 받아들일 수 없을 때 보내는 응답.
+  Slave가 SDA를 제어함
+    ACK(0) = 수신 확인 응답.
+    NACK(1) = Slave가 해당 Byte를 수신하지 않거나 받아들일 수 없을 때 보내는 응답.
+
 READ일 경우
   Slave가 SDA를 제어하고 Master가 읽는다.
   하지만 ACK를 보낼 때는 Master가 제어함.
-  Master가 SDA를 제어함 : ACK(0) = 수신 확인 + 다음 Byte 계속 전송 요청. NACK(1) = 현재 Byte를 마지막으로 더 이상 데이터를 받지 않겠다는 의미.
-
-ack_out
-  write 후 슬레이브가 준 ACK/NACK를, 마스터가 읽어서 밖으로 내보내는 신호
-ack_in
-  read 후 마스터가 슬레이브에게 줄 ACK/NACK를 외부에서 넣어주는 신호
-
-write 상태에서 보낼 data bit가 0이면 SDA를 0으로 drive한다.
-보낼 data bit가 1이면 SDA를 release해서 pull-up에 의해 1이 되게 한다.
-즉 I2C에서는 1을 직접 출력하지 않고, release로 표현한다.
-
-read 상태에서는 Master가 SDA를 release하여 high-impedance 상태로 두고,
-Slave가 SDA를 0으로 당기거나 release하는 값을 Master가 읽는다.
-
-MSB First로, shift_reg구조를 활용함. 값을 저장하고, shift함.
+  Master가 SDA를 제어함
+    ACK(0) = 수신 확인 + 다음 Byte 계속 전송 요청.
+    NACK(1) = 현재 Byte를 마지막으로 더 이상 데이터를 받지 않겠다는 의미.
 
 Repeated START 장점
   STOP 없이 방향 전환 가능
@@ -47,6 +52,14 @@ Repeated START 장점
   레지스터 읽기 같은 표준 I2C 동작 구현 가능
   슬레이브 내부 상태 유지에 유리
 
+내 설계 기준
+  100MHz 시스템 clk을 기준으로 100kHz I2C 기준 clk을 만듦.
+
+  ack_out
+    write 후 슬레이브가 준 ACK/NACK를, 마스터가 읽어서 밖으로 내보내는 신호
+
+  ack_in
+    read 후 마스터가 슬레이브에게 줄 ACK/NACK를 외부에서 넣어주는 신호
 ----------------------------------------------------------------------------------------------------------------------------
 Master 각 state별 내용.
 
@@ -73,17 +86,17 @@ Master 각 state별 내용.
     data bit가 0이면 master가 SDA를 0으로 당김.
     data bit가 1이면 master가 SDA를 release해서 pull-up에 의해 1이 되게 함.
     read 명령이면 master는 SDA를 release하고 slave가 보내는 데이터를 읽음.
-    데이터는 보통 MSB first로 bit7부터 bit0까지 전송함.
+    데이터는 MSB first로 bit7부터 bit0까지 전송함.
     DATA 전송 중에는 SCL이 Low일 때 SDA 값을 바꾸고, SCL이 High일 때 SDA 값을 샘플링함.
     8비트 송수신이 끝나면 DATA_ACK 상태로 이동.
 
   DATA_ACK
     데이터 8비트 전송 후 9번째 clock에서 ACK/NACK를 처리하는 상태.
-    write 동작일 때는 master가 데이터를 보낸 쪽이므로 master는 SDA를 release하고 slave의 ACK를 읽음.
+    write 동작일 때는 master가 데이터를 보낸 쪽이므로 master는 SDA를 release하고 slave의 ACK/NACK를 읽음.
     slave가 SDA를 0으로 당기면 ACK, slave가 SDA를 release하면 pull-up에 의해 1이 되어 NACK로 판단함.
     read 동작일 때는 master가 데이터를 받은 쪽이므로 master가 ACK/NACK를 보냄.
-    ACK/NACK 처리가 끝나면 WAIT_CMD 상태로 이동하며,이후 STOP, START 재생성, 추가 write/read 여부는 상위 제어 로직의 명령에 따라 결정됨.
-    ACK 처리가 끝나면 WAIT_CMD 상태로 이동해서 다음 명령을 기다림.
+    ACK/NACK 처리가 끝나면 WAIT_CMD 상태로 이동하며,
+    이후 STOP, START 재생성, 추가 write/read 여부는 상위 제어 로직의 명령에 따라 결정됨.
 
   STOP
     STOP condition을 생성함.
