@@ -7,7 +7,7 @@ I2C (Inter-Integrated-Circuit)
 
 Pull-Up 저항이 있기 때문에, 아무도 SDA/SCL을 0으로 당기지 않고 Z로 release하면 실제 버스 전압은 1이 된다.
 
-100MHz 시스템 clk을기준으로 100Khz I2C 기준 clk을 만듦.
+100MHz 시스템 clk을기준으로 100kHz I2C 기준 clk을 만듦.
 
 ACK = Acknowledge
 NACK = Not Acknowledge
