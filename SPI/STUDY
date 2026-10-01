@@ -24,6 +24,7 @@ CPHA(phase)
 
 FPGA의 System Clock은 SPI 통신에 사용하기에는 너무 빠를 수 있기 때문에 div_cnt를 이용해 원하는 SCLK 주기를 생성합니다. 
 div_cnt가 반주기에 도달하면 half_tick을 발생시키고, 이때 SCLK를 Toggle하여 SPI Clock을 생성합니다.
+즉, System Clock을 기준으로 SCLK 신호를 생성한다
 
 MSB FIRST로 shift_reg 구조를 활용.
 shift_reg를 사용하는 이유 = Serial ↔ Parallel 변환을 매우 자연스럽게 구현할 수 있기 때문
