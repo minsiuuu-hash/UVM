@@ -6,7 +6,7 @@ SPI(Serial Peripheral Interface)
   
 Full-Duplex = 하나의 SCLK를 기준으로 Master와 Slave가 동시에 1bit씩 데이터를 주고받을 수 있음.
 
-SCLK: master가 만드는 clock
+SCLK: Master가 만드는 clock
 MOSI: Master Out Slave In(직렬 전송)
 MISO: Master In Slave Out(직렬 전송)
 CS_n: chip select, 보통 active low
@@ -17,7 +17,6 @@ CPOL(polarity)
   클럭의 idle 상태를 결정
     cpol = 0 → idle일 때 SCLK = 0
     cpol = 1 → idle일 때 SCLK = 1
-
 CPHA(phase)
   첫 번째 edge에서 샘플링할지, 두 번째 edge에서 샘플링할지 결정
     cpha = 0
@@ -25,8 +24,7 @@ CPHA(phase)
     cpha = 1
       첫 edge에서는 데이터 변화, 두 번째 edge에서 sample
 
-시스템 clk은 너무 빠르기때문에, 의도적으로 div_cnt를 활용하여 자체 clk을 만들고
-반주기일때, 즉 half_tick이 발생될때마다 토글되도록 함.
+시스템 clk은 너무 빠르기때문에, 의도적으로 div_cnt를 활용하여 자체 clk을 만들고 반주기일때, 즉 half_tick이 발생될때마다 토글되도록 함.
 
 MSB FIRST로 shift_reg 구조를 활용.
 
