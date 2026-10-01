@@ -41,9 +41,6 @@ cpha = 0일 경우
 cpha = 1일 경우
   data state에서 값이 준비되고 두번째에서 샘플하기때문에, bit_cnt == 7일때 한번 더 shift한 후 rx_data에 값을 넣음.  (data상태에서 8번. 총 8번) 
 
-slave에서 master에서 만든 sclk을 그대로 always에서 받게 되면, 나중에 다른 device와 연결할때 cdc환경에 노출될수있음.
-따라서 edge detector를 활용해, sclk를 event로 받아 조건문에서 활용할수있게만듦.
-
 Master state
   IDLE
     통신 대기 상태.
@@ -61,16 +58,16 @@ Master state
     8비트 송수신이 끝나면 rx_data를 저장하고 STOP 상태로 이동함.
   STOP
     통신 종료 상태.
-    SCLK를 CPOL idle 값으로 되돌리고, CS_N=1로 slave 선택을 해제함.
+    SCLK를 CPOL idle 값으로 되돌리고, CS_N=1로 Slave 선택을 해제함.
     done을 1로 한 clock 발생시키고 busy를 0으로 내린 뒤 IDLE로 복귀함.
 
 Slave state
   IDLE
     통신 대기 상태.
     CS_N=1이면 slave는 선택되지 않은 상태임.
-    CS_N이 0으로 내려가면 master가 통신을 시작한 것으로 보고 tx_data의 MSB를 MISO에 미리 출력한 뒤 DATA 상태로 이동함.
+    CS_N이 0으로 내려가면 Master가 통신을 시작한 것으로 보고 tx_data의 MSB를 MISO에 미리 출력한 뒤 DATA 상태로 이동함.
   DATA
-    master가 만든 SCLK edge에 맞춰 8비트 데이터를 송수신하는 상태.
+    Master가 만든 SCLK edge에 맞춰 8비트 데이터를 송수신하는 상태.
     SCLK rising edge에서 MOSI 값을 읽어 rx_shift_reg에 저장함.
     SCLK falling edge에서 다음 MISO 값을 준비함.
     8비트를 모두 처리하면 rx_data에 수신 데이터를 저장하고 STOP 상태로 이동함.
@@ -80,8 +77,11 @@ Slave state
     CS_N이 1로 올라가면 통신이 완전히 끝난 것으로 보고 IDLE로 복귀함.
 
 
-edge dectector 
-  edge detector는 신호가 0→1 또는 1→0으로 바뀌는 순간만 딱 1클럭짜리 펄스로 뽑아내는 회로.
+Slave에서 Master에서 만든 sclk을 그대로 always에서 받게 되면, 나중에 다른 device와 연결할때 cdc환경에 노출될수있음.
+따라서 Edge Detector를 활용해, sclk를 event로 받아 조건문에서 활용할수있게만듦.
+
+Edge Dectector 
+  Edge Detector는 신호가 0→1 또는 1→0으로 바뀌는 순간만 딱 1클럭짜리 펄스로 뽑아내는 회로.
   즉, 계속 High인 상태를 보는 게 아니라 변화가 일어난 그 “순간 이벤트”만 잡아서 다른 로직이 안전하게 사용하게 해줌.
 
 
