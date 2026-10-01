@@ -46,10 +46,10 @@ READ일 경우
     ACK(0) = 수신 확인 + 다음 Byte 계속 전송 요청.
     NACK(1) = 현재 Byte를 마지막으로 더 이상 데이터를 받지 않겠다는 의미.
 
-Repeated START 장점
-  STOP 없이스터 읽기 동작에 사용될 수 있음.
-  STOP을 발생시키지 않기 때문에 Bus를 계속  다시 START condition을 발생시켜 새로운 Address/R/W 단계를 시작하는 방식.
-  Write → Read와 같은 방향 전환이나 레지점유할 수 있음.
+Repeated START
+  STOP 없이 다시 START condition을 발생시켜 새로운 Address/R/W 단계를 시작하는 방식.
+  Write → Read와 같은 방향 전환이나 레지스터 읽기 동작에 사용될 수 있음.
+  STOP을 발생시키지 않기 때문에 Bus를 계속 점유할 수 있음.
 
 현재 설계 기준
   Master FSM에는 STOP 없이 START 상태로 다시 이동하여 Repeated START를 생성할 수 있는 경로가 존재함.
