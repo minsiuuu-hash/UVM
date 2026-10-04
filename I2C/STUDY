@@ -21,8 +21,8 @@ DATA 전송 Timing
 
   MSB First로, shift_reg구조를 활용함. 값을 저장하고, shift함.
 
-ACK = Acknowledge
-NACK = Not Acknowledge
+ACK(0) = Acknowledge
+NACK(1) = Not Acknowledge
 
 Address 전송
   7-bit Slave Address + 1-bit R/W = 8bit 전송
