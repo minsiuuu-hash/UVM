@@ -83,6 +83,11 @@ Edge Dectector
   Edge Detector는 신호가 0→1 또는 1→0으로 바뀌는 순간만 딱 1클럭짜리 펄스로 뽑아내는 회로.
   즉, 계속 High인 상태를 보는 게 아니라 변화가 일어난 그 “순간 이벤트”만 잡아서 다른 로직이 안전하게 사용하게 해줌.
 
+  이를 통해 SPI Slave에서는
+    Sampling Edge → 데이터 수신
+    Change Edge   → 다음 송신 데이터 준비
+  와 같이 각 SCLK Edge마다 필요한 동작을 정확히 한 번씩 수행할 수 있음.
+
 
 
 
