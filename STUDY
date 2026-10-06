@@ -86,6 +86,7 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
 - 크기가 미리 정해져 있는 배열
 ex)
 int data[5]; // 0부터 4까지
+
 (2) Dynamic Array
 - Simulation 중 배열 크기를 결정하거나 변경할 수 있음
 - []로 선언하고 new[]로 크기 생성
@@ -120,8 +121,7 @@ pop_back()   : 뒤에서 제거
 insert()     : 원하는 위치에 추가
 delete()     : 삭제
 
-특히 UVM/Testbench에서는
-Dynamic Array, Associative Array, Queue를 자주 사용함.
+특히 UVM/Testbench에서는 Dynamic Array, Associative Array, Queue를 자주 사용함.
 
 6. Subroutine(Task / Function)
 Task      = 시간 개념 O
