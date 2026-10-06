@@ -78,8 +78,8 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
        @(posedge clk);
    end
 
-   while (count < 10)
-       count++;
+   while (count < 10)  (while : 조건이 참인 동안 반복, 반복 횟수가 정해지지 않은 경우 사용)
+		count++;
 
 5. Data Arrays
 (1) Fixed-size Array
