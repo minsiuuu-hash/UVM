@@ -410,9 +410,9 @@ Assertion = 설계가 반드시 지켜야 할 조건이나 시간적 규칙을 �
 		assert property ( @(posedge clk) req |=> ack ); = req가 발생하면 다음 클럭에 ack가 발생해야 한다.
 Property는 신호가 지켜야 할 조건과 시간적 관계를 정의하고, assert property는 해당 규칙을 검사하여 위반 시 오류를 발생시킨다.
 
-UVM_Object > UVM_report_object > UVM_Component > UVM_Driver > UART_Driver
-UVM_Object > UVM_Transaction > UVM_sequence_item > UART_seq_item
-이러한 순서로 왼쪽부터 상위 parent
+uvm_object > uvm_report_object > uvm_component > uvm_driver > UART_Driver
+uvm_object > uvm_transaction > uvm_sequence_item > UART_seq_item
+→ 왼쪽으로 갈수록 상위 class, 바로 왼쪽 class가 직접 parent class
 
 UVM_Object(Hierarchy에 속하지 않는 데이터/동작 객체)
 	일시적으로 생성돼서 transaction/stimulus 역할을 하고, component hierarchy에는 고정으로 박혀 있지 않음(데이터/임시 객체).
