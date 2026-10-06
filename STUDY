@@ -387,8 +387,9 @@ Singleton
 = 전역 관리자에 중요
 ex)
 uvm_root = UVM hierarchy / phase 관리, simulation에 하나
-factory manager = object/component 생성 및 override 관리, simulation에 하나 
-resource/config
+factory manager = object/component 생성 및 override 관리, 전역에서 하나의 factory를 공유
+resource pool = resource 정보를 전역에서 관리하는 singleton
+config_db = singleton 객체라기보다 resource pool을 이용하는 전역 설정용 interface
 
 race condtion 조심사항.
 	fork/join 결은 프로세스들을 동시에 시작시켜주지만, event를 활용해서 순서를 제어할수있음.
