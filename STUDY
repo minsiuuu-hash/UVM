@@ -65,26 +65,21 @@ SYSTEM VERILOG  - 검증용(Verification) 기초내용
    while   → 조건이 참인 동안 반복
 
    ex)
-   for (int i=0; i<8; i++)
-       data[i] = 0;
+   for (int i=0; i<8; i++) (for : RTL/TB 둘 다 많이 사용)
+       data[i] = 0;    		 
 
-   foreach (array[i])
+   foreach (array[i]) (foreach : 배열 처리, 특히 TB/UVM에서 편함)
        $display("%d", array[i]);
 
-   repeat (10)
+   repeat (10)  (repeat : TB에서 클럭 N번 기다릴 때 편함)
        @(posedge clk);
 
-   forever begin
+   forever begin  (forever : UVM Driver/Monitor에서 자주 사용)
        @(posedge clk);
    end
 
    while (count < 10)
        count++;
-
-   - for      : RTL/TB 둘 다 많이 사용
-   - foreach  : 배열 처리, 특히 TB/UVM에서 편함
-   - repeat   : TB에서 클럭 N번 기다릴 때 편함
-   - forever  : UVM Driver/Monitor에서 자주 사용
 
 5. Data Arrays
 (1) Fixed-size Array
