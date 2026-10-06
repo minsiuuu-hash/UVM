@@ -291,8 +291,7 @@ SV bit       ↔ C svBit
 SV logic     ↔ C svLogic
 
 (4) chandle
-- C/C++에서 생성한 Memory/Object의 주소(Handle)를
-  SystemVerilog에서 받아서 관리할 때 사용
+- C/C++에서 생성한 Memory/Object의 주소(Handle)를 SystemVerilog에서 받아서 관리할 때 사용
 - SV가 C의 Pointer를 직접 다루는 대신 chandle을 사용
 ------------------------------------------------------------------------------------
 
