@@ -155,8 +155,7 @@ build_phase() → function
 connect_phase() → function
 run_phase()   → task
 
-→ 실제 clk/DUT 신호를 기다려야 하는 run_phase는
-  시간 개념이 필요하기 때문에 task
+→ 실제 clk/DUT 신호를 기다려야 하는 run_phase는 시간 개념이 필요하기 때문에 task
 
 7. Inter-Thread Communication
 Thread
