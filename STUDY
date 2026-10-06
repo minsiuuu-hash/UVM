@@ -504,8 +504,7 @@ Callback = 기존 UVM component 코드를 직접 수정하지 않고
 Register Modeling
 
 RAL(Register Abstraction Layer)
-= DUT 내부 Register를 주소/Bus Signal로 직접 다루지 않고,
-  UVM 객체처럼 Register/Field 이름으로 읽고 쓰는 기능.
+= DUT 내부 Register를 주소/Bus Signal로 직접 다루지 않고, UVM 객체처럼 Register/Field 이름으로 읽고 쓰는 기능.
 = Register가 많을 때 주소/bit 관리가 편해짐.
 
 구조
