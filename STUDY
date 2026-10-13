@@ -362,7 +362,7 @@ Factory(new() 대신 type_id::create() 사용)
 = 나중에 override 가능
 = 기존 testbench 코드를 안 바꾸고 다른 class로 교체 가능
 
-factory가 중요한 이유 = UVM에서 “객체를 누가 만들지”를 중앙에서 관리하는 곳이기 때문이야
+factory가 중요한 이유 = UVM에서 객체/컴포넌트 생성을 중앙에서 관리하고, override를 통해 기존 코드 수정 없이 생성할 class 타입을 변경할 수 있기 때문.
 	1. 어떤 class들이 등록되어 있는지
 	`uvm_object_utils(my_item) -> my_item이라는 class를 factory에 등록
 	2. 그 class를 어떻게 create 해야 하는지
