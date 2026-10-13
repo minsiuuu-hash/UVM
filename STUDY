@@ -9,8 +9,7 @@
 4. Broad-range Testing
    => Constrained Random으로 넓은 범위 테스트
 5. Corner-case Testing
-   => Coverage에서 빠진 부분을 Directed Test나
-      좁은 Constraint로 집중 테스트
+   => Coverage에서 빠진 부분을 Directed Test나 좁은 Constraint로 집중 테스트
 6. Verification Closure
    => 목표 Coverage를 만족하면 검증 종료
 -----------------------------------------------------------------------------------------------------------
