@@ -64,7 +64,7 @@
    while   → 조건이 참인 동안 반복
 
    ex)
-   for (int i=0; i<8; i++) (for : RTL/TB 둘 다 많이 사용)
+   for (int i=0; i<8; i++) (for : 조건이 참인 동안 반복, RTL/TB 둘 다 많이 사용)
        data[i] = 0;    		 
 
    foreach (array[i]) (foreach : 배열 처리, 특히 TB/UVM에서 편함)
