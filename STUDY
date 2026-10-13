@@ -421,7 +421,7 @@ UVM_Object(Hierarchy에 속하지 않는 데이터/동작 객체)
 UVM_report_object
 	UVM의 report 기능
 	ex)
-	`uvm_info(...) : verbosity 필터링(NONE ,LOW ,MEDIUM ,HIGH ,FULL, DEBUG) HIGH이면 HIGH기준 왼쪽만 실행. 
+	`uvm_info(...) : verbosity 필터링(NONE, LOW, MEDIUM, HIGH, FULL, DEBUG) HIGH이면 HIGH기준 왼쪽만 실행. 
 	`uvm_warning(...)
 	`uvm_error(...)
 	`uvm_fatal(...)
