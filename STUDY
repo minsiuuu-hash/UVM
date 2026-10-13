@@ -14,7 +14,7 @@
    => 목표 Coverage를 만족하면 검증 종료
 -----------------------------------------------------------------------------------------------------------
 
-SYSTEM VERILOG  - 검증용(Verification) 기초내용
+검증(Verification)의 언어 SYSTEM VERILOG  -  기초내용
 
 1. logic / bit
    logic = 4-state → 0, 1, X, Z 표현 가능
