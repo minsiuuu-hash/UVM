@@ -421,10 +421,11 @@ UVM_Object(Hierarchy에 속하지 않는 데이터/동작 객체)
 UVM_report_object
 	UVM의 report 기능
 	ex)
-	`uvm_info(...) : verbosity 필터링(NONE, LOW, MEDIUM, HIGH, FULL, DEBUG) HIGH이면 HIGH기준 왼쪽만 실행. 
-	`uvm_warning(...)
-	`uvm_error(...)
-	`uvm_fatal(...)
+	`uvm_info(...)    : 일반 정보 메시지 출력. Verbosity 필터링 적용.(NONE, LOW, MEDIUM, HIGH, FULL, DEBUG)
+                    HIGH로 설정하면 HIGH 이하(NONE, LOW, MEDIUM, HIGH)의 메시지만 출력.
+	`uvm_warning(...) : 경고 메시지 출력. 기본적으로 Simulation 계속 진행. Verbosity 필터링 적용 X.
+	`uvm_error(...)   : 오류 메시지 출력 및 Error Count 증가. 기본적으로 Simulation 계속 진행. Verbosity 필터링 적용 X.
+	`uvm_fatal(...)   : 심각한 오류 메시지 출력 후 Simulation 종료. Verbosity 필터링 적용 X.
 
 UVM_Component(어디에 소속해있는가) 
 	UVM hierarchy(TestBench의 구조) 안에 들어가고, build_phase, connect_phase, run_phase, report_phase 같은 phase를 가짐(component들이 simulation 구조를 구성).
