@@ -306,7 +306,7 @@ OOP (Object Oriented Programing)
 			ex) class write_packet extends packet;
 		(2) 다형성(polymorphism) : 동일한 메서드 호출로 객체의 실제 타입에 따라 서로 다른 동작을 수행할 수 있는 특성.
 			부모 타입 변수로 자식 객체를 가리키고, 실제 객체에 따라 다른 동작을 하게 하는 것 = 부모 class의 함수 앞에 "virtual" 을 붙여야 실제 자식 객체의 함수가 실행됨.
-			virtual task,function = class 기능(override = 덮어쓰기) >> 대부분의 UVM느낌
+			virtual task, function = class 기능(override = 덮어쓰기) >> 대부분의 UVM느낌
 			override = “부모 클래스에 이미 있는 같은 이름/같은 형태의 함수를 자식 클래스에서 다시 정의해서, 자식 상황에 맞게 다르게 동작하게 만드는 것”
 			method override
 				= 자식 class가 부모 function을 재정의
@@ -340,8 +340,8 @@ OOP (Object Oriented Programing)
 			복잡한 내부 동작은 숨기고, 필요한 기능 이름만 보여주는 것 = 사용자는 “무엇을 하는지”만 알고, “어떻게 하는지”는 몰라도 되게 만드는 것
 			ex) 전송 기능이 있다는 것만 정의하고, UART/SPI 전송 방법은 자식 클래스가 구현한다.
 
-CLASS = 동적개체 (소프트웨어) 
-Interface, Module = 정적개체 (하드웨어)
+Class(Component와 Object) = 동적 객체를 생성하기 위한 설계도 (소프트웨어) 
+Interface(DUT와 Testbench 사이의 신호 연결), Module(DUT를 포함한 하드웨어 구조 정의) = 정적개체 하드웨어)
 
 Class 타입(Property = 객체가 가지고 있는 데이터/변수, Method = 객체가 할 수 있는 동작(function/task))
 1. 다른 class를 가져올때 handle를 생성해줘야함.
