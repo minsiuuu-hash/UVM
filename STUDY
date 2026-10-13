@@ -301,7 +301,7 @@ OOP (Object Oriented Programing)
 1. ramdomized stimulus 값 생성 TEST > 임의의 값을 자동으로 생성하여 DUT에 신호입력, constraints randomize
 2. 객체화
 	CLASS 객체지향 언어 : 상속성(inheritance), 다형성(polymorphism), 캡슐화(encapsulation), 추상화(abstraction)
-		(1) 상속(inheritance) : 공통 코드 재사용 용도
+		(1) 상속성(inheritance) : 공통 코드 재사용 용도
 			기존 class를 기반으로 새로운 class를 만드는 것(extends) = 공통 기능은 부모 class에 만들고, 세부 기능은 자식 class에서 추가하거나 수정하는 것.
 			ex) class write_packet extends packet;
 		(2) 다형성(polymorphism) : 코드 수정 없이 다양한 동작 가능 용도
