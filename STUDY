@@ -93,8 +93,6 @@ ex)
 int data[];
 data = new[10]; // 0부터 9까지
 
-- delete() : 배열 삭제
-
 (3) Associative Array
 - 연속된 index가 아닌 원하는 index/key를 사용할 수 있는 배열
 - 실제 사용하는 index에 대해서만 memory가 생성됨
