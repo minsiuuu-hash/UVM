@@ -6,7 +6,7 @@ I2C (Inter-Integrated-Circuit)
   데이터 방향이 master > slave, slave > master로 SDA(양방향 데이터 선)를 활용해 가능하지만, 동시에는 불가.
 
 Open-Drain / Pull-Up
-  Pull-Up 저항이 있기 때문에, 아무도 SDA/SCL을 0으로 당기지 않고 Z로 release하면 실제 버스 전압은 1이 된다.
+  Pull-Up 저항이 있기 때문에, 아무도 SDA/SCL을 0으로 당기지 않으면 Z로 release해서 실제 버스 전압은 1이 된다.
   Pull-Up 저항이 크면, release로 High가 되는 시간이 오래 걸리지만 0으로 당길 때 전류가 작게 걸린다.   
   Pull-Up 저항이 작으면, release로 High가 되는 시간이 적게 걸리지만 0으로 당길 때 전류가 많이 걸린다.
 
