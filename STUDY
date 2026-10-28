@@ -611,6 +611,12 @@ UVM 구조
 		run_phase에서는 구동 된 값을 복사하기만 하는것, 즉 읽기만 하니까 보통 =를 사용해서 복사함.
 		uvm_analysis_port #(*_seq_item) ap; = monitor가 관찰한 transaction을 다른 component들에게 뿌려주는 방송 포트
 		ap.write(item); 연결된 모든 component에 write()함수가 실행됌.
+	3)Sequencer -> uvm_sequencer #(*_seq_item)
+		Sequence에서 생성한 Sequence Item을 Driver에 전달하는 역할.
+		Sequence와 Driver 사이에서 Transaction 전달을 중재함.
+		여러 Sequence가 동시에 실행되면 Arbitration(우선순위 중재)을 수행함.
+		Sequencer는 일반적으로 Item을 직접 생성하거나 DUT 신호를 구동하지 않음.
+		별도의 기능을 추가하지 않는다면 기본 uvm_sequencer를 그대로 사용해도 됨.
 
 
 
