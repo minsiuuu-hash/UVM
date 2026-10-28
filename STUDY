@@ -240,7 +240,8 @@ Functional Coverage => 검증하려고 계획한 기능과 상황이 얼마나 �
     - ignore_bins : Coverage에서 제외할 값
     - illegal_bins : 나오면 안 되는 값
     - Transition bins : 특정 값의 변화 측정 (ex. 0 => 1)
-    - wildcard, with 등을 사용하여 원하는 조건으로 구성 가능
+    - wildcard : wildcard bins a = {4'b1???}; 면 상위 비트가 1인 값을 측정 
+	- with : bins a = {[0:15]} with (item % 2 == 0); 면 짝수값만
 (4) Cross Coverage
     - 두 개 이상의 Coverpoint 조합을 검사
     - 각각의 값은 테스트했더라도 특정 조합은 테스트하지 않았을 수 있기 때문에 사용
