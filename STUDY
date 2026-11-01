@@ -594,8 +594,8 @@ UVM 구조
 		2. Macro 처리
 			→ `uvm_do(item)
 5. Environment -> uvm_env (Agent, Scoreboard, Coverage)
-	agt.mon.ap.connect(scb.ap_imp);
-	agt.mon.ap.connect(cov.analysis_export); -> ap와 scoreboard, coverage를 연결해주는 역할.
+	agt.mon.ap.connect(scb.ap_imp); -> uvm_scoreboard에는 Transaction을 수신할 Analysis Imp가 기본적으로 제공 x
+	agt.mon.ap.connect(cov.analysis_export); -> uvm_subscriber가 이미 analysis_export라는 이름의 수신 포트를 제공
 	1)Scoreboard -> uvm_scoreboard
 		DUT의 전체적인 데이터 흐름을 계속 감시/비교
 		uvm_analysis_imp #(*_seq_item, *_scoreboard) ap_imp; (imp = 실제 도착지)
