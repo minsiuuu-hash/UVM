@@ -550,7 +550,7 @@ UVM 구조
 2. Interface
 	DUT 신호(RTL 신호) 묶음 선언.
 	Clocking Block 활용
-		race condition 방지용
+		DUT와 Testbench가 같은 Clock Edge에서 동작할 때 발생할 수 있는 Race Condition을 방지하기 위함
  		입력은 안정된 후 샘플링
  		출력은 DUT와 충돌하지 않게 늦게 구동
 		EX) input  #1 : clock edge보다 1 time unit 전에 샘플링
