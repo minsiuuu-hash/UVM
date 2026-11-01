@@ -252,7 +252,7 @@ Functional Coverage => 검증하려고 계획한 기능과 상황이 얼마나 �
 9. Package
 - 여러 곳에서 공통으로 사용할 class, typedef, parameter, function/task 등을 하나로 묶어서 관리하는 공간
 - package ~ endpackage로 정의
-- import package_name::*; 으로 Package 내부 내용을 가져와 사용
+- import package_name::*; 으로 Package 내부 내용을 가져와 사용(ex. import uvm_pkg::*;)
 - package_name::이름 형태로 특정 항목에 직접 접근 가능
 - UVM에서는 여러 Class들을 하나의 Package로 묶어서 관리할 때 많이 사용
 
