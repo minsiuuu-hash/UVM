@@ -503,10 +503,11 @@ Callback = 기존 UVM component 코드를 직접 수정하지 않고
 	특정 위치(hook)에 추가 동작을 끼워 넣는 기능.
 	ex) Error Injection, Debugging, Coverage, Protocol Check
 
-Register Modeling = UVM에서 DUT 내부의 Register를 소프트웨어 객체로 표현하고, 이를 통해 Register의 Read/Write 동작을 검증하는 기능
+Register Modeling = DUT 내부 Register의 주소, Bit Field, 초기값 등을 UVM에서 모델로 만들어 관리하는 것.
 RAL(Register Abstraction Layer)
-= DUT 내부 Register를 주소/Bus Signal로 직접 다루지 않고, UVM 객체처럼 Register/Field 이름으로 읽고 쓰는 기능.
-= Register가 많을 때 주소/bit 관리가 편해짐.
+= Register의 주소나 Bus Signal을 직접 지정하지 않고, Register 이름으로 Read/Write할 수 있게 해주는 UVM 기능.
+= Register가 많아도 주소와 Bit Field를 편리하게 관리할 수 있음.
+핵심: Register Modeling은 DUT의 Register를 검증용 모델로 만드는 것이고, RAL은 그 모델을 이용해 Register에 편리하게 접근하고 검증하는 기능.
 
 구조
 - uvm_reg_field : Register 내부 field
