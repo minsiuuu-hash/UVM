@@ -9,6 +9,8 @@ Open-Drain / Pull-Up
   I2C는 여러 장치가 SDA와 SCL 라인을 공유하기 때문에 Open-Drain 방식을 사용합니다. 
   각 장치는 LOW만 직접 구동하고 HIGH는 Pull-up 저항을 이용하므로, 장치 간 전기적 충돌을 방지할 수 있습니다. 
   또한 이러한 구조를 통해 ACK/NACK, Clock Stretching, 멀티 마스터 환경에서의 Arbitration도 구현할 수 있습니다.
+  Clock Stretching = Master가 SCL을 HIGH로 만들기 위해 라인을 해제하더라도 Slave가 SCL을 LOW로 유지할 수 있음.
+                      이를 통해 Slave가 데이터 처리에 시간이 더 필요할 때 통신을 지연시킬 수 있음.
 
   Pull-Up 저항이 있기 때문에, 아무도 SDA/SCL을 0으로 당기지 않으면 Z로 release해서 실제 버스 전압은 1이 된다.
   Pull-Up 저항이 크면, release로 High가 되는 시간이 오래 걸리지만 0으로 당길 때 전류가 작게 걸린다.   
