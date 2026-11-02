@@ -499,8 +499,7 @@ TLM(Transaction Level Modeling)
     Sequencer → Driver = PUSH, PULL MODE
     Monitor → Scoreboard, Coverage = BroadCast MODE(Analysis Port)
 
-Callback = 기존 UVM component 코드를 직접 수정하지 않고
-	특정 위치(hook)에 추가 동작을 끼워 넣는 기능.
+Callback = 기존 UVM component 코드를 직접 수정하지 않고 특정 위치(hook)에 추가 동작을 끼워 넣는 기능.
 	ex) Error Injection, Debugging, Coverage, Protocol Check
 
 Register Modeling = DUT 내부 Register의 주소, Bit Field, 초기값 등을 UVM에서 모델로 만들어 관리하는 것.
